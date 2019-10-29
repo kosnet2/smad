@@ -14,7 +14,9 @@ class Listeners:
 
     # Alerts
     def addAlert(self):
-        # UI
+        ''''''###''''''
+        '''    UI   '''
+        ''''''###''''''
         # Get alert name
         alert = self.ui.alertsAlertNameTextEdit.toPlainText()
         if len(alert) == 0:
@@ -51,7 +53,6 @@ class Listeners:
         
         if self.ui.alertsCaptureGroupBox.isChecked():
             captureTime = self.ui.alertsCaptureDurationSpinBox.value()
-            
             captureFilename = self.ui.alertsFileNameTextEdit.toPlainText()
             if len(captureFilename) == 0:
                 utils.showMessageBox("Capture file name field must not be empty", "Empty field", QtWidgets.QMessageBox.Critical)
@@ -64,14 +65,31 @@ class Listeners:
             return
         
         self.ui.alertsListListWidget.addItem(alert)
-        print("add alert is valid")
-        # Daemons
+        utils.showMessageBox("Alert added!", "Success", QtWidgets.QMessageBox.Information)
+        
+        # Reset UI
+        self.ui.alertsAlertNameTextEdit.setText("")
+        self.ui.alertsSetMetricsTextEdit.setText("")
+        self.ui.alertsEmailTextEdit.setText("")
+        self.ui.alertsFileNameTextEdit.setText("")
+        
+        ''''''###''''''
+        ''' DAEMONS '''
+        ''''''###''''''
+        
         
         
             
     def deleteAlert(self):
-        # UI
-        self.ui.alertsListListWidget.takeItem(self.alertsListListWidget.currentRow())
+        ''''''###''''''
+        '''    UI   '''
+        ''''''###''''''
+        
+        #QtWidgets.QMessageBox.question(self.ui, 'You are about to delete an alert', 'Are you sure?', QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No, QtWidgets.QMessageBox.No)
+        #self.ui.alertsListListWidget.takeItem(self.ui.alertsListListWidget.currentRow())
+        ''''''###''''''
+        ''' DAEMONS '''
+        ''''''###''''''
         # Daemons
         
     # Start Monitors
