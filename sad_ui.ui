@@ -832,54 +832,18 @@ p, li { white-space: pre-wrap; }
        <layout class="QGridLayout" name="gridLayout_10">
         <item row="0" column="0">
          <widget class="QTableWidget" name="notificationsTableWidget">
-          <property name="wordWrap">
-           <bool>true</bool>
+          <property name="columnCount">
+           <number>4</number>
           </property>
-          <property name="cornerButtonEnabled">
-           <bool>true</bool>
-          </property>
-          <property name="rowCount">
-           <number>3</number>
-          </property>
-          <attribute name="horizontalHeaderVisible">
-           <bool>false</bool>
-          </attribute>
           <attribute name="horizontalHeaderCascadingSectionResizes">
            <bool>true</bool>
           </attribute>
           <attribute name="horizontalHeaderDefaultSectionSize">
-           <number>220</number>
-          </attribute>
-          <attribute name="horizontalHeaderMinimumSectionSize">
-           <number>100</number>
-          </attribute>
-          <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
-           <bool>true</bool>
+           <number>300</number>
           </attribute>
           <attribute name="horizontalHeaderStretchLastSection">
            <bool>true</bool>
           </attribute>
-          <attribute name="verticalHeaderVisible">
-           <bool>false</bool>
-          </attribute>
-          <attribute name="verticalHeaderStretchLastSection">
-           <bool>false</bool>
-          </attribute>
-          <row>
-           <property name="text">
-            <string>0</string>
-           </property>
-          </row>
-          <row>
-           <property name="text">
-            <string>1</string>
-           </property>
-          </row>
-          <row>
-           <property name="text">
-            <string>2</string>
-           </property>
-          </row>
           <column>
            <property name="text">
             <string>Datetime</string>
@@ -887,7 +851,7 @@ p, li { white-space: pre-wrap; }
           </column>
           <column>
            <property name="text">
-            <string>Name</string>
+            <string>Alert name</string>
            </property>
           </column>
           <column>
@@ -897,69 +861,9 @@ p, li { white-space: pre-wrap; }
           </column>
           <column>
            <property name="text">
-            <string>File</string>
+            <string>File name</string>
            </property>
           </column>
-          <item row="0" column="0">
-           <property name="text">
-            <string>2019-10-10 22:12:12</string>
-           </property>
-          </item>
-          <item row="0" column="1">
-           <property name="text">
-            <string>alert_x</string>
-           </property>
-          </item>
-          <item row="0" column="2">
-           <property name="text">
-            <string>metric_b</string>
-           </property>
-          </item>
-          <item row="0" column="3">
-           <property name="text">
-            <string>captureX</string>
-           </property>
-          </item>
-          <item row="1" column="0">
-           <property name="text">
-            <string>2019-10-11 22:12:12</string>
-           </property>
-          </item>
-          <item row="1" column="1">
-           <property name="text">
-            <string>alert_x</string>
-           </property>
-          </item>
-          <item row="1" column="2">
-           <property name="text">
-            <string>metric_z</string>
-           </property>
-          </item>
-          <item row="1" column="3">
-           <property name="text">
-            <string>-</string>
-           </property>
-          </item>
-          <item row="2" column="0">
-           <property name="text">
-            <string>2019-10-9 22:12:12</string>
-           </property>
-          </item>
-          <item row="2" column="1">
-           <property name="text">
-            <string>alert_y</string>
-           </property>
-          </item>
-          <item row="2" column="2">
-           <property name="text">
-            <string>metric_x</string>
-           </property>
-          </item>
-          <item row="2" column="3">
-           <property name="text">
-            <string>captureY</string>
-           </property>
-          </item>
          </widget>
         </item>
        </layout>
