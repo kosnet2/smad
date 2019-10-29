@@ -2,11 +2,14 @@
 <ui version="4.0">
  <class>MainWindow</class>
  <widget class="QMainWindow" name="MainWindow">
+  <property name="windowModality">
+   <enum>Qt::NonModal</enum>
+  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>818</width>
+    <width>1010</width>
     <height>843</height>
    </rect>
   </property>
@@ -16,9 +19,9 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QHBoxLayout" name="horizontalLayout">
     <item>
-     <widget class="QTabWidget" name="tabWidget">
+     <widget class="QTabWidget" name="mainTabWidget">
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="homeTab">
        <attribute name="title">
@@ -26,7 +29,7 @@
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_3">
         <item>
-         <widget class="QTabWidget" name="tabWidget_2">
+         <widget class="QTabWidget" name="homeTabWidget">
           <property name="tabPosition">
            <enum>QTabWidget::North</enum>
           </property>
@@ -34,7 +37,7 @@
            <enum>QTabWidget::Triangular</enum>
           </property>
           <property name="currentIndex">
-           <number>1</number>
+           <number>0</number>
           </property>
           <property name="iconSize">
            <size>
@@ -51,15 +54,15 @@
           <property name="tabsClosable">
            <bool>false</bool>
           </property>
-          <widget class="QWidget" name="cpuTab">
+          <widget class="QWidget" name="homeCpuTab">
            <attribute name="title">
             <string>CPU &amp;&amp; Processes</string>
            </attribute>
            <layout class="QGridLayout" name="gridLayout">
             <item row="0" column="0">
-             <widget class="QGroupBox" name="groupBox">
+             <widget class="QGroupBox" name="cpuSetupMonitorsGroupBox">
               <property name="title">
-               <string>Setup monitor</string>
+               <string>Setup monitors</string>
               </property>
               <property name="flat">
                <bool>false</bool>
@@ -69,16 +72,16 @@
               </property>
               <layout class="QVBoxLayout" name="verticalLayout">
                <item>
-                <widget class="QGroupBox" name="groupBox_5">
+                <widget class="QGroupBox" name="cpuProcessesGroupBox">
                  <property name="title">
-                  <string>Specify process to observe stdout( write &quot;all&quot; for all processes)</string>
+                  <string>Specify process to observe stdout (&quot;all&quot; for all processes)</string>
                  </property>
                  <property name="checkable">
                   <bool>true</bool>
                  </property>
                  <layout class="QVBoxLayout" name="verticalLayout_6">
                   <item>
-                   <widget class="QTextEdit" name="textEdit">
+                   <widget class="QTextEdit" name="cpuProcessesTextEdit">
                     <property name="sizeAdjustPolicy">
                      <enum>QAbstractScrollArea::AdjustToContentsOnFirstShow</enum>
                     </property>
@@ -90,7 +93,7 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                     </property>
                     <property name="placeholderText">
-                     <string>One process per line</string>
+                     <string>One process per line (eg. cat)</string>
                     </property>
                    </widget>
                   </item>
@@ -98,14 +101,14 @@ p, li { white-space: pre-wrap; }
                 </widget>
                </item>
                <item>
-                <widget class="QCheckBox" name="checkBox">
+                <widget class="QCheckBox" name="cpuTopProcessesCheckBox">
                  <property name="text">
                   <string>Observe top processes in terms of CPU usage</string>
                  </property>
                 </widget>
                </item>
                <item>
-                <widget class="QPushButton" name="pushButton">
+                <widget class="QPushButton" name="cpuStartMonitorsPushButton">
                  <property name="text">
                   <string>Start monitors</string>
                  </property>
@@ -121,13 +124,13 @@ p, li { white-space: pre-wrap; }
              </widget>
             </item>
             <item row="0" column="1">
-             <widget class="QGroupBox" name="groupBox_2">
+             <widget class="QGroupBox" name="cpuRunningMonitorsGroupBox">
               <property name="title">
                <string>Running monitors</string>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_2">
                <item>
-                <widget class="QListWidget" name="listWidget">
+                <widget class="QListWidget" name="cpuRunningMonitorsListWidget">
                  <item>
                   <property name="text">
                    <string>top_process</string>
@@ -146,7 +149,7 @@ p, li { white-space: pre-wrap; }
                 </widget>
                </item>
                <item>
-                <widget class="QPushButton" name="pushButton_2">
+                <widget class="QPushButton" name="cpuStopMonitorPushButton">
                  <property name="text">
                   <string>Stop monitor</string>
                  </property>
@@ -157,15 +160,15 @@ p, li { white-space: pre-wrap; }
             </item>
            </layout>
           </widget>
-          <widget class="QWidget" name="errorTab">
+          <widget class="QWidget" name="homeErrorsTab">
            <attribute name="title">
             <string>Performance &amp;&amp; Errors</string>
            </attribute>
            <layout class="QGridLayout" name="gridLayout_2">
             <item row="0" column="0">
-             <widget class="QGroupBox" name="groupBox_4">
+             <widget class="QGroupBox" name="errorsSetupMonitorsGroupBox">
               <property name="title">
-               <string>Setup monitor</string>
+               <string>Setup monitors</string>
               </property>
               <property name="flat">
                <bool>false</bool>
@@ -175,16 +178,16 @@ p, li { white-space: pre-wrap; }
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_5">
                <item>
-                <widget class="QGroupBox" name="groupBox_6">
+                <widget class="QGroupBox" name="errorsProcessesGroupBox">
                  <property name="title">
-                  <string>Specify process to observe files where most time is spent(&quot;all&quot; for all processes)</string>
+                  <string>Specify process to observe files where most time is spent (&quot;all&quot; for all processes)</string>
                  </property>
                  <property name="checkable">
                   <bool>true</bool>
                  </property>
                  <layout class="QVBoxLayout" name="verticalLayout_7">
                   <item>
-                   <widget class="QTextEdit" name="textEdit_2">
+                   <widget class="QTextEdit" name="errorsProcessesTextEdit">
                     <property name="sizeAdjustPolicy">
                      <enum>QAbstractScrollArea::AdjustToContentsOnFirstShow</enum>
                     </property>
@@ -196,7 +199,7 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                     </property>
                     <property name="placeholderText">
-                     <string>One process per line</string>
+                     <string>One process per line (eg. cat)</string>
                     </property>
                    </widget>
                   </item>
@@ -204,49 +207,49 @@ p, li { white-space: pre-wrap; }
                 </widget>
                </item>
                <item>
-                <widget class="QCheckBox" name="checkBox_7">
+                <widget class="QCheckBox" name="errorsTopSystemCallsCheckBox">
                  <property name="text">
                   <string>Observer top system calls returning errors</string>
                  </property>
                 </widget>
                </item>
                <item>
-                <widget class="QCheckBox" name="checkBox_6">
+                <widget class="QCheckBox" name="errorsSystemCallsTimeCheckBox">
                  <property name="text">
                   <string>Observe system calls where most time has been spent</string>
                  </property>
                 </widget>
                </item>
                <item>
-                <widget class="QCheckBox" name="checkBox_5">
+                <widget class="QCheckBox" name="errorsTopFilesCheckBox">
                  <property name="text">
                   <string>Observe top files with I/O errors</string>
                  </property>
                 </widget>
                </item>
                <item>
-                <widget class="QCheckBox" name="checkBox_4">
+                <widget class="QCheckBox" name="errorsTopProcessesCheckBox">
                  <property name="text">
                   <string>Observe top processes with I/O errors</string>
                  </property>
                 </widget>
                </item>
                <item>
-                <widget class="QCheckBox" name="checkBox_3">
+                <widget class="QCheckBox" name="errorsFileOpensCheckBox">
                  <property name="text">
                   <string>Observe failed file opens</string>
                  </property>
                 </widget>
                </item>
                <item>
-                <widget class="QCheckBox" name="checkBox_2">
+                <widget class="QCheckBox" name="errorsFilesTimeCheckBox">
                  <property name="text">
                   <string>Observe files where most time has been spent</string>
                  </property>
                 </widget>
                </item>
                <item>
-                <widget class="QPushButton" name="pushButton_4">
+                <widget class="QPushButton" name="errorsStartMonitorsPushButton">
                  <property name="text">
                   <string>Start monitors</string>
                  </property>
@@ -262,13 +265,13 @@ p, li { white-space: pre-wrap; }
              </widget>
             </item>
             <item row="0" column="1">
-             <widget class="QGroupBox" name="groupBox_3">
+             <widget class="QGroupBox" name="errorsRunningMonitorsGroupBox">
               <property name="title">
                <string>Running monitors</string>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_4">
                <item>
-                <widget class="QListWidget" name="listWidget_2">
+                <widget class="QListWidget" name="errorsRunningMonitorsListWidget">
                  <property name="sortingEnabled">
                   <bool>true</bool>
                  </property>
@@ -285,7 +288,7 @@ p, li { white-space: pre-wrap; }
                 </widget>
                </item>
                <item>
-                <widget class="QPushButton" name="pushButton_3">
+                <widget class="QPushButton" name="errorsStopMonitorPushButton">
                  <property name="text">
                   <string>Stop monitor</string>
                  </property>
@@ -296,15 +299,15 @@ p, li { white-space: pre-wrap; }
             </item>
            </layout>
           </widget>
-          <widget class="QWidget" name="networkTab">
+          <widget class="QWidget" name="homeNetworkTab">
            <attribute name="title">
             <string>Network</string>
            </attribute>
            <layout class="QGridLayout" name="gridLayout_3">
             <item row="0" column="0">
-             <widget class="QGroupBox" name="groupBox_7">
+             <widget class="QGroupBox" name="networkSetupMonitorsGroupBox">
               <property name="title">
-               <string>Setup monitor</string>
+               <string>Setup monitors</string>
               </property>
               <property name="flat">
                <bool>false</bool>
@@ -314,7 +317,7 @@ p, li { white-space: pre-wrap; }
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_8">
                <item>
-                <widget class="QGroupBox" name="groupBox_8">
+                <widget class="QGroupBox" name="networkHostsGroupBox">
                  <property name="title">
                   <string>Specify host IPs to observe network data exchanged</string>
                  </property>
@@ -323,7 +326,7 @@ p, li { white-space: pre-wrap; }
                  </property>
                  <layout class="QVBoxLayout" name="verticalLayout_9">
                   <item>
-                   <widget class="QTextEdit" name="textEdit_3">
+                   <widget class="QTextEdit" name="networkHostsTextEdit">
                     <property name="sizeAdjustPolicy">
                      <enum>QAbstractScrollArea::AdjustToContentsOnFirstShow</enum>
                     </property>
@@ -335,7 +338,7 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                     </property>
                     <property name="placeholderText">
-                     <string>One host per line(eg. 192.168.0.1)</string>
+                     <string>One host per line (eg. 192.168.0.1)</string>
                     </property>
                    </widget>
                   </item>
@@ -343,21 +346,21 @@ p, li { white-space: pre-wrap; }
                 </widget>
                </item>
                <item>
-                <widget class="QCheckBox" name="checkBox_11">
+                <widget class="QCheckBox" name="networkTopProcessesCheckBox">
                  <property name="text">
                   <string>Observe top processes in terms of bandwidth</string>
                  </property>
                 </widget>
                </item>
                <item>
-                <widget class="QCheckBox" name="checkBox_8">
+                <widget class="QCheckBox" name="networkTopClientsCheckBox">
                  <property name="text">
                   <string>Observer top client IPs in terms of established connections</string>
                  </property>
                 </widget>
                </item>
                <item>
-                <widget class="QPushButton" name="pushButton_5">
+                <widget class="QPushButton" name="networkStartMonitorsPushButton">
                  <property name="text">
                   <string>Start monitors</string>
                  </property>
@@ -373,13 +376,13 @@ p, li { white-space: pre-wrap; }
              </widget>
             </item>
             <item row="0" column="1">
-             <widget class="QGroupBox" name="groupBox_9">
+             <widget class="QGroupBox" name="networkRunningMonitorsGroupBox">
               <property name="title">
                <string>Running monitors</string>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_10">
                <item>
-                <widget class="QListWidget" name="listWidget_3">
+                <widget class="QListWidget" name="networkRunningMonitorsListWidget">
                  <property name="sortingEnabled">
                   <bool>true</bool>
                  </property>
@@ -406,7 +409,7 @@ p, li { white-space: pre-wrap; }
                 </widget>
                </item>
                <item>
-                <widget class="QPushButton" name="pushButton_6">
+                <widget class="QPushButton" name="networkStopMonitorPushButton">
                  <property name="text">
                   <string>Stop monitor</string>
                  </property>
@@ -417,15 +420,15 @@ p, li { white-space: pre-wrap; }
             </item>
            </layout>
           </widget>
-          <widget class="QWidget" name="securityTab">
+          <widget class="QWidget" name="homeSecurityTab">
            <attribute name="title">
             <string>Security</string>
            </attribute>
            <layout class="QGridLayout" name="gridLayout_4">
             <item row="0" column="0">
-             <widget class="QGroupBox" name="groupBox_11">
+             <widget class="QGroupBox" name="securitySetupMonitorsGroupBox">
               <property name="title">
-               <string>Setup monitor</string>
+               <string>Setup monitors</string>
               </property>
               <property name="flat">
                <bool>false</bool>
@@ -435,7 +438,7 @@ p, li { white-space: pre-wrap; }
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_12">
                <item>
-                <widget class="QGroupBox" name="groupBox_12">
+                <widget class="QGroupBox" name="securityLoginShellsGroupBox">
                  <property name="title">
                   <string>Show all the commands executed by the login shell with given ID</string>
                  </property>
@@ -444,7 +447,7 @@ p, li { white-space: pre-wrap; }
                  </property>
                  <layout class="QVBoxLayout" name="verticalLayout_13">
                   <item>
-                   <widget class="QTextEdit" name="textEdit_4">
+                   <widget class="QTextEdit" name="securityLoginShellsTextEdit">
                     <property name="sizeAdjustPolicy">
                      <enum>QAbstractScrollArea::AdjustToContentsOnFirstShow</enum>
                     </property>
@@ -456,7 +459,7 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                     </property>
                     <property name="placeholderText">
-                     <string>One ID per line(eg. 5459)</string>
+                     <string>One ID per line (eg. 5459)</string>
                     </property>
                    </widget>
                   </item>
@@ -464,7 +467,7 @@ p, li { white-space: pre-wrap; }
                 </widget>
                </item>
                <item>
-                <widget class="QGroupBox" name="groupBox_13">
+                <widget class="QGroupBox" name="securityUserDirectoriesGroupBox">
                  <property name="title">
                   <string>Show the directories that a user visits</string>
                  </property>
@@ -473,9 +476,9 @@ p, li { white-space: pre-wrap; }
                  </property>
                  <layout class="QVBoxLayout" name="verticalLayout_14">
                   <item>
-                   <widget class="QTextEdit" name="textEdit_5">
+                   <widget class="QTextEdit" name="securityUserDirectoriesTextEdit">
                     <property name="placeholderText">
-                     <string>One user per line(eg. root)</string>
+                     <string>One user per line (eg. root)</string>
                     </property>
                    </widget>
                   </item>
@@ -483,7 +486,7 @@ p, li { white-space: pre-wrap; }
                 </widget>
                </item>
                <item>
-                <widget class="QGroupBox" name="groupBox_14">
+                <widget class="QGroupBox" name="securityFileOpensGroupBox">
                  <property name="title">
                   <string>Show every file open that happens in a directory</string>
                  </property>
@@ -492,9 +495,9 @@ p, li { white-space: pre-wrap; }
                  </property>
                  <layout class="QVBoxLayout" name="verticalLayout_15">
                   <item>
-                   <widget class="QTextEdit" name="textEdit_6">
+                   <widget class="QTextEdit" name="securityFileOpensTextEdit">
                     <property name="placeholderText">
-                     <string>One directory per line(eg. /etc)</string>
+                     <string>One directory per line (eg. /etc)</string>
                     </property>
                    </widget>
                   </item>
@@ -502,7 +505,7 @@ p, li { white-space: pre-wrap; }
                 </widget>
                </item>
                <item>
-                <widget class="QPushButton" name="pushButton_8">
+                <widget class="QPushButton" name="securityStartMonitorsPushButton">
                  <property name="text">
                   <string>Start monitors</string>
                  </property>
@@ -518,13 +521,13 @@ p, li { white-space: pre-wrap; }
              </widget>
             </item>
             <item row="0" column="1">
-             <widget class="QGroupBox" name="groupBox_10">
+             <widget class="QGroupBox" name="securityRunningMonitorsGroupBox">
               <property name="title">
                <string>Running monitors</string>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_11">
                <item>
-                <widget class="QListWidget" name="listWidget_4">
+                <widget class="QListWidget" name="securityRunningMonitorsListWidget">
                  <property name="sortingEnabled">
                   <bool>true</bool>
                  </property>
@@ -551,7 +554,7 @@ p, li { white-space: pre-wrap; }
                 </widget>
                </item>
                <item>
-                <widget class="QPushButton" name="pushButton_7">
+                <widget class="QPushButton" name="securityStopMonitorPushButton">
                  <property name="text">
                   <string>Stop monitor</string>
                  </property>
@@ -562,15 +565,15 @@ p, li { white-space: pre-wrap; }
             </item>
            </layout>
           </widget>
-          <widget class="QWidget" name="applicationTab">
+          <widget class="QWidget" name="homeAppTab">
            <attribute name="title">
             <string>Application</string>
            </attribute>
            <layout class="QGridLayout" name="gridLayout_5">
             <item row="0" column="0">
-             <widget class="QGroupBox" name="groupBox_16">
+             <widget class="QGroupBox" name="appSetupMonitorsGroupBox">
               <property name="title">
-               <string>Setup monitor</string>
+               <string>Setup monitors</string>
               </property>
               <property name="flat">
                <bool>false</bool>
@@ -580,7 +583,7 @@ p, li { white-space: pre-wrap; }
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_17">
                <item>
-                <widget class="QGroupBox" name="groupBox_17">
+                <widget class="QGroupBox" name="appHTTPGroupBox">
                  <property name="title">
                   <string>Show all HTTP requests of specified type by the machine</string>
                  </property>
@@ -589,7 +592,7 @@ p, li { white-space: pre-wrap; }
                  </property>
                  <layout class="QVBoxLayout" name="verticalLayout_18">
                   <item>
-                   <widget class="QTextEdit" name="textEdit_7">
+                   <widget class="QTextEdit" name="appHTTPTextEdit">
                     <property name="sizeAdjustPolicy">
                      <enum>QAbstractScrollArea::AdjustToContentsOnFirstShow</enum>
                     </property>
@@ -601,7 +604,7 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                     </property>
                     <property name="placeholderText">
-                     <string>One type per line(eg. GET, POST)</string>
+                     <string>One type per line (eg. GET, POST)</string>
                     </property>
                    </widget>
                   </item>
@@ -609,7 +612,7 @@ p, li { white-space: pre-wrap; }
                 </widget>
                </item>
                <item>
-                <widget class="QGroupBox" name="groupBox_18">
+                <widget class="QGroupBox" name="appSQLGroupBox">
                  <property name="title">
                   <string>Show all SQL queries of specified type by the machine</string>
                  </property>
@@ -618,9 +621,9 @@ p, li { white-space: pre-wrap; }
                  </property>
                  <layout class="QVBoxLayout" name="verticalLayout_19">
                   <item>
-                   <widget class="QTextEdit" name="textEdit_8">
+                   <widget class="QTextEdit" name="appSQLTextEdit">
                     <property name="placeholderText">
-                     <string>One type per line(eg. SELECT, UPDATE)</string>
+                     <string>One type per line (eg. SELECT, UPDATE)</string>
                     </property>
                    </widget>
                   </item>
@@ -628,7 +631,7 @@ p, li { white-space: pre-wrap; }
                 </widget>
                </item>
                <item>
-                <widget class="QPushButton" name="pushButton_10">
+                <widget class="QPushButton" name="appStartMonitorsPushButton">
                  <property name="text">
                   <string>Start monitors</string>
                  </property>
@@ -644,13 +647,13 @@ p, li { white-space: pre-wrap; }
              </widget>
             </item>
             <item row="0" column="1">
-             <widget class="QGroupBox" name="groupBox_15">
+             <widget class="QGroupBox" name="appRunningMonitorsGroupBox">
               <property name="title">
                <string>Running monitors</string>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_16">
                <item>
-                <widget class="QListWidget" name="listWidget_5">
+                <widget class="QListWidget" name="appRunningMonitorsListWidget">
                  <property name="sortingEnabled">
                   <bool>true</bool>
                  </property>
@@ -672,7 +675,7 @@ p, li { white-space: pre-wrap; }
                 </widget>
                </item>
                <item>
-                <widget class="QPushButton" name="pushButton_9">
+                <widget class="QPushButton" name="appStopMonitorPushButton">
                  <property name="text">
                   <string>Stop monitor</string>
                  </property>
@@ -693,40 +696,40 @@ p, li { white-space: pre-wrap; }
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_20">
         <item>
-         <widget class="QTabWidget" name="tabWidget_3">
+         <widget class="QTabWidget" name="alertsTabWidget">
           <property name="tabShape">
            <enum>QTabWidget::Triangular</enum>
           </property>
           <property name="currentIndex">
            <number>0</number>
           </property>
-          <widget class="QWidget" name="tab">
+          <widget class="QWidget" name="alertsCreateTab">
            <attribute name="title">
             <string>Create</string>
            </attribute>
            <layout class="QVBoxLayout" name="verticalLayout_22">
             <item>
-             <widget class="QGroupBox" name="groupBox_19">
+             <widget class="QGroupBox" name="alertsTriggerGroupBox">
               <property name="title">
                <string>Trigger</string>
               </property>
               <layout class="QFormLayout" name="formLayout_4">
                <item row="1" column="0">
-                <widget class="QLabel" name="label">
+                <widget class="QLabel" name="alertsChooseMonitorLabel">
                  <property name="text">
                   <string>Choose monitor</string>
                  </property>
                 </widget>
                </item>
                <item row="3" column="0">
-                <widget class="QLabel" name="label_2">
+                <widget class="QLabel" name="alertsSetMetricsLabel">
                  <property name="text">
                   <string>Set metrics</string>
                  </property>
                 </widget>
                </item>
                <item row="3" column="1">
-                <widget class="QTextEdit" name="textEdit_9">
+                <widget class="QTextEdit" name="alertsSetMetricsTextEdit">
                  <property name="sizeAdjustPolicy">
                   <enum>QAbstractScrollArea::AdjustToContents</enum>
                  </property>
@@ -742,7 +745,7 @@ p, li { white-space: pre-wrap; }
                 </widget>
                </item>
                <item row="1" column="1">
-                <widget class="QComboBox" name="comboBox">
+                <widget class="QComboBox" name="alertsChooseMonitorComboBox">
                  <item>
                   <property name="text">
                    <string>monitor_z</string>
@@ -756,14 +759,14 @@ p, li { white-space: pre-wrap; }
                 </widget>
                </item>
                <item row="0" column="0">
-                <widget class="QLabel" name="label_5">
+                <widget class="QLabel" name="alertsAlertNameLabel">
                  <property name="text">
                   <string>Alert name</string>
                  </property>
                 </widget>
                </item>
                <item row="0" column="1">
-                <widget class="QTextEdit" name="textEdit_12">
+                <widget class="QTextEdit" name="alertsAlertNameTextEdit">
                  <property name="placeholderText">
                   <string>Alert name(eg. alert_x)</string>
                  </property>
@@ -773,20 +776,20 @@ p, li { white-space: pre-wrap; }
              </widget>
             </item>
             <item>
-             <widget class="QGroupBox" name="groupBox_20">
+             <widget class="QGroupBox" name="alertsNotifyGroupBox">
               <property name="title">
                <string>Notify</string>
               </property>
               <layout class="QGridLayout" name="gridLayout_6">
                <item row="1" column="0">
-                <widget class="QCheckBox" name="checkBox_10">
+                <widget class="QCheckBox" name="alertsNotifyCheckBox">
                  <property name="text">
                   <string>Display alert to notifications tab</string>
                  </property>
                 </widget>
                </item>
                <item row="0" column="0">
-                <widget class="QGroupBox" name="groupBox_22">
+                <widget class="QGroupBox" name="alertsEmailGroupBox">
                  <property name="title">
                   <string>Send alert to email</string>
                  </property>
@@ -795,7 +798,7 @@ p, li { white-space: pre-wrap; }
                  </property>
                  <layout class="QVBoxLayout" name="verticalLayout_21">
                   <item>
-                   <widget class="QTextEdit" name="textEdit_10">
+                   <widget class="QTextEdit" name="alertsEmailTextEdit">
                     <property name="sizeAdjustPolicy">
                      <enum>QAbstractScrollArea::AdjustToContents</enum>
                     </property>
@@ -811,13 +814,13 @@ p, li { white-space: pre-wrap; }
              </widget>
             </item>
             <item>
-             <widget class="QGroupBox" name="groupBox_21">
+             <widget class="QGroupBox" name="alertsActionGroupBox">
               <property name="title">
                <string>Action</string>
               </property>
               <layout class="QGridLayout" name="gridLayout_7">
                <item row="0" column="0">
-                <widget class="QGroupBox" name="groupBox_23">
+                <widget class="QGroupBox" name="alertsCaptureGroupBox">
                  <property name="title">
                   <string>Set up capture</string>
                  </property>
@@ -826,7 +829,7 @@ p, li { white-space: pre-wrap; }
                  </property>
                  <layout class="QGridLayout" name="gridLayout_8">
                   <item row="3" column="1">
-                   <widget class="QTextEdit" name="textEdit_11">
+                   <widget class="QTextEdit" name="alertsFileNameTextEdit">
                     <property name="sizeAdjustPolicy">
                      <enum>QAbstractScrollArea::AdjustToContents</enum>
                     </property>
@@ -836,17 +839,17 @@ p, li { white-space: pre-wrap; }
                    </widget>
                   </item>
                   <item row="1" column="1">
-                   <widget class="QSpinBox" name="spinBox"/>
+                   <widget class="QSpinBox" name="alertsCaptureDurationSpinBox"/>
                   </item>
                   <item row="1" column="0">
-                   <widget class="QLabel" name="label_3">
+                   <widget class="QLabel" name="alertsCaptureDurationLabel">
                     <property name="text">
                      <string>Capture for (seconds)</string>
                     </property>
                    </widget>
                   </item>
                   <item row="3" column="0">
-                   <widget class="QLabel" name="label_4">
+                   <widget class="QLabel" name="alertsFileNameLabel">
                     <property name="text">
                      <string>Filename</string>
                     </property>
@@ -859,7 +862,7 @@ p, li { white-space: pre-wrap; }
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="pushButton_11">
+             <widget class="QPushButton" name="alertsAddAlertPushButton">
               <property name="text">
                <string>Add alert</string>
               </property>
@@ -867,19 +870,19 @@ p, li { white-space: pre-wrap; }
             </item>
            </layout>
           </widget>
-          <widget class="QWidget" name="tab_2">
+          <widget class="QWidget" name="alertsListTab">
            <attribute name="title">
             <string>   List   </string>
            </attribute>
            <layout class="QVBoxLayout" name="verticalLayout_24">
             <item>
-             <widget class="QGroupBox" name="groupBox_24">
+             <widget class="QGroupBox" name="alertsListGroupBox">
               <property name="title">
                <string>Alert list</string>
               </property>
               <layout class="QGridLayout" name="gridLayout_9">
                <item row="0" column="0">
-                <widget class="QListWidget" name="listWidget_6">
+                <widget class="QListWidget" name="alertsListListWidget">
                  <property name="sortingEnabled">
                   <bool>true</bool>
                  </property>
@@ -899,7 +902,7 @@ p, li { white-space: pre-wrap; }
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="pushButton_12">
+             <widget class="QPushButton" name="alertsListDeleteAlert">
               <property name="layoutDirection">
                <enum>Qt::LeftToRight</enum>
               </property>
@@ -920,21 +923,30 @@ p, li { white-space: pre-wrap; }
        </attribute>
        <layout class="QGridLayout" name="gridLayout_10">
         <item row="0" column="0">
-         <widget class="QTableWidget" name="tableWidget">
+         <widget class="QTableWidget" name="notificationsTableWidget">
           <property name="wordWrap">
            <bool>true</bool>
+          </property>
+          <property name="cornerButtonEnabled">
+           <bool>true</bool>
+          </property>
+          <property name="rowCount">
+           <number>3</number>
           </property>
           <attribute name="horizontalHeaderVisible">
            <bool>false</bool>
           </attribute>
           <attribute name="horizontalHeaderCascadingSectionResizes">
-           <bool>false</bool>
+           <bool>true</bool>
           </attribute>
           <attribute name="horizontalHeaderDefaultSectionSize">
            <number>220</number>
           </attribute>
           <attribute name="horizontalHeaderMinimumSectionSize">
            <number>100</number>
+          </attribute>
+          <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
+           <bool>true</bool>
           </attribute>
           <attribute name="horizontalHeaderStretchLastSection">
            <bool>true</bool>
@@ -960,67 +972,82 @@ p, li { white-space: pre-wrap; }
             <string>2</string>
            </property>
           </row>
-          <row>
-           <property name="text">
-            <string>3</string>
-           </property>
-          </row>
           <column>
            <property name="text">
-            <string>name</string>
+            <string>Datetime</string>
            </property>
           </column>
           <column>
            <property name="text">
-            <string>metric</string>
+            <string>Name</string>
            </property>
           </column>
           <column>
            <property name="text">
-            <string>file</string>
+            <string>Metric</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>File</string>
            </property>
           </column>
           <item row="0" column="0">
            <property name="text">
-            <string>alert_x</string>
+            <string>2019-10-10 22:12:12</string>
            </property>
           </item>
           <item row="0" column="1">
            <property name="text">
-            <string>metric_b</string>
+            <string>alert_x</string>
            </property>
           </item>
           <item row="0" column="2">
+           <property name="text">
+            <string>metric_b</string>
+           </property>
+          </item>
+          <item row="0" column="3">
            <property name="text">
             <string>captureX</string>
            </property>
           </item>
           <item row="1" column="0">
            <property name="text">
-            <string>alert_x</string>
+            <string>2019-10-11 22:12:12</string>
            </property>
           </item>
           <item row="1" column="1">
            <property name="text">
-            <string>metric_z</string>
+            <string>alert_x</string>
            </property>
           </item>
           <item row="1" column="2">
+           <property name="text">
+            <string>metric_z</string>
+           </property>
+          </item>
+          <item row="1" column="3">
            <property name="text">
             <string>-</string>
            </property>
           </item>
           <item row="2" column="0">
            <property name="text">
-            <string>alert_y</string>
+            <string>2019-10-9 22:12:12</string>
            </property>
           </item>
           <item row="2" column="1">
            <property name="text">
-            <string>metric_x</string>
+            <string>alert_y</string>
            </property>
           </item>
           <item row="2" column="2">
+           <property name="text">
+            <string>metric_x</string>
+           </property>
+          </item>
+          <item row="2" column="3">
            <property name="text">
             <string>captureY</string>
            </property>
@@ -1038,35 +1065,11 @@ p, li { white-space: pre-wrap; }
     </item>
    </layout>
   </widget>
-  <widget class="QMenuBar" name="menubar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>818</width>
-     <height>24</height>
-    </rect>
+  <widget class="QStatusBar" name="statusbar">
+   <property name="sizeGripEnabled">
+    <bool>true</bool>
    </property>
-   <widget class="QMenu" name="menuFile">
-    <property name="title">
-     <string>File</string>
-    </property>
-   </widget>
-   <widget class="QMenu" name="menuEdit">
-    <property name="title">
-     <string>Edit</string>
-    </property>
-   </widget>
-   <widget class="QMenu" name="menuAbout">
-    <property name="title">
-     <string>About</string>
-    </property>
-   </widget>
-   <addaction name="menuFile"/>
-   <addaction name="menuEdit"/>
-   <addaction name="menuAbout"/>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
  </widget>
  <resources/>
  <connections/>
