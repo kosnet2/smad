@@ -62,17 +62,17 @@ class Listeners:
         
     # Start Monitors
     def startProcessMonitor(self):
-		if self.ui.cpuProcessesGroupBox.isChecked():
-			text = self.ui.cpuProcessesTextEdit.toPlainText()
-			if text == '':
-				utils.showMessageBox('No processes entered', 'Error', QtWidgets.QMessageBox.Critical)
-				return
-			processes = text.split('\n')
+        if self.ui.cpuProcessesGroupBox.isChecked():
+            text = self.ui.cpuProcessesTextEdit.toPlainText()
+            if text == '':
+                utils.showMessageBox('No processes entered', 'Error', QtWidgets.QMessageBox.Critical)
+                return
+            processes = text.split('\n')
 			# Loop processes and start sysdig
 
-		if self.ui.cpuTopProcessesCheckBox.isChecked():
-			a = 1
-			# Start sysdig
+        if self.ui.cpuTopProcessesCheckBox.isChecked():
+            a = 1
+            # Start sysdig
     	
         
     def startApplicationMonitor(self):
