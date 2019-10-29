@@ -1,5 +1,6 @@
-from sad_ui import *
 from listeners import Listeners
+from load_data import LoadData
+from sad_ui import *
 import sys
 
 if __name__ == '__main__':
@@ -12,7 +13,8 @@ if __name__ == '__main__':
     listeners = Listeners(ui)
     
     # Load data
-       
+    data = LoadData(ui)
+
     # Utilities
     
     MainWindow.showMaximized()

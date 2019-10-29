@@ -130,23 +130,7 @@ p, li { white-space: pre-wrap; }
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_2">
                <item>
-                <widget class="QListWidget" name="cpuRunningMonitorsListWidget">
-                 <item>
-                  <property name="text">
-                   <string>top_process</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>process_all</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>process_cat</string>
-                  </property>
-                 </item>
-                </widget>
+                <widget class="QListWidget" name="cpuRunningMonitorsListWidget"/>
                </item>
                <item>
                 <widget class="QPushButton" name="cpuStopMonitorPushButton">
@@ -275,16 +259,6 @@ p, li { white-space: pre-wrap; }
                  <property name="sortingEnabled">
                   <bool>true</bool>
                  </property>
-                 <item>
-                  <property name="text">
-                   <string>fail_file_open</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>top_file_io</string>
-                  </property>
-                 </item>
                 </widget>
                </item>
                <item>
@@ -386,26 +360,6 @@ p, li { white-space: pre-wrap; }
                  <property name="sortingEnabled">
                   <bool>true</bool>
                  </property>
-                 <item>
-                  <property name="text">
-                   <string>netdata_10.10.10.10</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>netdata_192.168.0.1</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>top_client_IP</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>top_proc_bw</string>
-                  </property>
-                 </item>
                 </widget>
                </item>
                <item>
@@ -531,26 +485,6 @@ p, li { white-space: pre-wrap; }
                  <property name="sortingEnabled">
                   <bool>true</bool>
                  </property>
-                 <item>
-                  <property name="text">
-                   <string>commands_4310</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>commands_5459</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>dir_root</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>file_open_/etc</string>
-                  </property>
-                 </item>
                 </widget>
                </item>
                <item>
@@ -657,21 +591,6 @@ p, li { white-space: pre-wrap; }
                  <property name="sortingEnabled">
                   <bool>true</bool>
                  </property>
-                 <item>
-                  <property name="text">
-                   <string>query_SELECT</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>request_GET</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>request_POST</string>
-                  </property>
-                 </item>
                 </widget>
                </item>
                <item>
@@ -734,7 +653,7 @@ p, li { white-space: pre-wrap; }
                   <enum>QAbstractScrollArea::AdjustToContents</enum>
                  </property>
                  <property name="lineWrapMode">
-                  <enum>QTextEdit::FixedPixelWidth</enum>
+                  <enum>QTextEdit::WidgetWidth</enum>
                  </property>
                  <property name="overwriteMode">
                   <bool>false</bool>
@@ -745,18 +664,7 @@ p, li { white-space: pre-wrap; }
                 </widget>
                </item>
                <item row="1" column="1">
-                <widget class="QComboBox" name="alertsChooseMonitorComboBox">
-                 <item>
-                  <property name="text">
-                   <string>monitor_z</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>monitor_b</string>
-                  </property>
-                 </item>
-                </widget>
+                <widget class="QComboBox" name="alertsChooseMonitorComboBox"/>
                </item>
                <item row="0" column="0">
                 <widget class="QLabel" name="alertsAlertNameLabel">
@@ -768,7 +676,7 @@ p, li { white-space: pre-wrap; }
                <item row="0" column="1">
                 <widget class="QTextEdit" name="alertsAlertNameTextEdit">
                  <property name="placeholderText">
-                  <string>Alert name(eg. alert_x)</string>
+                  <string>Alert name (eg. alert_x)</string>
                  </property>
                 </widget>
                </item>
@@ -839,7 +747,17 @@ p, li { white-space: pre-wrap; }
                    </widget>
                   </item>
                   <item row="1" column="1">
-                   <widget class="QSpinBox" name="alertsCaptureDurationSpinBox"/>
+                   <widget class="QSpinBox" name="alertsCaptureDurationSpinBox">
+                    <property name="minimum">
+                     <number>1</number>
+                    </property>
+                    <property name="maximum">
+                     <number>86400</number>
+                    </property>
+                    <property name="value">
+                     <number>60</number>
+                    </property>
+                   </widget>
                   </item>
                   <item row="1" column="0">
                    <widget class="QLabel" name="alertsCaptureDurationLabel">
@@ -886,16 +804,6 @@ p, li { white-space: pre-wrap; }
                  <property name="sortingEnabled">
                   <bool>true</bool>
                  </property>
-                 <item>
-                  <property name="text">
-                   <string>alert_x</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>alert_y</string>
-                  </property>
-                 </item>
                 </widget>
                </item>
               </layout>
