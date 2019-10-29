@@ -1,5 +1,5 @@
 from sad_ui import *
-from listeners import *
+from listeners import Listeners
 import sys
 
 if __name__ == '__main__':
@@ -10,7 +10,7 @@ if __name__ == '__main__':
 
     # Set up listeners
     listeners = Listeners(ui)
-
+    
     # Load data
        
     # Utilities
