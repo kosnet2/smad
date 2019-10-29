@@ -1,9 +1,11 @@
-def registerListeners(ui):
-	a = 1
+class Listeners:
+	def __init__(self, ui):
+		self.ui = ui
+		self.registerListeners()
 
-"""
-      LISTENERS
-    """
+	def registerListeners(self):
+		self.ui.cpuStartMonitorsPushButton.clicked.connect(lambda: startProcessMonitor())
+
     # Alerts
     def addAlert(self):
         if(self.groupBox_22.isChecked()==True):
@@ -19,7 +21,7 @@ def registerListeners(ui):
         
     # Start Monitors
     def startProcessMonitor(self):
-        a = 1
+    	a = 1
         
     def startApplicationMonitor(self):
         a = 1
@@ -33,7 +35,7 @@ def registerListeners(ui):
     def startPerformanceMonitor(self):
         a = 1
     
-    
+
     # Stop Monitors
     def stopProcessMonitor(self):
         a = 1
@@ -49,32 +51,3 @@ def registerListeners(ui):
 
     def stopPerformanceMonitor(self):
         a = 1
-    
-    """
-      LOADING FUNCTIONALITY
-    """
-    
-    # Alerts
-    def loadAlerts(self):
-        a = 1
-        
-    # Monitors
-    def loadProcessMonitors(self):
-        a = 1
-    
-    def loadApplicationMonitors(self):
-        a = 1
-        
-    def loadSecurityMonitors(self):
-        a = 1
-    
-    def loadNetworkMonitors(self):
-        a = 1
-    
-    def loadPerformanceMonitors(self):
-        a = 1
-        
-    # Notifications
-    def loadNotifications(self):
-        a = 1
-
