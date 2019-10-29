@@ -15,7 +15,5 @@ if __name__ == '__main__':
     # Load data
     data = LoadData(ui)
 
-    # Utilities
-    
     MainWindow.showMaximized()
     sys.exit(app.exec_())
