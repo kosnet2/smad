@@ -1,4 +1,5 @@
 from sad_ui import *
+from listeners import Listeners
 import sys
 
 def addAlert(message):
@@ -13,7 +14,9 @@ if __name__ == '__main__':
     MainWindow = QtWidgets.QMainWindow()
     ui = Ui_MainWindow()
     ui.setupUi(MainWindow)
-
+    listeners = Listeners(ui)
+    
+    
     # Example
     # ui.networkStopMonitorPushButton.clicked.connect(lambda: addAlert('Boom'))
     # item = QtWidgets.QListWidgetItem()
