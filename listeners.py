@@ -14,12 +14,12 @@ class Listeners:
 
     # Alerts
     def addAlert(self):
-        isValid = True
-        
+        # UI
         # Get alert name
         alert = self.ui.alertsAlertNameTextEdit.toPlainText()
         if len(alert) == 0:
-            isValid = False
+            utils.showMessageBox("Alert name field must not be empty", "Empty field", QtWidgets.QMessageBox.Critical)
+            return
         
         # Get chosen monitor
         monitor = self.ui.alertsChooseMonitorComboBox.currentText()
@@ -27,14 +27,22 @@ class Listeners:
         # Get metrics
         metrics = self.ui.alertsSetMetricsTextEdit.toPlainText()
         if len(metrics) == 0:
-            isValid = False
+            utils.showMessageBox("Metrics field must not be empty", "Empty field", QtWidgets.QMessageBox.Critical)
+            return
         
         # Get notification details
         email = ''
+        notificationsChecked = self.ui.alertsEmailGroupBox.isChecked() or self.ui.alertsNotifyCheckBox.isChecked()
+        if not notificationsChecked:
+            utils.showMessageBox("Please select at least one notification field", "Empty field", QtWidgets.QMessageBox.Critical)
+            return
+        
         if self.ui.alertsEmailGroupBox.isChecked():
             email = self.ui.alertsEmailTextEdit.toPlainText()
             if len(email) == 0:
-                isValid = False
+                utils.showMessageBox("Email field must not be empty", "Empty field", QtWidgets.QMessageBox.Critical)
+                return
+
         notifications = self.ui.alertsNotifyCheckBox.isChecked()
         
         # Get capture details
@@ -46,19 +54,25 @@ class Listeners:
             
             captureFilename = self.ui.alertsFileNameTextEdit.toPlainText()
             if len(captureFilename) == 0:
-                isValid = False
+                utils.showMessageBox("Capture file name field must not be empty", "Empty field", QtWidgets.QMessageBox.Critical)
+                return
         
-        if isValid:
-            print("add alert is valid")
-            # add alert to UI list
-            # call sysdig daemons 
-            
+        # Add it to alert list
+    
+        if self.ui.alertsListListWidget.findItems(alert, QtCore.Qt.MatchExactly):
+            utils.showMessageBox("Alert already exists", "Duplicate alert", QtWidgets.QMessageBox.Critical)
+            return
+        
+        self.ui.alertsListListWidget.addItem(alert)
+        print("add alert is valid")
+        # Daemons
+        
+        
             
     def deleteAlert(self):
         # UI
-        self.listWidget_6.takeItem(self.listWidget_6.currentRow())
-        self.displayErrorMessage(message='Oh no!')
-        
+        self.ui.alertsListListWidget.takeItem(self.alertsListListWidget.currentRow())
+        # Daemons
         
     # Start Monitors
     def startProcessMonitor(self):
