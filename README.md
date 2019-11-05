@@ -1,8 +1,8 @@
-# ![](resources/sad-logo.png) SAD  
+# ![](resources/sad-logo.png)
 
 *Server Anomaly Detection*
 
-## Author
+## Authors
 * **Basel Sababa** — Full-stack Developer, Cyber Security — [mrbzs](https://github.com/mrbzs)
 * **Karlen Avogian** — Deep Learning, Cyber Security — [kosnet2](https://github.com/kosnet2)
 
