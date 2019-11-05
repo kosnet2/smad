@@ -6,7 +6,7 @@
 * **Basel Sababa** — Full-stack Developer, Cyber Security — [mrbzs](https://github.com/mrbzs)
 * **Karlen Avogian** — Deep Learning, Cyber Security — [kosnet2](https://github.com/kosnet2)
 
-* **Copyright** — The tool is prepared in the context of a Final Year Project[University Of Nicosia](https://www.unic.ac.cy/) 
+* **Copyright** — The tool is prepared in the context of a Final Year Project for [University Of Nicosia](https://www.unic.ac.cy/) 
 
 ## Description
 * Server Anomaly Detection tool, that supports monitoring real-time systems on various levels.
