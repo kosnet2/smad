@@ -7,7 +7,7 @@ class LoadData:
 		self.getAlerts()
 		
 	def getMonitors(self):
-		self.monitors = ['cpu_stdout_cat', 'cpu_top_processes', 'errors_most_time_files_cat', 'errors_top_system_calls', 'errors_top_processes', 'network_top_processes', 'security_user_directories_root', 'app_http_requests']
+		self.monitors = ['cpu_stdout_cat', 'errors_most_time_files_cat', 'errors_top_system_calls', 'errors_top_processes', 'network_top_processes', 'security_user_directories_root', 'app_http_requests']
 		for monitor in self.monitors:
 			monitorType = monitor[:monitor.index('_')]
 			

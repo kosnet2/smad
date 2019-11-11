@@ -1,10 +1,12 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from utilities import Utilities as utils
+from sysdig_thread import SysdigThread
 
 class Listeners:
     def __init__(self, ui):
         self.ui = ui
         self.registerListeners()
+        self.threads = {}
     
     
     def registerListeners(self):
@@ -118,12 +120,14 @@ class Listeners:
         for monitor in monitors:
             idx = self.ui.alertsChooseMonitorComboBox.findText(monitor)
             if idx == -1:
+                # Start sysdig
+                self.threads['cpu_top_processes'] = SysdigThread('cpu_top_processes', 'sysdig -c topprocs_cpu --unbuffered')
+                self.threads['cpu_top_processes'].start()
+
                 self.ui.alertsChooseMonitorComboBox.addItem(monitor)
                 self.ui.cpuRunningMonitorsListWidget.addItem(monitor)
-          
-        # Start sysdig
         
-        utils.showMessageBox('Monitor added!', 'Success', QtWidgets.QMessageBox.Information)
+        utils.showMessageBox('Monitors started!', 'Success', QtWidgets.QMessageBox.Information)
     	
     def startApplicationMonitors(self):
         monitorsChecked = any([self.ui.appHTTPGroupBox.isChecked(),
@@ -307,6 +311,11 @@ class Listeners:
         self.ui.alertsChooseMonitorComboBox.removeItem(cbIdx)
         
         # Sysdig
+        self.threads[text].stop()
+        self.threads[text].join()
+        del self.threads[text]
+
+        utils.showMessageBox('Monitor stopped!', 'Success', QtWidgets.QMessageBox.Information)
     
     def stopApplicationMonitor(self):
         idx = self.ui.appRunningMonitorsListWidget.currentRow()
