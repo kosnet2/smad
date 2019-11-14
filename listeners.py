@@ -23,13 +23,14 @@ class Listeners:
         self.ui.appStopMonitorPushButton.clicked.connect(lambda: self.stopApplicationMonitor())
         
         # Alerts Button Listeners
-        self.ui.alertsAddAlertPushButton.clicked.connect(lambda: self.addAlert())
-        self.ui.alertsListDeleteAlert.clicked.connect(lambda: self.deleteAlert())
-        
+        self.ui.alertsSaveAlertPushButton.clicked.connect(lambda: self.saveAlert())
+        self.ui.alertsDeleteAlertPushButton.clicked.connect(lambda: self.deleteAlert())
+        self.ui.alertsEditAlertPushButton.clicked.connect(lambda: self.editAlert())
+
         # Anomalies Button Listeners
 
     # Alerts
-    def addAlert(self):
+    def saveAlert(self):
         # Get alert name, monitor and metrics
         alert = self.ui.alertsAlertNameTextEdit.toPlainText().strip()
         if len(alert) == 0:
@@ -72,12 +73,12 @@ class Listeners:
                 return
 
         if self.ui.alertsListListWidget.findItems(alert, QtCore.Qt.MatchExactly):
-            utils.showMessageBox('Alert already exists', 'Duplicate alert', QtWidgets.QMessageBox.Critical)
-            return
-        
-        self.ui.alertsListListWidget.addItem(alert)
-        self.data.addAlert(alert, monitor, metrics, notifications, email, captureTime, captureFilename)
-        utils.showMessageBox('Alert added!', 'Success', QtWidgets.QMessageBox.Information)
+            self.data.editAlert(alert, monitor, metrics, notifications, email, captureTime, captureFilename)
+            utils.showMessageBox('Alert has been edited!', 'Success', QtWidgets.QMessageBox.Information)
+        else:
+            self.ui.alertsListListWidget.addItem(alert)
+            self.data.addAlert(alert, monitor, metrics, notifications, email, captureTime, captureFilename)
+            utils.showMessageBox('Alert has been added!', 'Success', QtWidgets.QMessageBox.Information)
         
         # Reset UI
         self.ui.alertsAlertNameTextEdit.setText('')
@@ -98,6 +99,34 @@ class Listeners:
 
         utils.showMessageBox('Alert removed!', 'Success', QtWidgets.QMessageBox.Information)
         
+    def editAlert(self):
+        idx = self.ui.alertsListListWidget.currentRow()
+        if idx == -1:
+            utils.showMessageBox('No alert selected', 'Error', QtWidgets.QMessageBox.Critical)
+            return
+
+        # Get alert by name
+        alert = self.data.getAlert(self.ui.alertsListListWidget.currentItem().text())
+
+        # Update UI with alert details
+        self.ui.alertsAlertNameTextEdit.setText(alert.name)
+        index = self.ui.alertsChooseMonitorComboBox.findText(alert.monitor, QtCore.Qt.MatchFixedString)
+        if index >= 0:
+            self.ui.alertsChooseMonitorComboBox.setCurrentIndex(index)
+        self.ui.alertsSetMetricsTextEdit.setText(alert.metrics)
+        self.ui.alertsNotifyCheckBox.setChecked(alert.notifications)
+        if alert.email != '':
+            self.ui.alertsEmailGroupBox.setChecked(True)
+            self.ui.alertsEmailTextEdit.setText(alert.email)
+        else:
+            self.ui.alertsEmailGroupBox.setChecked(False)
+        if alert.seconds > 0:
+            self.ui.alertsCaptureGroupBox.setChecked(True)
+            self.ui.alertsCaptureDurationSpinBox.setValue(alert.seconds)
+            self.ui.alertsFileNameTextEdit.setText(alert.filename)
+        else:
+            self.ui.alertsCaptureGroupBox.setChecked(False)
+
     # Start Monitors
     def startProcessMonitors(self):
         monitorsChecked = any([self.ui.cpuProcessesGroupBox.isChecked(),
@@ -317,7 +346,7 @@ class Listeners:
         self.threads[text].stop()
         self.threads[text].join()
         del self.threads[text]
-        
+
         self.data.removeMonitor(text)
 
         utils.showMessageBox('Monitor stopped!', 'Success', QtWidgets.QMessageBox.Information)

@@ -613,214 +613,203 @@ p, li { white-space: pre-wrap; }
        <attribute name="title">
         <string>Alerts</string>
        </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_20">
+       <layout class="QHBoxLayout" name="horizontalLayout_2">
         <item>
-         <widget class="QTabWidget" name="alertsTabWidget">
-          <property name="tabShape">
-           <enum>QTabWidget::Triangular</enum>
+         <widget class="QGroupBox" name="alertsAlertDetailsGroupBox">
+          <property name="title">
+           <string>Alert details</string>
           </property>
-          <property name="currentIndex">
-           <number>0</number>
+          <layout class="QVBoxLayout" name="verticalLayout_23">
+           <item>
+            <widget class="QGroupBox" name="alertsTriggerGroupBox">
+             <property name="title">
+              <string>Trigger</string>
+             </property>
+             <layout class="QFormLayout" name="formLayout_4">
+              <item row="0" column="0">
+               <widget class="QLabel" name="alertsAlertNameLabel">
+                <property name="text">
+                 <string>Alert name</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QTextEdit" name="alertsAlertNameTextEdit">
+                <property name="placeholderText">
+                 <string>Alert name (eg. alert_x)</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="0">
+               <widget class="QLabel" name="alertsChooseMonitorLabel">
+                <property name="text">
+                 <string>Choose monitor</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1">
+               <widget class="QComboBox" name="alertsChooseMonitorComboBox"/>
+              </item>
+              <item row="3" column="0">
+               <widget class="QLabel" name="alertsSetMetricsLabel">
+                <property name="text">
+                 <string>Set metrics</string>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="1">
+               <widget class="QTextEdit" name="alertsSetMetricsTextEdit">
+                <property name="sizeAdjustPolicy">
+                 <enum>QAbstractScrollArea::AdjustToContents</enum>
+                </property>
+                <property name="lineWrapMode">
+                 <enum>QTextEdit::WidgetWidth</enum>
+                </property>
+                <property name="overwriteMode">
+                 <bool>false</bool>
+                </property>
+                <property name="placeholderText">
+                 <string>Need to figure out how to do this</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <widget class="QGroupBox" name="alertsActionGroupBox">
+             <property name="title">
+              <string>Action</string>
+             </property>
+             <layout class="QGridLayout" name="gridLayout_7">
+              <item row="0" column="0">
+               <widget class="QGroupBox" name="alertsCaptureGroupBox">
+                <property name="title">
+                 <string>Set up capture</string>
+                </property>
+                <property name="checkable">
+                 <bool>true</bool>
+                </property>
+                <layout class="QGridLayout" name="gridLayout_8">
+                 <item row="3" column="1">
+                  <widget class="QTextEdit" name="alertsFileNameTextEdit">
+                   <property name="sizeAdjustPolicy">
+                    <enum>QAbstractScrollArea::AdjustToContents</enum>
+                   </property>
+                   <property name="placeholderText">
+                    <string>Meaningful filename</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="1">
+                  <widget class="QSpinBox" name="alertsCaptureDurationSpinBox">
+                   <property name="minimum">
+                    <number>1</number>
+                   </property>
+                   <property name="maximum">
+                    <number>86400</number>
+                   </property>
+                   <property name="value">
+                    <number>60</number>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="0">
+                  <widget class="QLabel" name="alertsCaptureDurationLabel">
+                   <property name="text">
+                    <string>Capture for (seconds)</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="3" column="0">
+                  <widget class="QLabel" name="alertsFileNameLabel">
+                   <property name="text">
+                    <string>Filename</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <widget class="QGroupBox" name="alertsNotifyGroupBox">
+             <property name="title">
+              <string>Notify</string>
+             </property>
+             <layout class="QGridLayout" name="gridLayout_6">
+              <item row="1" column="0">
+               <widget class="QCheckBox" name="alertsNotifyCheckBox">
+                <property name="text">
+                 <string>Display alert to notifications tab</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="0">
+               <widget class="QGroupBox" name="alertsEmailGroupBox">
+                <property name="title">
+                 <string>Send alert to email</string>
+                </property>
+                <property name="checkable">
+                 <bool>true</bool>
+                </property>
+                <layout class="QVBoxLayout" name="verticalLayout_21">
+                 <item>
+                  <widget class="QTextEdit" name="alertsEmailTextEdit">
+                   <property name="sizeAdjustPolicy">
+                    <enum>QAbstractScrollArea::AdjustToContents</enum>
+                   </property>
+                   <property name="placeholderText">
+                    <string>email@email.com</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="alertsSaveAlertPushButton">
+             <property name="text">
+              <string>Save alert</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="alertsListGroupBox">
+          <property name="title">
+           <string>Alert list</string>
           </property>
-          <widget class="QWidget" name="alertsCreateTab">
-           <attribute name="title">
-            <string>Create</string>
-           </attribute>
-           <layout class="QVBoxLayout" name="verticalLayout_22">
-            <item>
-             <widget class="QGroupBox" name="alertsTriggerGroupBox">
-              <property name="title">
-               <string>Trigger</string>
-              </property>
-              <layout class="QFormLayout" name="formLayout_4">
-               <item row="1" column="0">
-                <widget class="QLabel" name="alertsChooseMonitorLabel">
-                 <property name="text">
-                  <string>Choose monitor</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="3" column="0">
-                <widget class="QLabel" name="alertsSetMetricsLabel">
-                 <property name="text">
-                  <string>Set metrics</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="3" column="1">
-                <widget class="QTextEdit" name="alertsSetMetricsTextEdit">
-                 <property name="sizeAdjustPolicy">
-                  <enum>QAbstractScrollArea::AdjustToContents</enum>
-                 </property>
-                 <property name="lineWrapMode">
-                  <enum>QTextEdit::WidgetWidth</enum>
-                 </property>
-                 <property name="overwriteMode">
-                  <bool>false</bool>
-                 </property>
-                 <property name="placeholderText">
-                  <string>Need to figure out how to do this</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="1">
-                <widget class="QComboBox" name="alertsChooseMonitorComboBox"/>
-               </item>
-               <item row="0" column="0">
-                <widget class="QLabel" name="alertsAlertNameLabel">
-                 <property name="text">
-                  <string>Alert name</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="1">
-                <widget class="QTextEdit" name="alertsAlertNameTextEdit">
-                 <property name="placeholderText">
-                  <string>Alert name (eg. alert_x)</string>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </widget>
-            </item>
-            <item>
-             <widget class="QGroupBox" name="alertsNotifyGroupBox">
-              <property name="title">
-               <string>Notify</string>
-              </property>
-              <layout class="QGridLayout" name="gridLayout_6">
-               <item row="1" column="0">
-                <widget class="QCheckBox" name="alertsNotifyCheckBox">
-                 <property name="text">
-                  <string>Display alert to notifications tab</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="0">
-                <widget class="QGroupBox" name="alertsEmailGroupBox">
-                 <property name="title">
-                  <string>Send alert to email</string>
-                 </property>
-                 <property name="checkable">
-                  <bool>true</bool>
-                 </property>
-                 <layout class="QVBoxLayout" name="verticalLayout_21">
-                  <item>
-                   <widget class="QTextEdit" name="alertsEmailTextEdit">
-                    <property name="sizeAdjustPolicy">
-                     <enum>QAbstractScrollArea::AdjustToContents</enum>
-                    </property>
-                    <property name="placeholderText">
-                     <string>email@email.com</string>
-                    </property>
-                   </widget>
-                  </item>
-                 </layout>
-                </widget>
-               </item>
-              </layout>
-             </widget>
-            </item>
-            <item>
-             <widget class="QGroupBox" name="alertsActionGroupBox">
-              <property name="title">
-               <string>Action</string>
-              </property>
-              <layout class="QGridLayout" name="gridLayout_7">
-               <item row="0" column="0">
-                <widget class="QGroupBox" name="alertsCaptureGroupBox">
-                 <property name="title">
-                  <string>Set up capture</string>
-                 </property>
-                 <property name="checkable">
-                  <bool>true</bool>
-                 </property>
-                 <layout class="QGridLayout" name="gridLayout_8">
-                  <item row="3" column="1">
-                   <widget class="QTextEdit" name="alertsFileNameTextEdit">
-                    <property name="sizeAdjustPolicy">
-                     <enum>QAbstractScrollArea::AdjustToContents</enum>
-                    </property>
-                    <property name="placeholderText">
-                     <string>Meaningful filename</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="1" column="1">
-                   <widget class="QSpinBox" name="alertsCaptureDurationSpinBox">
-                    <property name="minimum">
-                     <number>1</number>
-                    </property>
-                    <property name="maximum">
-                     <number>86400</number>
-                    </property>
-                    <property name="value">
-                     <number>60</number>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="1" column="0">
-                   <widget class="QLabel" name="alertsCaptureDurationLabel">
-                    <property name="text">
-                     <string>Capture for (seconds)</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="3" column="0">
-                   <widget class="QLabel" name="alertsFileNameLabel">
-                    <property name="text">
-                     <string>Filename</string>
-                    </property>
-                   </widget>
-                  </item>
-                 </layout>
-                </widget>
-               </item>
-              </layout>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="alertsAddAlertPushButton">
-              <property name="text">
-               <string>Add alert</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </widget>
-          <widget class="QWidget" name="alertsListTab">
-           <attribute name="title">
-            <string>   List   </string>
-           </attribute>
-           <layout class="QVBoxLayout" name="verticalLayout_24">
-            <item>
-             <widget class="QGroupBox" name="alertsListGroupBox">
-              <property name="title">
-               <string>Alert list</string>
-              </property>
-              <layout class="QGridLayout" name="gridLayout_9">
-               <item row="0" column="0">
-                <widget class="QListWidget" name="alertsListListWidget">
-                 <property name="sortingEnabled">
-                  <bool>true</bool>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="alertsListDeleteAlert">
-              <property name="layoutDirection">
-               <enum>Qt::LeftToRight</enum>
-              </property>
-              <property name="text">
-               <string>Delete alert</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </widget>
+          <layout class="QVBoxLayout" name="verticalLayout_22">
+           <item>
+            <widget class="QListWidget" name="alertsListListWidget"/>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="alertsAlertListButtons">
+             <item>
+              <widget class="QPushButton" name="alertsEditAlertPushButton">
+               <property name="text">
+                <string>Edit</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="alertsDeleteAlertPushButton">
+               <property name="text">
+                <string>Delete</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+          </layout>
          </widget>
         </item>
        </layout>

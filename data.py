@@ -25,6 +25,11 @@ class Data:
 		for monitor in self.monitors:
 			self.alerts.extend(self.monitors[monitor])
 
+	def getAlert(self, name):
+		for alert in self.alerts:
+			if alert.name == name:
+				return alert
+
 	def addMonitor(self, name):
 		self.monitors[name] = []
 
@@ -37,6 +42,15 @@ class Data:
 		alert = Alert(name, monitor, metrics, notifications, email, seconds, filename)
 		self.alerts.append(alert)
 		self.monitors[monitor].append(alert)
+
+	def editAlert(self, name, monitor, metrics, notifications, email, seconds, filename):
+		index = [alert.name for alert in self.alerts].index(name)
+		self.alerts[index].monitor = monitor
+		self.alerts[index].metrics = metrics
+		self.alerts[index].notifications = notifications
+		self.alerts[index].email = email
+		self.alerts[index].seconds = seconds
+		self.alerts[index].filename = filename
 
 	def removeMonitor(self, name):
 		del self.monitors[name]
