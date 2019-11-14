@@ -4,10 +4,11 @@ import shlex
 import os
 
 class SysdigThread(threading.Thread):
-	def __init__(self, name, command):
+	def __init__(self, name, command, data):
 		super(SysdigThread, self).__init__()
 		self.name = name
 		self.command = command
+		self.data = data
 		self._stop_event = threading.Event()
 
 	def run(self):
@@ -21,7 +22,13 @@ class SysdigThread(threading.Thread):
 			if output == '' and process.poll() is not None:
 				break
 			if output:
-				print(output.strip())
+				if self.name == 'cpu_top_processes':
+					if len(self.data.monitors[self.name]):
+						line = output.strip().decode('utf-8')
+						if '%' in line:
+							cpu_usage = line[:line.index('%')]
+							if (cpu_usage[0].isdigit() and float(cpu_usage) > 2):
+								print(line)
 			rc = process.poll()
 
 	def stop(self):

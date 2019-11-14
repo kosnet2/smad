@@ -3,11 +3,11 @@ from utilities import Utilities as utils
 from sysdig_thread import SysdigThread
 
 class Listeners:
-    def __init__(self, ui):
+    def __init__(self, ui, data):
         self.ui = ui
+        self.data = data
         self.registerListeners()
         self.threads = {}
-    
     
     def registerListeners(self):
         # Monitors Button Listeners
@@ -76,6 +76,7 @@ class Listeners:
             return
         
         self.ui.alertsListListWidget.addItem(alert)
+        self.data.addAlert(alert, monitor, metrics, notifications, email, captureTime, captureFilename)
         utils.showMessageBox('Alert added!', 'Success', QtWidgets.QMessageBox.Information)
         
         # Reset UI
@@ -90,10 +91,12 @@ class Listeners:
         idx = self.ui.alertsListListWidget.currentRow()
         if idx == -1:
             utils.showMessageBox('No alert selected', 'Error', QtWidgets.QMessageBox.Critical)
+            return
         
+        self.data.removeAlert(self.ui.alertsListListWidget.currentItem().text())
         self.ui.alertsListListWidget.takeItem(idx)
-        
-        # Sysdig
+
+        utils.showMessageBox('Alert removed!', 'Success', QtWidgets.QMessageBox.Information)
         
     # Start Monitors
     def startProcessMonitors(self):
@@ -111,19 +114,19 @@ class Listeners:
                 utils.showMessageBox('No processes entered', 'Error', QtWidgets.QMessageBox.Critical)
                 return
             processes = text.split('\n')
-            # TODO: Implement naming logic for monitors
-            monitors.extend(processes)
+
+            monitors.extend(['cpu_process_' + process for process in processes])
 
         if self.ui.cpuTopProcessesCheckBox.isChecked():
             monitors.append('cpu_top_processes')
         
         for monitor in monitors:
-            idx = self.ui.alertsChooseMonitorComboBox.findText(monitor)
-            if idx == -1:
+            if monitor not in self.data.monitors:
                 # Start sysdig
-                self.threads['cpu_top_processes'] = SysdigThread('cpu_top_processes', 'sysdig -c topprocs_cpu --unbuffered')
+                self.threads['cpu_top_processes'] = SysdigThread('cpu_top_processes', 'sysdig -c topprocs_cpu --unbuffered', self.data)
                 self.threads['cpu_top_processes'].start()
 
+                self.data.addMonitor(monitor)
                 self.ui.alertsChooseMonitorComboBox.addItem(monitor)
                 self.ui.cpuRunningMonitorsListWidget.addItem(monitor)
         
@@ -314,6 +317,8 @@ class Listeners:
         self.threads[text].stop()
         self.threads[text].join()
         del self.threads[text]
+        
+        self.data.removeMonitor(text)
 
         utils.showMessageBox('Monitor stopped!', 'Success', QtWidgets.QMessageBox.Information)
     
