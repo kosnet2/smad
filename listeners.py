@@ -143,21 +143,25 @@ class Listeners:
                 utils.showMessageBox('No processes entered', 'Error', QtWidgets.QMessageBox.Critical)
                 return
             processes = text.split('\n')
-
-            monitors.extend(['cpu_process_' + process for process in processes])
+            for process in processes:
+                process = process.strip()
+                if process != '':
+                    monitors.append('cpu_stdout_' + process)
 
         if self.ui.cpuTopProcessesCheckBox.isChecked():
             monitors.append('cpu_top_processes')
         
-        for monitor in monitors:
-            if monitor not in self.data.monitors:
-                # Start sysdig
-                self.threads['cpu_top_processes'] = SysdigThread('cpu_top_processes', 'sysdig -c topprocs_cpu --unbuffered', self.data)
-                self.threads['cpu_top_processes'].start()
+        for name in monitors:
+            if name not in self.data.monitors:
+                self.data.addMonitor(name)
+                monitor = self.data.monitors[name]
 
-                self.data.addMonitor(monitor)
-                self.ui.alertsChooseMonitorComboBox.addItem(monitor)
-                self.ui.cpuRunningMonitorsListWidget.addItem(monitor)
+                # Start sysdig
+                self.threads[name] = SysdigThread(name, monitor)
+                self.threads[name].start()
+
+                self.ui.alertsChooseMonitorComboBox.addItem(name)
+                self.ui.cpuRunningMonitorsListWidget.addItem(name)
         
         utils.showMessageBox('Monitors started!', 'Success', QtWidgets.QMessageBox.Information)
     	

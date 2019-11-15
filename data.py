@@ -1,4 +1,12 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
+from sysdig_commands import SysdigCommands
+
+# File responsible for handling application data
+class Monitor:
+	def __init__(self, command, metricType):
+		self.command = command
+		self.metricType = metricType
+		self.alerts = []
 
 # Defines an alert set by the user on a specific Monitor
 class Alert:
@@ -11,15 +19,13 @@ class Alert:
         self.seconds = seconds
         self.filename = filename
 
-# File responsible for handling application data
 class Data:
 	def __init__(self):
+		self.sysdig_commands = SysdigCommands()
 		self.loadData()
 		
 	def loadData(self):
-		self.monitors = {
-			'cpu_stdout_cat': []
-		}
+		self.monitors = {}
 		self.alerts = []
 
 		for monitor in self.monitors:
@@ -31,12 +37,14 @@ class Data:
 				return alert
 
 	def addMonitor(self, name):
-		self.monitors[name] = []
+		commandDict = self.sysdig_commands.getCommand(name)
+		monitor = Monitor(commandDict['command'], commandDict['metricType'])
+		self.monitors[name] = monitor
 
 		# Add existing alerts to new monitor
 		for alert in self.alerts:
 			if alert.monitor == name:
-				self.monitors[name].append(alert)
+				self.monitors[name].alerts.append(alert)
 
 	def addAlert(self, name, monitor, metrics, notifications=False, email='', seconds=0, filename=''):
 		alert = Alert(name, monitor, metrics, notifications, email, seconds, filename)

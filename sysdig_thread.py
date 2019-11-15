@@ -4,15 +4,14 @@ import shlex
 import os
 
 class SysdigThread(threading.Thread):
-	def __init__(self, name, command, data):
+	def __init__(self, name, monitor):
 		super(SysdigThread, self).__init__()
 		self.name = name
-		self.command = command
-		self.data = data
+		self.monitor = monitor
 		self._stop_event = threading.Event()
 
 	def run(self):
-		process = subprocess.Popen(shlex.split(self.command), stdout=subprocess.PIPE)
+		process = subprocess.Popen(shlex.split(self.monitor.command), stdout=subprocess.PIPE)
 		while True:
 			if self.stopped():
 				process.kill()
@@ -23,7 +22,7 @@ class SysdigThread(threading.Thread):
 				break
 			if output:
 				if self.name == 'cpu_top_processes':
-					if len(self.data.monitors[self.name]):
+					if len(self.monitor.alerts):
 						line = output.strip().decode('utf-8')
 						if '%' in line:
 							cpu_usage = line[:line.index('%')]
