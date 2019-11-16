@@ -1,6 +1,6 @@
 from listeners import Listeners
 from data import Data
-from sad_ui import *
+from sad_ui import QtWidgets, Ui_MainWindow
 import sys
 
 if __name__ == '__main__':

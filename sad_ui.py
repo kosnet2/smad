@@ -2,19 +2,17 @@
 
 # Form implementation generated from reading ui file 'sad_ui.ui'
 #
-# Created by: PyQt5 UI code generator 5.13.2
+# Created by: PyQt5 UI code generator 5.9.2
 #
 # WARNING! All changes made in this file will be lost!
 
-
 from PyQt5 import QtCore, QtGui, QtWidgets
-
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.setWindowModality(QtCore.Qt.NonModal)
-        MainWindow.resize(1010, 843)
+        MainWindow.resize(1010, 840)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.horizontalLayout = QtWidgets.QHBoxLayout(self.centralwidget)
@@ -429,7 +427,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
         self.mainTabWidget.setCurrentIndex(0)
-        self.homeTabWidget.setCurrentIndex(0)
+        self.homeTabWidget.setCurrentIndex(4)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
@@ -543,3 +541,4 @@ class Ui_MainWindow(object):
         item.setText(_translate("MainWindow", "File name"))
         self.mainTabWidget.setTabText(self.mainTabWidget.indexOf(self.notificationsTab), _translate("MainWindow", "Notifications"))
         self.mainTabWidget.setTabText(self.mainTabWidget.indexOf(self.anomaliesTab), _translate("MainWindow", "Anomalies"))
+

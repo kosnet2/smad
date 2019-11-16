@@ -137,34 +137,26 @@ class Listeners:
             return
         
         monitors = []
+        invalidMonitors = []
         if self.ui.cpuProcessesGroupBox.isChecked():
             text = self.ui.cpuProcessesTextEdit.toPlainText().strip()
             if text == '':
                 utils.showMessageBox('No processes entered', 'Error', QtWidgets.QMessageBox.Critical)
                 return
-            processes = text.split('\n')
-            for process in processes:
-                process = process.strip()
-                if process != '':
-                    monitors.append('cpu_stdout_' + process)
+            mntrs = utils.getValidMonitors(text, 'cpu_stdout_', 'process')
+            monitors.extend(mntrs[0])
+            invalidMonitors.extend(mntrs[1])
 
         if self.ui.cpuTopProcessesCheckBox.isChecked():
             monitors.append('cpu_top_processes')
         
-        for name in monitors:
-            if name not in self.data.monitors:
-                self.data.addMonitor(name)
-                monitor = self.data.monitors[name]
-
-                # Start sysdig
-                self.threads[name] = SysdigThread(name, monitor)
-                self.threads[name].start()
-
-                self.ui.alertsChooseMonitorComboBox.addItem(name)
-                self.ui.cpuRunningMonitorsListWidget.addItem(name)
+        self.startSysdig(monitors, self.ui.cpuRunningMonitorsListWidget)
         
-        utils.showMessageBox('Monitors started!', 'Success', QtWidgets.QMessageBox.Information)
-    	
+        self.displayMonitorStatus(monitors, invalidMonitors)
+        
+        # Reset form
+        self.ui.cpuProcessesTextEdit.setPlainText('')
+            
     def startApplicationMonitors(self):
         monitorsChecked = any([self.ui.appHTTPGroupBox.isChecked(),
                                self.ui.appSQLGroupBox.isChecked()])
@@ -174,35 +166,33 @@ class Listeners:
             return
         
         monitors = []
+        invalidMonitors = []
         if self.ui.appHTTPGroupBox.isChecked():
             text = self.ui.appHTTPTextEdit.toPlainText().strip()
             if text == '':
                 utils.showMessageBox('No request types entered', 'Error', QtWidgets.QMessageBox.Critical)
                 return
-            requestTypes = text.split('\n')
-             # TODO: Implement naming logic for monitors
-            monitors.extend(requestTypes)
+            mntrs = utils.getValidMonitors(text, 'application_request_of_type_', 'request')
+            monitors.extend(mntrs[0])
+            invalidMonitors.extend(mntrs[1])
         
         if self.ui.appSQLGroupBox.isChecked():
             text = self.ui.appSQLTextEdit.toPlainText().strip()
             if text == '':
                 utils.showMessageBox('No query types entered', 'Error', QtWidgets.QMessageBox.Critical)
                 return
-            queryTypes = text.split('\n')
-            # TODO: Implement naming logic for monitors
-            monitors.extend(queryTypes)
+            mntrs = utils.getValidMonitors(text, 'application_queries_of_type_', 'query')
+            monitors.extend(mntrs[0])
+            invalidMonitors.extend(mntrs[1])
         
+        self.startSysdig(monitors, self.ui.appRunningMonitorsListWidget)
         
-        for monitor in monitors:
-            idx = self.ui.alertsChooseMonitorComboBox.findText(monitor)
-            if idx == -1:
-                self.ui.alertsChooseMonitorComboBox.addItem(monitor)
-                self.ui.appRunningMonitorsListWidget.addItem(monitor)
-          
-        # Start sysdig
+        self.displayMonitorStatus(monitors, invalidMonitors)       
         
-        utils.showMessageBox('Monitor added!', 'Success', QtWidgets.QMessageBox.Information)        
-    
+        # Reset form
+        self.ui.appHTTPTextEdit.setPlainText('')
+        self.ui.appSQLTextEdit.setPlainText('')
+
     def startSecurityMonitors(self):
         monitorsChecked = any([self.ui.securityLoginShellsGroupBox.isChecked(),
                                self.ui.securityUserDirectoriesGroupBox.isChecked(),
@@ -213,83 +203,82 @@ class Listeners:
             return
         
         monitors = []
+        invalidMonitors = []
         if self.ui.securityLoginShellsGroupBox.isChecked():
             text = self.ui.securityLoginShellsTextEdit.toPlainText().strip()
             if text == '':
                 utils.showMessageBox('No login shell IDs entered', 'Error', QtWidgets.QMessageBox.Critical)
                 return
-            loginShellIds = text.split('\n')
-            # TODO: Implement naming logic for monitors
-            monitors.extend(loginShellIds)
+            mntrs = utils.getValidMonitors(text, 'security_commands_executed_by_id_', 'shellid') 
+            monitors.extend(mntrs[0])
+            invalidMonitors.extend(mntrs[1])
         
         if self.ui.securityUserDirectoriesGroupBox.isChecked():
             text = self.ui.securityUserDirectoriesTextEdit.toPlainText().strip()
             if text == '':
                 utils.showMessageBox('No users entered', 'Error', QtWidgets.QMessageBox.Critical)
                 return
-            users = text.split('\n')
-             # TODO: Implement naming logic for monitors
-            monitors.extend(users)
+            mntrs = utils.getValidMonitors(text, 'security_directories_visited_by_user_', 'user')
+            monitors.extend(mntrs[0])
+            invalidMonitors.extend(mntrs[1])
         
         if self.ui.securityFileOpensGroupBox.isChecked():
             text = self.ui.securityFileOpensTextEdit.toPlainText().strip()
             if text == '':
                 utils.showMessageBox('No directories entered', 'Error', QtWidgets.QMessageBox.Critical)
                 return
-            directories = text.split('\n')
-             # TODO: Implement naming logic for monitors
-            monitors.extend(directories)
-            
-        for monitor in monitors:
-            idx = self.ui.alertsChooseMonitorComboBox.findText(monitor)
-            if idx == -1:
-                self.ui.alertsChooseMonitorComboBox.addItem(monitor)
-                self.ui.securityRunningMonitorsListWidget.addItem(monitor)
-            
-        # Start sysdig
-        utils.showMessageBox('Monitor added!', 'Success', QtWidgets.QMessageBox.Information)        
+            mntrs = utils.getValidMonitors(text, 'security_file_opens_at_', 'dir')
+            monitors.extend(mntrs[0])
+            invalidMonitors.extend(mntrs[1])
+        
+        self.startSysdig(monitors, self.ui.securityRunningMonitorsListWidget)
+        
+        self.displayMonitorStatus(monitors, invalidMonitors)
+
+        # Reset form
+        self.ui.securityLoginShellsTextEdit.setPlainText('')
+        self.ui.securityUserDirectoriesTextEdit.setPlainText('')
+        self.ui.securityFileOpensTextEdit.setPlainText('')
     
     def startNetworkMonitors(self):
         monitorsChecked = any([self.ui.networkHostsGroupBox.isChecked(),
                                self.ui.networkTopProcessesCheckBox.isChecked(),
-                               self.ui.networkTopClientsCheckBox.isChecked()])
+                               self.ui.networkTopConnectionsCheckBox.isChecked()])
     
         if not monitorsChecked:
             utils.showMessageBox('Please select at least one monitor', 'Error', QtWidgets.QMessageBox.Critical)
             return
         
         monitors = []
+        invalidMonitors = []
         if self.ui.networkHostsGroupBox.isChecked():
             text = self.ui.networkHostsTextEdit.toPlainText().strip()
             if text == '':
                 utils.showMessageBox('No hosts entered', 'Error', QtWidgets.QMessageBox.Critical)
                 return
-            hosts = text.split('\n')
-             # TODO: Implement naming logic for monitors
-            monitors.extend(hosts)
+            mntrs = utils.getValidMonitors(text, 'network_spy_ip_', 'ip')
+            monitors.extend(mntrs[0])
+            invalidMonitors.extend(mntrs[1])
         
         if self.ui.networkTopProcessesCheckBox.isChecked():
-            monitors.append('network_top_processes')
+            monitors.append('network_top_processes_bandwidth')
             
-        if self.ui.networkTopClientsCheckBox.isChecked():
-            monitors.append('network_top_client_connections')
+        if self.ui.networkTopConnectionsCheckBox.isChecked():
+            monitors.append('network_top_connections_bandwidth')
         
-        for monitor in monitors:
-            idx = self.ui.alertsChooseMonitorComboBox.findText(monitor)
-            if idx == -1:
-                self.ui.alertsChooseMonitorComboBox.addItem(monitor)
-                self.ui.networkRunningMonitorsListWidget.addItem(monitor)
-          
-        # Start sysdig
-        utils.showMessageBox('Monitor added!', 'Success', QtWidgets.QMessageBox.Information)            
-
+        self.startSysdig(monitors, self.ui.networkRunningMonitorsListWidget)
+        
+        self.displayMonitorStatus(monitors, invalidMonitors)
+        
+        # Reset form
+        self.ui.networkHostsTextEdit.setPlainText('')
+        
     def startErrorsMonitors(self):
-        monitorsChecked = any([self.ui.errorsProcessesGroupBox.isChecked(),
+        monitorsChecked = any([self.ui.errorsFileOpensGroupBox.isChecked(),
                                self.ui.errorsTopSystemCallsCheckBox.isChecked(),
                                self.ui.errorsSystemCallsTimeCheckBox.isChecked(),
                                self.ui.errorsTopFilesCheckBox.isChecked(),
                                self.ui.errorsTopProcessesCheckBox.isChecked(),
-                               self.ui.errorsFileOpensCheckBox.isChecked(),
                                self.ui.errorsFilesTimeCheckBox.isChecked()])
        
         if not monitorsChecked:
@@ -297,41 +286,37 @@ class Listeners:
             return
         
         monitors = []
-        if self.ui.errorsProcessesGroupBox.isChecked():
-            text = self.ui.errorsProcessesTextEdit.toPlainText().strip()
+        invalidMonitors = []
+        if self.ui.errorsFileOpensGroupBox.isChecked():
+            text = self.ui.errorsFileOpensTextEdit.toPlainText().strip()
             if text == '':
                 utils.showMessageBox('No processes entered', 'Error', QtWidgets.QMessageBox.Critical)
                 return
-            processes = text.split('\n')
-            # TODO: Implement naming logic for monitors
-            monitors.extend(processes)
+            mntrs = utils.getValidMonitors(text, 'errors_top_failed_file_opens_', 'process')
+            monitors.extend(mntrs[0])
+            invalidMonitors.extend(mntrs[1])
         
         if self.ui.errorsTopSystemCallsCheckBox.isChecked():
-            monitors.append('errors_most_time_files_cat')
+            monitors.append('errors_top_system_calls_errors')
             
         if self.ui.errorsSystemCallsTimeCheckBox.isChecked():
-            monitors.append('errors_top_system_calls')
+            monitors.append('errors_top_system_calls_errors_time')
         
         if self.ui.errorsTopFilesCheckBox.isChecked():
-            monitors.append('errors_top_files')
+            monitors.append('errors_top_file_errors')
         
         if self.ui.errorsTopProcessesCheckBox.isChecked():
             monitors.append('errors_top_processes')
-        
-        if self.ui.errorsFileOpensCheckBox.isChecked():
-            monitors.append('errors_file_opens')
-            
+  
         if self.ui.errorsFilesTimeCheckBox.isChecked():
-            monitors.append('errors_most_time_files')
-            
-        for monitor in monitors:
-            idx = self.ui.alertsChooseMonitorComboBox.findText(monitor)
-            if idx == -1:
-                self.ui.alertsChooseMonitorComboBox.addItem(monitor)
-                self.ui.errorsRunningMonitorsListWidget.addItem(monitor)
-            
-        # Start sysdig
-        utils.showMessageBox('Monitor added!', 'Success', QtWidgets.QMessageBox.Information)        
+            monitors.append('errors_files_most_time_spent')
+
+        self.startSysdig(monitors, self.ui.errorsRunningMonitorsListWidget)
+
+        self.displayMonitorStatus(monitors, invalidMonitors)
+        
+        # Reset form
+        self.ui.errorsFileOpensTextEdit.setPlainText('')
 
     # Stop Monitors
     def stopProcessMonitor(self):
@@ -409,3 +394,26 @@ class Listeners:
         self.ui.alertsChooseMonitorComboBox.removeItem(cbIdx)
         
         # Sysdig
+        
+        
+    # Sysdig stuff here
+    def startSysdig(self, monitors, listWidget):
+        for name in monitors:
+            if name not in self.data.monitors:
+                self.data.addMonitor(name)
+                monitor = self.data.monitors[name]
+                
+                # Start sysdig
+                self.threads[name] = SysdigThread(name, monitor)
+                self.threads[name].start()
+                
+                self.ui.alertsChooseMonitorComboBox.addItem(name)
+                listWidget.addItem(name)
+                
+    def displayMonitorStatus(self, monitors, invalidMonitors):
+        if len(invalidMonitors) != 0:
+            utils.showMessageBox('These monitors contain errors:\n\n--> '+ '\n--> '.join(invalidMonitors) +'\n\nConsult the docs for further info.','Warning', QtWidgets.QMessageBox.Warning)
+        if len(monitors) != 0:    
+            utils.showMessageBox('Monitors started:\n\n--> ' + '\n--> '.join(monitors), 'Success', QtWidgets.QMessageBox.Information)
+        else:
+            utils.showMessageBox('No monitors started!', 'Error', QtWidgets.QMessageBox.Critical)
