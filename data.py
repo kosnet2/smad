@@ -49,7 +49,7 @@ class Data:
 	def addAlert(self, name, monitor, metrics, notifications=False, email='', seconds=0, filename=''):
 		alert = Alert(name, monitor, metrics, notifications, email, seconds, filename)
 		self.alerts.append(alert)
-		self.monitors[monitor].append(alert)
+		self.monitors[monitor].alerts.append(alert)
 
 	def editAlert(self, name, monitor, metrics, notifications, email, seconds, filename):
 		index = [alert.name for alert in self.alerts].index(name)

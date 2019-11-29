@@ -26,10 +26,44 @@ class Listeners:
         self.ui.alertsSaveAlertPushButton.clicked.connect(lambda: self.saveAlert())
         self.ui.alertsDeleteAlertPushButton.clicked.connect(lambda: self.deleteAlert())
         self.ui.alertsEditAlertPushButton.clicked.connect(lambda: self.editAlert())
+        self.ui.alertsChooseMonitorComboBox.currentIndexChanged.connect(lambda: self.enableMetrics())
 
         # Anomalies Button Listeners
 
     # Alerts
+    def enableMetrics(self):
+        # Reset metrics before proceeding
+        self.ui.alertsMetricUnitComboBox.clear()
+        self.ui.alertsMetricValueSpinBox.setValue(0)
+        self.ui.alertsMetricUnitComboBox.setEnabled(True)
+        self.ui.alertsMetricValueSpinBox.setMinimum(0)
+        self.ui.alertsMetricValueSpinBox.setMaximum(2147483647)
+        
+        monitor = self.ui.alertsChooseMonitorComboBox.currentText()
+        if monitor != '':
+            metricType = self.data.monitors[monitor].metricType
+            
+            if metricType == 'none':
+                self.ui.alertsSetMetricWidget.setEnabled(False)
+            else:
+                self.ui.alertsSetMetricWidget.setEnabled(True)
+    
+                if metricType == 'percentage':
+                    self.ui.alertsMetricValueSpinBox.setMaximum(100)
+                    self.ui.alertsMetricUnitComboBox.addItem('%')
+                elif metricType == 'time':
+                    self.ui.alertsMetricUnitComboBox.addItem('s')
+                    self.ui.alertsMetricUnitComboBox.addItem('ms')
+                    self.ui.alertsMetricUnitComboBox.addItem('μs')
+                    self.ui.alertsMetricUnitComboBox.addItem('m')
+                elif metricType == 'number':
+                    self.ui.alertsMetricUnitComboBox.setEnabled(False)
+                elif metricType == 'size':
+                    self.ui.alertsMetricUnitComboBox.addItem('B')
+                    self.ui.alertsMetricUnitComboBox.addItem('KB')
+                    self.ui.alertsMetricUnitComboBox.addItem('MB')
+                    self.ui.alertsMetricUnitComboBox.addItem('GB')
+    
     def saveAlert(self):
         # Get alert name, monitor and metrics
         alert = self.ui.alertsAlertNameTextEdit.toPlainText().strip()
@@ -37,13 +71,14 @@ class Listeners:
             utils.showMessageBox('Alert name field must not be empty', 'Error', QtWidgets.QMessageBox.Critical)
             return
         monitor = self.ui.alertsChooseMonitorComboBox.currentText()
-        
-        metrics = self.ui.alertsSetMetricsTextEdit.toPlainText().strip()
-        # TODO: Need to figure out logic
-        if len(metrics) == 0:
-            utils.showMessageBox('Metrics field must not be empty', 'Error', QtWidgets.QMessageBox.Critical)
-            return
 
+        metrics = ''
+        if self.ui.alertsSetMetricWidget.isEnabled():
+            metrics += self.ui.alertsMetricOperationComboBox.currentText() + ' '
+            metrics += str(self.ui.alertsMetricValueSpinBox.value()) + ' '
+            metrics += self.ui.alertsMetricUnitComboBox.currentText()
+        
+        print(metrics)
         # Get notifications
         notificationsChecked = any([self.ui.alertsEmailGroupBox.isChecked(),
                                     self.ui.alertsNotifyCheckBox.isChecked()])
@@ -82,7 +117,6 @@ class Listeners:
         
         # Reset UI
         self.ui.alertsAlertNameTextEdit.setText('')
-        self.ui.alertsSetMetricsTextEdit.setText('')
         self.ui.alertsEmailTextEdit.setText('')
         self.ui.alertsFileNameTextEdit.setText('')
         
@@ -113,7 +147,26 @@ class Listeners:
         index = self.ui.alertsChooseMonitorComboBox.findText(alert.monitor, QtCore.Qt.MatchFixedString)
         if index >= 0:
             self.ui.alertsChooseMonitorComboBox.setCurrentIndex(index)
-        self.ui.alertsSetMetricsTextEdit.setText(alert.metrics)
+            
+        metrics = alert.metrics.split(' ')
+        if len(metrics) == 0 :  # CASE - no metrics
+            a = 10 # do nothing, for now..
+        elif len(metrics) == 2: # CASE - missing last field
+            op = metrics[0]
+            th = metrics[1]
+            idx = self.ui.alertsMetricOperationComboBox.findText(op)
+            self.ui.alertsMetricOperationComboBox.setCurrentIndex(idx)
+            self.ui.alertsMetricValueSpinBox.setValue(int(th))
+        elif len(metrics) == 3: # CASE - all fields set
+            op = metrics[0]
+            th = metrics[1]
+            un = metrics[2]
+            idx = self.ui.alertsMetricOperationComboBox.findText(op)
+            self.ui.alertsMetricOperationComboBox.setCurrentIndex(idx)
+            self.ui.alertsMetricValueSpinBox.setValue(int(th))
+            idx = self.ui.alertsMetricUnitComboBox.findText(un)
+            self.ui.alertsMetricUnitComboBox.setCurrentIndex(idx)
+            
         self.ui.alertsNotifyCheckBox.setChecked(alert.notifications)
         if alert.email != '':
             self.ui.alertsEmailGroupBox.setChecked(True)
