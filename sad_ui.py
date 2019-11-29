@@ -2,11 +2,13 @@
 
 # Form implementation generated from reading ui file 'sad_ui.ui'
 #
-# Created by: PyQt5 UI code generator 5.9.2
+# Created by: PyQt5 UI code generator 5.13.2
 #
 # WARNING! All changes made in this file will be lost!
 
+
 from PyQt5 import QtCore, QtGui, QtWidgets
+
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -42,7 +44,9 @@ class Ui_MainWindow(object):
         self.verticalLayout = QtWidgets.QVBoxLayout(self.cpuSetupMonitorsGroupBox)
         self.verticalLayout.setObjectName("verticalLayout")
         self.cpuProcessesGroupBox = QtWidgets.QGroupBox(self.cpuSetupMonitorsGroupBox)
+        self.cpuProcessesGroupBox.setEnabled(True)
         self.cpuProcessesGroupBox.setCheckable(True)
+        self.cpuProcessesGroupBox.setChecked(False)
         self.cpuProcessesGroupBox.setObjectName("cpuProcessesGroupBox")
         self.verticalLayout_6 = QtWidgets.QVBoxLayout(self.cpuProcessesGroupBox)
         self.verticalLayout_6.setObjectName("verticalLayout_6")
@@ -95,28 +99,29 @@ class Ui_MainWindow(object):
         self.verticalLayout_5.setObjectName("verticalLayout_5")
         self.errorsFileOpensGroupBox = QtWidgets.QGroupBox(self.errorsSetupMonitorsGroupBox)
         self.errorsFileOpensGroupBox.setCheckable(True)
+        self.errorsFileOpensGroupBox.setChecked(False)
         self.errorsFileOpensGroupBox.setObjectName("errorsFileOpensGroupBox")
         self.verticalLayout_20 = QtWidgets.QVBoxLayout(self.errorsFileOpensGroupBox)
         self.verticalLayout_20.setObjectName("verticalLayout_20")
         self.errorsFileOpensTextEdit = QtWidgets.QTextEdit(self.errorsFileOpensGroupBox)
         self.errorsFileOpensTextEdit.setObjectName("errorsFileOpensTextEdit")
         self.verticalLayout_20.addWidget(self.errorsFileOpensTextEdit)
-        self.errorsSystemCallsTimeCheckBox = QtWidgets.QCheckBox(self.errorsFileOpensGroupBox)
-        self.errorsSystemCallsTimeCheckBox.setObjectName("errorsSystemCallsTimeCheckBox")
-        self.verticalLayout_20.addWidget(self.errorsSystemCallsTimeCheckBox)
-        self.errorsTopFilesCheckBox = QtWidgets.QCheckBox(self.errorsFileOpensGroupBox)
-        self.errorsTopFilesCheckBox.setObjectName("errorsTopFilesCheckBox")
-        self.verticalLayout_20.addWidget(self.errorsTopFilesCheckBox)
-        self.errorsFilesTimeCheckBox = QtWidgets.QCheckBox(self.errorsFileOpensGroupBox)
-        self.errorsFilesTimeCheckBox.setObjectName("errorsFilesTimeCheckBox")
-        self.verticalLayout_20.addWidget(self.errorsFilesTimeCheckBox)
-        self.errorsTopProcessesCheckBox = QtWidgets.QCheckBox(self.errorsFileOpensGroupBox)
-        self.errorsTopProcessesCheckBox.setObjectName("errorsTopProcessesCheckBox")
-        self.verticalLayout_20.addWidget(self.errorsTopProcessesCheckBox)
-        self.errorsTopSystemCallsCheckBox = QtWidgets.QCheckBox(self.errorsFileOpensGroupBox)
-        self.errorsTopSystemCallsCheckBox.setObjectName("errorsTopSystemCallsCheckBox")
-        self.verticalLayout_20.addWidget(self.errorsTopSystemCallsCheckBox)
         self.verticalLayout_5.addWidget(self.errorsFileOpensGroupBox)
+        self.errorsTopSystemCallsCheckBox = QtWidgets.QCheckBox(self.errorsSetupMonitorsGroupBox)
+        self.errorsTopSystemCallsCheckBox.setObjectName("errorsTopSystemCallsCheckBox")
+        self.verticalLayout_5.addWidget(self.errorsTopSystemCallsCheckBox)
+        self.errorsTopFilesCheckBox = QtWidgets.QCheckBox(self.errorsSetupMonitorsGroupBox)
+        self.errorsTopFilesCheckBox.setObjectName("errorsTopFilesCheckBox")
+        self.verticalLayout_5.addWidget(self.errorsTopFilesCheckBox)
+        self.errorsTopProcessesCheckBox = QtWidgets.QCheckBox(self.errorsSetupMonitorsGroupBox)
+        self.errorsTopProcessesCheckBox.setObjectName("errorsTopProcessesCheckBox")
+        self.verticalLayout_5.addWidget(self.errorsTopProcessesCheckBox)
+        self.errorsFilesTimeCheckBox = QtWidgets.QCheckBox(self.errorsSetupMonitorsGroupBox)
+        self.errorsFilesTimeCheckBox.setObjectName("errorsFilesTimeCheckBox")
+        self.verticalLayout_5.addWidget(self.errorsFilesTimeCheckBox)
+        self.errorsSystemCallsTimeCheckBox = QtWidgets.QCheckBox(self.errorsSetupMonitorsGroupBox)
+        self.errorsSystemCallsTimeCheckBox.setObjectName("errorsSystemCallsTimeCheckBox")
+        self.verticalLayout_5.addWidget(self.errorsSystemCallsTimeCheckBox)
         self.errorsStartMonitorsPushButton = QtWidgets.QPushButton(self.errorsSetupMonitorsGroupBox)
         self.errorsStartMonitorsPushButton.setAutoDefault(False)
         self.errorsStartMonitorsPushButton.setDefault(False)
@@ -136,6 +141,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_8.setObjectName("verticalLayout_8")
         self.networkHostsGroupBox = QtWidgets.QGroupBox(self.networkSetupMonitorsGroupBox)
         self.networkHostsGroupBox.setCheckable(True)
+        self.networkHostsGroupBox.setChecked(False)
         self.networkHostsGroupBox.setObjectName("networkHostsGroupBox")
         self.verticalLayout_9 = QtWidgets.QVBoxLayout(self.networkHostsGroupBox)
         self.verticalLayout_9.setObjectName("verticalLayout_9")
@@ -180,6 +186,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_12.setObjectName("verticalLayout_12")
         self.securityLoginShellsGroupBox = QtWidgets.QGroupBox(self.securitySetupMonitorsGroupBox)
         self.securityLoginShellsGroupBox.setCheckable(True)
+        self.securityLoginShellsGroupBox.setChecked(False)
         self.securityLoginShellsGroupBox.setObjectName("securityLoginShellsGroupBox")
         self.verticalLayout_13 = QtWidgets.QVBoxLayout(self.securityLoginShellsGroupBox)
         self.verticalLayout_13.setObjectName("verticalLayout_13")
@@ -190,6 +197,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_12.addWidget(self.securityLoginShellsGroupBox)
         self.securityUserDirectoriesGroupBox = QtWidgets.QGroupBox(self.securitySetupMonitorsGroupBox)
         self.securityUserDirectoriesGroupBox.setCheckable(True)
+        self.securityUserDirectoriesGroupBox.setChecked(False)
         self.securityUserDirectoriesGroupBox.setObjectName("securityUserDirectoriesGroupBox")
         self.verticalLayout_14 = QtWidgets.QVBoxLayout(self.securityUserDirectoriesGroupBox)
         self.verticalLayout_14.setObjectName("verticalLayout_14")
@@ -199,6 +207,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_12.addWidget(self.securityUserDirectoriesGroupBox)
         self.securityFileOpensGroupBox = QtWidgets.QGroupBox(self.securitySetupMonitorsGroupBox)
         self.securityFileOpensGroupBox.setCheckable(True)
+        self.securityFileOpensGroupBox.setChecked(False)
         self.securityFileOpensGroupBox.setObjectName("securityFileOpensGroupBox")
         self.verticalLayout_15 = QtWidgets.QVBoxLayout(self.securityFileOpensGroupBox)
         self.verticalLayout_15.setObjectName("verticalLayout_15")
@@ -236,6 +245,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_17.setObjectName("verticalLayout_17")
         self.appHTTPGroupBox = QtWidgets.QGroupBox(self.appSetupMonitorsGroupBox)
         self.appHTTPGroupBox.setCheckable(True)
+        self.appHTTPGroupBox.setChecked(False)
         self.appHTTPGroupBox.setObjectName("appHTTPGroupBox")
         self.verticalLayout_18 = QtWidgets.QVBoxLayout(self.appHTTPGroupBox)
         self.verticalLayout_18.setObjectName("verticalLayout_18")
@@ -246,6 +256,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_17.addWidget(self.appHTTPGroupBox)
         self.appSQLGroupBox = QtWidgets.QGroupBox(self.appSetupMonitorsGroupBox)
         self.appSQLGroupBox.setCheckable(True)
+        self.appSQLGroupBox.setChecked(False)
         self.appSQLGroupBox.setObjectName("appSQLGroupBox")
         self.verticalLayout_19 = QtWidgets.QVBoxLayout(self.appSQLGroupBox)
         self.verticalLayout_19.setObjectName("verticalLayout_19")
@@ -427,7 +438,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
         self.mainTabWidget.setCurrentIndex(0)
-        self.homeTabWidget.setCurrentIndex(4)
+        self.homeTabWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
@@ -452,11 +463,11 @@ class Ui_MainWindow(object):
         self.errorsSetupMonitorsGroupBox.setTitle(_translate("MainWindow", "Setup monitors"))
         self.errorsFileOpensGroupBox.setTitle(_translate("MainWindow", "Show all failed file opens by given processes (\"all\" for all processes)"))
         self.errorsFileOpensTextEdit.setPlaceholderText(_translate("MainWindow", "One process per line (eg. cat)"))
-        self.errorsSystemCallsTimeCheckBox.setText(_translate("MainWindow", "Observe system calls where most time has been spent"))
-        self.errorsTopFilesCheckBox.setText(_translate("MainWindow", "Observe top files with I/O errors"))
-        self.errorsFilesTimeCheckBox.setText(_translate("MainWindow", "Observe files where most time has been spent"))
-        self.errorsTopProcessesCheckBox.setText(_translate("MainWindow", "Observe top processes with I/O errors"))
         self.errorsTopSystemCallsCheckBox.setText(_translate("MainWindow", "Observe top system calls returning errors"))
+        self.errorsTopFilesCheckBox.setText(_translate("MainWindow", "Observe top files with I/O errors"))
+        self.errorsTopProcessesCheckBox.setText(_translate("MainWindow", "Observe top processes with I/O errors"))
+        self.errorsFilesTimeCheckBox.setText(_translate("MainWindow", "Observe files where most time has been spent"))
+        self.errorsSystemCallsTimeCheckBox.setText(_translate("MainWindow", "Observe system calls where most time has been spent"))
         self.errorsStartMonitorsPushButton.setText(_translate("MainWindow", "Start monitors"))
         self.homeTabWidget.setTabText(self.homeTabWidget.indexOf(self.homeErrorsTab), _translate("MainWindow", "Performance && Errors"))
         self.networkSetupMonitorsGroupBox.setTitle(_translate("MainWindow", "Setup monitors"))
@@ -541,4 +552,3 @@ class Ui_MainWindow(object):
         item.setText(_translate("MainWindow", "File name"))
         self.mainTabWidget.setTabText(self.mainTabWidget.indexOf(self.notificationsTab), _translate("MainWindow", "Notifications"))
         self.mainTabWidget.setTabText(self.mainTabWidget.indexOf(self.anomaliesTab), _translate("MainWindow", "Anomalies"))
-

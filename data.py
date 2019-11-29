@@ -1,4 +1,3 @@
-from PyQt5 import QtCore, QtGui, QtWidgets
 from sysdig_commands import SysdigCommands
 
 # File responsible for handling application data
@@ -13,7 +12,7 @@ class Alert:
     def __init__(self, name, monitor, metrics, notifications, email, seconds, filename):
         self.name = name
         self.monitor = monitor
-        self.metrics = metrics # probably a dictionary
+        self.metrics = metrics
         self.email = email
         self.notifications = notifications
         self.seconds = seconds
@@ -22,14 +21,21 @@ class Alert:
 class Data:
 	def __init__(self):
 		self.sysdig_commands = SysdigCommands()
-		self.loadData()
-		
-	def loadData(self):
 		self.monitors = {}
 		self.alerts = []
+		
+	def saveData(self):
+		# Save monitors to file
+		with open('resources/monitors.txt', 'w+') as f:
+			f.write('\n'.join([monitor for monitor in self.monitors]))
 
-		for monitor in self.monitors:
-			self.alerts.extend(self.monitors[monitor])
+	def getSavedMonitors(self):
+		try:
+			with open('resources/monitors.txt', 'r') as f:
+				monitors = f.read().split('\n') 
+				return monitors[1:] if monitors[0] == '' else monitors
+		except Exception:
+			return []
 
 	def getAlert(self, name):
 		for alert in self.alerts:

@@ -37,7 +37,7 @@
            <enum>QTabWidget::Triangular</enum>
           </property>
           <property name="currentIndex">
-           <number>4</number>
+           <number>0</number>
           </property>
           <property name="iconSize">
            <size>
@@ -73,11 +73,17 @@
               <layout class="QVBoxLayout" name="verticalLayout">
                <item>
                 <widget class="QGroupBox" name="cpuProcessesGroupBox">
+                 <property name="enabled">
+                  <bool>true</bool>
+                 </property>
                  <property name="title">
                   <string>Show stdout for given processes (&quot;all&quot; for all processes)</string>
                  </property>
                  <property name="checkable">
                   <bool>true</bool>
+                 </property>
+                 <property name="checked">
+                  <bool>false</bool>
                  </property>
                  <layout class="QVBoxLayout" name="verticalLayout_6">
                   <item>
@@ -192,6 +198,9 @@ p, li { white-space: pre-wrap; }
                  <property name="checkable">
                   <bool>true</bool>
                  </property>
+                 <property name="checked">
+                  <bool>false</bool>
+                 </property>
                  <layout class="QVBoxLayout" name="verticalLayout_20">
                   <item>
                    <widget class="QTextEdit" name="errorsFileOpensTextEdit">
@@ -200,42 +209,42 @@ p, li { white-space: pre-wrap; }
                     </property>
                    </widget>
                   </item>
-                  <item>
-                   <widget class="QCheckBox" name="errorsSystemCallsTimeCheckBox">
-                    <property name="text">
-                     <string>Observe system calls where most time has been spent</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QCheckBox" name="errorsTopFilesCheckBox">
-                    <property name="text">
-                     <string>Observe top files with I/O errors</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QCheckBox" name="errorsFilesTimeCheckBox">
-                    <property name="text">
-                     <string>Observe files where most time has been spent</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QCheckBox" name="errorsTopProcessesCheckBox">
-                    <property name="text">
-                     <string>Observe top processes with I/O errors</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QCheckBox" name="errorsTopSystemCallsCheckBox">
-                    <property name="text">
-                     <string>Observe top system calls returning errors</string>
-                    </property>
-                   </widget>
-                  </item>
                  </layout>
+                </widget>
+               </item>
+               <item>
+                <widget class="QCheckBox" name="errorsTopSystemCallsCheckBox">
+                 <property name="text">
+                  <string>Observe top system calls returning errors</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QCheckBox" name="errorsTopFilesCheckBox">
+                 <property name="text">
+                  <string>Observe top files with I/O errors</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QCheckBox" name="errorsTopProcessesCheckBox">
+                 <property name="text">
+                  <string>Observe top processes with I/O errors</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QCheckBox" name="errorsFilesTimeCheckBox">
+                 <property name="text">
+                  <string>Observe files where most time has been spent</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QCheckBox" name="errorsSystemCallsTimeCheckBox">
+                 <property name="text">
+                  <string>Observe system calls where most time has been spent</string>
+                 </property>
                 </widget>
                </item>
                <item>
@@ -280,6 +289,9 @@ p, li { white-space: pre-wrap; }
                  </property>
                  <property name="checkable">
                   <bool>true</bool>
+                 </property>
+                 <property name="checked">
+                  <bool>false</bool>
                  </property>
                  <layout class="QVBoxLayout" name="verticalLayout_9">
                   <item>
@@ -382,6 +394,9 @@ p, li { white-space: pre-wrap; }
                  <property name="checkable">
                   <bool>true</bool>
                  </property>
+                 <property name="checked">
+                  <bool>false</bool>
+                 </property>
                  <layout class="QVBoxLayout" name="verticalLayout_13">
                   <item>
                    <widget class="QTextEdit" name="securityLoginShellsTextEdit">
@@ -411,6 +426,9 @@ p, li { white-space: pre-wrap; }
                  <property name="checkable">
                   <bool>true</bool>
                  </property>
+                 <property name="checked">
+                  <bool>false</bool>
+                 </property>
                  <layout class="QVBoxLayout" name="verticalLayout_14">
                   <item>
                    <widget class="QTextEdit" name="securityUserDirectoriesTextEdit">
@@ -429,6 +447,9 @@ p, li { white-space: pre-wrap; }
                  </property>
                  <property name="checkable">
                   <bool>true</bool>
+                 </property>
+                 <property name="checked">
+                  <bool>false</bool>
                  </property>
                  <layout class="QVBoxLayout" name="verticalLayout_15">
                   <item>
@@ -507,6 +528,9 @@ p, li { white-space: pre-wrap; }
                  <property name="checkable">
                   <bool>true</bool>
                  </property>
+                 <property name="checked">
+                  <bool>false</bool>
+                 </property>
                  <layout class="QVBoxLayout" name="verticalLayout_18">
                   <item>
                    <widget class="QTextEdit" name="appHTTPTextEdit">
@@ -535,6 +559,9 @@ p, li { white-space: pre-wrap; }
                  </property>
                  <property name="checkable">
                   <bool>true</bool>
+                 </property>
+                 <property name="checked">
+                  <bool>false</bool>
                  </property>
                  <layout class="QVBoxLayout" name="verticalLayout_19">
                   <item>
