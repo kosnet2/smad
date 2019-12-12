@@ -78,8 +78,8 @@ class Data:
 
 		for monitor in self.monitors:
 			i = 0
-			for alert in self.monitors[monitor]:
+			for alert in self.monitors[monitor].alerts:
 				if alert.name == name:
-					del self.monitors[monitor][i]
+					del self.monitors[monitor].alerts[i]
 					return
 				i += 1

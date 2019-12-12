@@ -404,7 +404,15 @@ class Listeners:
         
         cbIdx = self.ui.alertsChooseMonitorComboBox.findText(text)
         self.ui.alertsChooseMonitorComboBox.removeItem(cbIdx)
+        
         # Sysdig
+        self.threads[text].stop()
+        self.threads[text].join()
+        del self.threads[text]
+
+        self.data.removeMonitor(text)
+
+        utils.showMessageBox('Monitor stopped!', 'Success', QtWidgets.QMessageBox.Information)
         
     def stopSecurityMonitor(self):
         idx = self.ui.securityRunningMonitorsListWidget.currentRow()
@@ -419,6 +427,13 @@ class Listeners:
         self.ui.alertsChooseMonitorComboBox.removeItem(cbIdx)
         
         # Sysdig
+        self.threads[text].stop()
+        self.threads[text].join()
+        del self.threads[text]
+
+        self.data.removeMonitor(text)
+
+        utils.showMessageBox('Monitor stopped!', 'Success', QtWidgets.QMessageBox.Information)
         
     def stopNetworkMonitor(self):
         idx = self.ui.networkRunningMonitorsListWidget.currentRow()
@@ -433,6 +448,13 @@ class Listeners:
         self.ui.alertsChooseMonitorComboBox.removeItem(cbIdx)
         
         # Sysdig
+        self.threads[text].stop()
+        self.threads[text].join()
+        del self.threads[text]
+
+        self.data.removeMonitor(text)
+
+        utils.showMessageBox('Monitor stopped!', 'Success', QtWidgets.QMessageBox.Information)
         
     def stopErrorsMonitor(self):
         idx = self.ui.errorsRunningMonitorsListWidget.currentRow()
@@ -447,6 +469,13 @@ class Listeners:
         self.ui.alertsChooseMonitorComboBox.removeItem(cbIdx)
         
         # Sysdig
+        self.threads[text].stop()
+        self.threads[text].join()
+        del self.threads[text]
+
+        self.data.removeMonitor(text)
+
+        utils.showMessageBox('Monitor stopped!', 'Success', QtWidgets.QMessageBox.Information)
         
         
     # Sysdig stuff here
