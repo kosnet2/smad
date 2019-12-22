@@ -1,3 +1,5 @@
+from PyQt5 import QtWidgets
+import datetime
 import threading
 import subprocess
 import shlex
@@ -5,14 +7,19 @@ import os
 import re
 
 class SysdigThread(threading.Thread):
-    def __init__(self, name, monitor):
+    def __init__(self, name, monitor, ui):
         super(SysdigThread, self).__init__()
+        self.ui = ui
         self.name = name
         self.monitor = monitor
         self._stop_event = threading.Event()
         self.time_dict = {'ps': 10 ** -6, 'ns': 10 ** -3, 'μs': 1, 'us' : 1, 'ms': 10 ** 3, 's': 10 ** 6, 'm': 60 * (10 ** 6)}
         self.size_dict = {'B': 1, 'KB': 2 ** 10, 'MB': 2 ** 20, 'GB': 2 ** 30, 'TB': 2 ** 40, 'PB': 2 ** 50}
-        
+    
+    def getValues(self, line):
+        res = re.findall(r'[\S]+', line)
+        return res if len(res) < 3 else [res[0], ' '.join(res[1:-1]), res[-1]]
+
     def run(self):
         process = subprocess.Popen(shlex.split(self.monitor.command), stdout=subprocess.PIPE)
         while True:
@@ -25,157 +32,13 @@ class SysdigThread(threading.Thread):
                 break
             if output:
                 line = output.strip().decode('utf-8')
-                if self.name == 'cpu_top_processes':
-                    if '%' in line:
-                        cpu_usage = line[:line.index('%')]
-                        if cpu_usage[0].isdigit():
-                            cpu_usage = float(cpu_usage)
-                            for alert in self.monitor.alerts:
-                                op, value, unit= alert.metrics.split(' ')
-                                if op == '<' and cpu_usage < float(value):
-                                    print(op, value, unit, 'Less bro', line)
-                                elif op == '>' and cpu_usage > float(value):
-                                    print(op, value, unit, 'Tis bigger', line)
-                                elif  op == '=' and cpu_usage == float(value):
-                                    print(op, value, unit, 'Equals man!', line)
-                elif self.name == 'errors_top_system_calls_errors':
-                    if line[0].isdigit():
-                        num_errors, sys_call = re.findall(r'\w+', line)
-                        num_errors = int(num_errors)
-                        for alert in self.monitor.alerts:
-                            # TODO: ADD ERRORS UNIT HERE LATER
-                            op, value= alert.metrics.split(' ')
-                            if op == '<' and num_errors < int(value):
-                                print(op, value, 'Less bro', line)
-                            elif op == '>' and num_errors > int(value):
-                                print(op, value, 'Tis bigger', line)
-                            elif  op == '=' and num_errors == int(value):
-                                print(op, value, 'Equals man!', line)
-                    
-                elif self.name == 'errors_top_file_errors':
-                    if line[0].isdigit():
-                        num_errors, filename = re.findall(r'\w+', line)
-                        num_errors = int(num_errors)
-                        for alert in self.monitor.alerts:
-                            # TODO: ADD ERRORS UNIT HERE LATER
-                            op, value= alert.metrics.split(' ')
-                            if op == '<' and num_errors < int(value):
-                                print(op, value, 'Less bro', line)
-                            elif op == '>' and num_errors > int(value):
-                                print(op, value, 'Tis bigger', line)
-                            elif  op == '=' and num_errors == int(value):
-                                print(op, value, 'Equals man!', line)
-                                    
-                                    
-                elif self.name == 'errors_files_most_time_spent':
-                    if line[0].isdigit():
-                        time, filename = re.findall(r'\w+', line)
-                        if time[-2].isdigit():
-                            time, timeunit = time[:-1], time[-1:]
-                        else:
-                            time, timeunit = time[:-2], time[-2:]
-                        
-                        time = float(time)
-                        time *= self.time_dict[timeunit]
-                        for alert in self.monitor.alerts:
-                            op, value, unit = alert.metrics.split(' ')
-                            value = float(value) * self.time_dict[unit]
-                            if op == '<' and time < value:
-                                print(op, value, 'Less bro', line)
-                            elif op == '>' and time > value:
-                                print(op, value, 'Tis bigger', line)
-                            elif  op == '=' and time == value:
-                                print(op, value, 'Equals man!', line)
-                        
-                elif self.name == 'errors_top_processes':
-                    if line[0].isdigit():
-                        num_errors, process, pid = re.findall(r'\w+', line)
-                        num_errors = int(num_errors)
-                        for alert in self.monitor.alerts:
-                            # TODO: ADD ERRORS UNIT HERE LATER
-                            op, value = alert.metrics.split(' ')
-                            if op == '<' and num_errors < int(value):
-                                print(op, value, 'Less bro', line)
-                            elif op == '>' and num_errors > int(value):
-                                print(op, value, 'Tis bigger', line)
-                            elif  op == '=' and num_errors == int(value):
-                                print(op, value, 'Equals man!', line)     
-                                
-                elif self.name == 'errors_top_system_calls_errors_time':
-                    if line[0].isdigit():
-                        time, syscall = re.findall(r'\w+', line)
-                        if time[-2].isdigit():
-                            time, timeunit = time[:-1], time[-1:]
-                        else:
-                            time, timeunit = time[:-2], time[-2:]
-                        
-                        time = float(time)
-                        time *= self.time_dict[timeunit]
-                        for alert in self.monitor.alerts:
-                            op, value, unit = alert.metrics.split(' ')
-                            value = float(value) * self.time_dict[unit]
-                            if op == '<' and time < value:
-                                print(op, value, 'Less bro', line)
-                            elif op == '>' and time > value:
-                                print(op, value, 'Tis bigger', line)
-                            elif  op == '=' and time == value:
-                                print(op, value, 'Equals man!', line)
-                                
-                elif self.name == 'network_top_connections_bandwidth':
-                    if line[0].isdigit():
-                        res = re.findall(r'[\S]+', line)
-                        size, proto = res[0], res[1]
-                        if len(res) == 2:
-                            ip = res[1]
-                        elif len(res) > 3:
-                            size, proto, ip = res[0], ' '.join(res[1:-1]), res[-1]
-                            
-                        # make sure we get no erros on parsing
-                        if size[-1].isdigit():
-                            size += 'B'
-                        if size[-2].isdigit():
-                            size, sizeunit = size[:-1], size[-1:]
-                        else:
-                            size, sizeunit = size[:-2], size[-2:]
-                        
-                        size = float(size)
-                        size *= self.size_dict[sizeunit]
-                        for alert in self.monitor.alerts:
-                            op, value, unit = alert.metrics.split(' ')
-                            value = float(value) * self.size_dict[unit]
-                            if op == '<' and size < value:
-                                print(op, value, 'Less bro', line)
-                            elif op == '>' and size > value:
-                                print(op, value, 'Tis bigger', line)
-                            elif  op == '=' and size == value:
-                                print(op, value, 'Equals man!', line)     
-                                
-                elif self.name == 'network_top_processes_bandwidth':
-                    if line[0].isdigit():
-
-                        print(line)
-                        res = re.findall(r'[\S]+', line)
-                        size, proc, pid = res[0], ' '.join(res[1:-1]), res[-1]
-
-                        # make sure we get no erros on parsing
-                        if size[-1].isdigit():
-                            size += 'B'
-                        if size[-2].isdigit():
-                            size, sizeunit = size[:-1], size[-1:]
-                        else:
-                            size, sizeunit = size[:-2], size[-2:]
-                        size = float(size)
-                        size *= self.size_dict[sizeunit]
-                        for alert in self.monitor.alerts:
-                            op, value, unit = alert.metrics.split(' ')
-                            value = float(value) * self.size_dict[unit]
-                            if op == '<' and size < value:
-                                print(op, value, 'Less bro', line)
-                            elif op == '>' and size > value:
-                                print(op, value, 'Tis bigger', line)
-                            elif  op == '=' and size == value:
-                                print(op, value, 'Equals man!', line)  
-                    
+                if line[0].isdigit() and len(self.monitor.alerts):
+                    if self.monitor.metricType == 'number' or self.monitor.metricType == 'percentage':
+                        self.checkNumberMetric(self.getValues(line))
+                    elif self.monitor.metricType == 'time':
+                        self.checkTimeMetric(self.getValues(line))
+                    elif self.monitor.metricType == 'size':
+                        self.checkSizeMetric(self.getValues(line))
             rc = process.poll()
 
     def stop(self):	
@@ -183,3 +46,82 @@ class SysdigThread(threading.Thread):
 
     def stopped(self):
         return self._stop_event.is_set()
+
+    def checkNumberMetric(self, values):
+        if self.name == 'cpu_top_processes':
+            value, processName, pid = values
+            details = f'{value} from process {processName} ({pid})'
+            value = float(value[:-1])
+        elif self.name == 'errors_top_system_calls_errors':
+            value, sysCall = values
+            details = f'{value} Errors from syscall {sysCall}'
+            value = int(value)
+        elif self.name == 'errors_top_file_errors':
+            value, filename = values
+            details = f'{value} Errors from file {filename}'
+            value = int(value)
+        elif self.name == 'errors_top_processes':
+            value, processName, pid = values
+            details = f'{value} errors from process: {processName} ({pid})'
+            value = int(value)
+
+        for alert in self.monitor.alerts:
+            op, threshold, unit = alert.metrics.split(' ')
+            threshold = float(threshold)
+            if (op == '<' and value < threshold) or (op == '>' and value > threshold) or (op == '=' and value == threshold):
+                rowValues = [str(datetime.datetime.now()), alert.name, '-', details]
+                self.addNotification(rowValues)
+
+    def checkTimeMetric(self, values):
+        time, source = values
+        if time[-2].isdigit():
+            time, timeunit = time[:-1], time[-1:]
+        else:
+            time, timeunit = time[:-2], time[-2:]
+        
+        time = float(time) * self.time_dict[timeunit]
+
+        if self.name == 'errors_files_most_time_spent':
+            details = f'{time}{timeunit} in file {source}'
+        elif self.name == 'errors_top_system_calls_errors_time':
+            details = f'{time}{timeunit} in syscall {source}'
+
+        for alert in self.monitor.alerts:
+            op, value, unit = alert.metrics.split(' ')
+            value = float(value) * self.time_dict[unit]
+            if (op == '<' and time < value) or (op == '>' and time > value) or (op == '=' and time == value):
+                rowValues = [str(datetime.datetime.now()), alert.name, '-', details]
+                self.addNotification(rowValues)
+
+    def checkSizeMetric(self, values):
+        if len(values) == 2:
+            size, arg1 = values
+            arg2 = 'unknown'
+        else:
+            size, arg1, arg2 = values
+            
+        if size[-1].isdigit():
+            size += 'B'
+        if size[-2].isdigit():
+            size, sizeunit = size[:-1], size[-1:]
+        else:
+            size, sizeunit = size[:-2], size[-2:]
+        
+        size = float(size) * self.size_dict[sizeunit]
+
+        if self.name == 'network_top_connections_bandwidth':
+            details = f'{size}{sizeunit} from IP {arg2} ({arg1})'
+        elif self.name == 'network_top_processes_bandwidth':
+            details = f'{size}{sizeunit} from process {arg1} ({arg2})'
+
+        for alert in self.monitor.alerts:
+            op, value, unit = alert.metrics.split(' ')
+            value = float(value) * self.size_dict[unit]
+            if (op == '<' and size < value) or (op == '>' and size > value) or (op == '=' and size == value):
+                rowValues = [str(datetime.datetime.now()), alert.name, '-', details]
+                self.addNotification(rowValues)
+
+    def addNotification(self, values):
+        self.ui.notificationsTableWidget.insertRow(0)
+        for i in range(self.ui.notificationsTableWidget.columnCount()):
+            self.ui.notificationsTableWidget.setItem(0, i, QtWidgets.QTableWidgetItem(values[i]))

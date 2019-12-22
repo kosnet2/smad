@@ -1,2 +1,1 @@
-network_top_processes_bandwidth
-network_top_connections_bandwidth
+cpu_stdout_cat

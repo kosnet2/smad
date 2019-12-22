@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'sad_ui.ui'
 #
-# Created by: PyQt5 UI code generator 5.13.2
+# Created by: PyQt5 UI code generator 5.14.0
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -449,8 +449,8 @@ class Ui_MainWindow(object):
         self.cpuProcessesTextEdit.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:\'Cantarell\'; font-size:11pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>"))
+"</style></head><body style=\" font-family:\'Ubuntu\'; font-size:11pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:\'Cantarell\';\"><br /></p></body></html>"))
         self.cpuProcessesTextEdit.setPlaceholderText(_translate("MainWindow", "One process per line (eg. cat)"))
         self.cpuTopProcessesCheckBox.setText(_translate("MainWindow", "Observe top processes in terms of CPU usage"))
         self.cpuStartMonitorsPushButton.setText(_translate("MainWindow", "Start monitors"))
@@ -475,8 +475,8 @@ class Ui_MainWindow(object):
         self.networkHostsTextEdit.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:\'Cantarell\'; font-size:11pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>"))
+"</style></head><body style=\" font-family:\'Ubuntu\'; font-size:11pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:\'Cantarell\';\"><br /></p></body></html>"))
         self.networkHostsTextEdit.setPlaceholderText(_translate("MainWindow", "One host per line (eg. 192.168.0.1)"))
         self.networkTopConnectionsCheckBox.setText(_translate("MainWindow", "Observe top network connections in terms of bandwidth"))
         self.networkTopProcessesCheckBox.setText(_translate("MainWindow", "Observe top processes in terms of bandwidth"))
@@ -490,8 +490,8 @@ class Ui_MainWindow(object):
         self.securityLoginShellsTextEdit.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:\'Cantarell\'; font-size:11pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>"))
+"</style></head><body style=\" font-family:\'Ubuntu\'; font-size:11pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:\'Cantarell\';\"><br /></p></body></html>"))
         self.securityLoginShellsTextEdit.setPlaceholderText(_translate("MainWindow", "One ID per line (eg. 5459)"))
         self.securityUserDirectoriesGroupBox.setTitle(_translate("MainWindow", "Show the directories that a user visits"))
         self.securityUserDirectoriesTextEdit.setPlaceholderText(_translate("MainWindow", "One user per line (eg. root)"))
@@ -507,8 +507,8 @@ class Ui_MainWindow(object):
         self.appHTTPTextEdit.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:\'Cantarell\'; font-size:11pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>"))
+"</style></head><body style=\" font-family:\'Ubuntu\'; font-size:11pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:\'Cantarell\';\"><br /></p></body></html>"))
         self.appHTTPTextEdit.setPlaceholderText(_translate("MainWindow", "One type per line (eg. GET, POST)"))
         self.appSQLGroupBox.setTitle(_translate("MainWindow", "Show all SQL queries of specified type by the machine"))
         self.appSQLTextEdit.setPlaceholderText(_translate("MainWindow", "One type per line (eg. SELECT, UPDATE)"))
@@ -547,8 +547,8 @@ class Ui_MainWindow(object):
         item = self.notificationsTableWidget.horizontalHeaderItem(1)
         item.setText(_translate("MainWindow", "Alert name"))
         item = self.notificationsTableWidget.horizontalHeaderItem(2)
-        item.setText(_translate("MainWindow", "Metric"))
-        item = self.notificationsTableWidget.horizontalHeaderItem(3)
         item.setText(_translate("MainWindow", "File name"))
+        item = self.notificationsTableWidget.horizontalHeaderItem(3)
+        item.setText(_translate("MainWindow", "Details"))
         self.mainTabWidget.setTabText(self.mainTabWidget.indexOf(self.notificationsTab), _translate("MainWindow", "Notifications"))
         self.mainTabWidget.setTabText(self.mainTabWidget.indexOf(self.anomaliesTab), _translate("MainWindow", "Anomalies"))

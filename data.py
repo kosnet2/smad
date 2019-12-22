@@ -44,8 +44,7 @@ class Data:
 
 	def addMonitor(self, name):
 		commandDict = self.sysdig_commands.getCommand(name)
-		monitor = Monitor(commandDict['command'], commandDict['metricType'])
-		self.monitors[name] = monitor
+		self.monitors[name] = Monitor(commandDict['command'], commandDict['metricType'])
 
 		# Add existing alerts to new monitor
 		for alert in self.alerts:

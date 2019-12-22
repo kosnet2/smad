@@ -1,6 +1,6 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
-from utilities import Utilities as utils
 from sysdig_thread import SysdigThread
+import utilities as utils
 
 class Listeners:
     def __init__(self, ui, data):
@@ -57,7 +57,7 @@ class Listeners:
                     self.ui.alertsMetricUnitComboBox.addItem('μs')
                     self.ui.alertsMetricUnitComboBox.addItem('m')
                 elif metricType == 'number':
-                    self.ui.alertsMetricUnitComboBox.setEnabled(False)
+                    self.ui.alertsMetricUnitComboBox.addItem('Errors')
                 elif metricType == 'size':
                     self.ui.alertsMetricUnitComboBox.addItem('B')
                     self.ui.alertsMetricUnitComboBox.addItem('KB')
@@ -78,7 +78,6 @@ class Listeners:
             metrics += str(self.ui.alertsMetricValueSpinBox.value()) + ' '
             metrics += self.ui.alertsMetricUnitComboBox.currentText()
         
-        print(metrics)
         # Get notifications
         notificationsChecked = any([self.ui.alertsEmailGroupBox.isChecked(),
                                     self.ui.alertsNotifyCheckBox.isChecked()])
@@ -486,7 +485,7 @@ class Listeners:
                 monitor = self.data.monitors[name]
                 
                 # Start sysdig
-                self.threads[name] = SysdigThread(name, monitor)
+                self.threads[name] = SysdigThread(name, monitor, self.ui)
                 self.threads[name].start()
                 
                 self.ui.alertsChooseMonitorComboBox.addItem(name)

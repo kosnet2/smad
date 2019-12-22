@@ -26,6 +26,7 @@
 
 ## Tested on
 * [Kali Linux](https://www.kali.org/)
+* [Ubuntu 19.04](http://releases.ubuntu.com/19.04/)
 
 ## Tool details
 
