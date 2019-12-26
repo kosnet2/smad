@@ -23,11 +23,6 @@ class Data:
 		self.sysdig_commands = SysdigCommands()
 		self.monitors = {}
 		self.alerts = []
-		
-	def saveData(self):
-		# Save monitors to file
-		with open('resources/monitors.txt', 'w+') as f:
-			f.write('\n'.join([monitor for monitor in self.monitors]))
 
 	def getSavedMonitors(self):
 		try:

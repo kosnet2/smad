@@ -15,7 +15,7 @@ def getValidMonitors(text, name, argType):
         # Validate linux commands
         if argType == 'process':
             # Protection against command injection
-            if re.match('[&|;#$]', line):
+            if re.search('[&|;#$]', line):
                 return False
 
             stream = os.popen('command -v ' + line)
@@ -45,7 +45,7 @@ def getValidMonitors(text, name, argType):
         # Validate directory exists                 
         elif argType == 'dir':
             # Protection against command injection
-            if re.match('[&|;#$]', line):
+            if re.search('[&|;#$]', line):
                 return False
 
             stream = os.popen('test -d '+ line +' && echo "yeap" || echo "nope"')
@@ -71,7 +71,7 @@ def getValidMonitors(text, name, argType):
     for line in lines:
         line = line.strip()
         if line != '' and isValidArgType(argType, line):
-            validMonitors.append(name + line)        
+            validMonitors.append(name + line)
         else:
             invalidMonitors.append(name + line)
             

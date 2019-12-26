@@ -2,6 +2,7 @@ from PyQt5 import QtWidgets
 import datetime
 import threading
 import subprocess
+import select
 import shlex
 import os
 import re
@@ -22,26 +23,30 @@ class SysdigThread(threading.Thread):
 
     def run(self):
         process = subprocess.Popen(shlex.split(self.monitor.command), stdout=subprocess.PIPE)
+        poll_obj = select.poll()
+        poll_obj.register(process.stdout, select.POLLIN)   
         while True:
             if self.stopped():
                 process.kill()
                 os.wait()
                 break
-            output = process.stdout.readline()
-            if output == '' and process.poll() is not None:
-                break
-            if output:
-                line = output.strip().decode('utf-8')
-                if line[0].isdigit() and len(self.monitor.alerts):
-                    if self.monitor.metricType == 'number' or self.monitor.metricType == 'percentage':
-                        self.checkNumberMetric(self.getValues(line))
-                    elif self.monitor.metricType == 'time':
-                        self.checkTimeMetric(self.getValues(line))
-                    elif self.monitor.metricType == 'size':
-                        self.checkSizeMetric(self.getValues(line))
+            if poll_obj.poll(0):
+                output = process.stdout.readline()
+                if output == '' and process.poll() is not None:
+                    break
+
+                if output:
+                    line = output.strip().decode('utf-8')
+                    if line[0].isdigit() and len(self.monitor.alerts):
+                        if self.monitor.metricType == 'number' or self.monitor.metricType == 'percentage':
+                            self.checkNumberMetric(self.getValues(line))
+                        elif self.monitor.metricType == 'time':
+                            self.checkTimeMetric(self.getValues(line))
+                        elif self.monitor.metricType == 'size':
+                            self.checkSizeMetric(self.getValues(line))
             rc = process.poll()
 
-    def stop(self):	
+    def stop(self):
         self._stop_event.set()
 
     def stopped(self):

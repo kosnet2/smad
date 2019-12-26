@@ -2,7 +2,6 @@ from listeners import Listeners
 from data import Data
 from sad_ui import QtWidgets, Ui_MainWindow
 import sys
-import atexit
 
 def updateMonitorsUI(savedMonitors):
     for monitor in savedMonitors:
@@ -85,7 +84,6 @@ if __name__ == '__main__':
 
     # Load data
     data = Data()
-    atexit.register(data.saveData)
 
     # Update UI
     updateMonitorsUI(data.getSavedMonitors())
@@ -93,5 +91,8 @@ if __name__ == '__main__':
     # Set up listeners
     listeners = Listeners(ui, data)
 
+    # Set close event listener
+    MainWindow.closeEvent = listeners.stopApplication
+    
     MainWindow.showMaximized()
     sys.exit(app.exec_())

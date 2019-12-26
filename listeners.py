@@ -9,6 +9,16 @@ class Listeners:
         self.registerListeners()
         self.threads = {}
     
+    def stopApplication(self, event):
+		# Save monitors to file
+        with open('resources/monitors.txt', 'w+') as f:
+            f.write('\n'.join([monitor for monitor in self.data.monitors]))
+
+        # Stop current threads
+        for thread in self.threads:
+            self.threads[thread].stop()
+            self.threads[thread].join()
+
     def registerListeners(self):
         # Monitors Button Listeners
         self.ui.cpuStartMonitorsPushButton.clicked.connect(lambda: self.startProcessMonitors())
