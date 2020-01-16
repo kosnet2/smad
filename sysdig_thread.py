@@ -1,3 +1,4 @@
+from sysdig_commands import SysdigCommands
 from PyQt5 import QtWidgets
 import datetime
 import threading
@@ -10,6 +11,7 @@ import re
 class SysdigThread(threading.Thread):
     def __init__(self, name, monitor, ui):
         super(SysdigThread, self).__init__()
+        self.sysdig_commands = SysdigCommands()
         self.ui = ui
         self.name = name
         self.monitor = monitor
@@ -76,6 +78,8 @@ class SysdigThread(threading.Thread):
             if (op == '<' and value < threshold) or (op == '>' and value > threshold) or (op == '=' and value == threshold):
                 rowValues = [str(datetime.datetime.now()), alert.name, '-', details]
                 self.addNotification(rowValues)
+                if alert.seconds:
+                    self.capture(alert.seconds, alert.filename)
 
     def checkTimeMetric(self, values):
         time, source = values
@@ -97,6 +101,8 @@ class SysdigThread(threading.Thread):
             if (op == '<' and time < value) or (op == '>' and time > value) or (op == '=' and time == value):
                 rowValues = [str(datetime.datetime.now()), alert.name, '-', details]
                 self.addNotification(rowValues)
+                if alert.seconds:
+                    self.capture(alert.seconds, alert.filename)
 
     def checkSizeMetric(self, values):
         if len(values) == 2:
@@ -125,8 +131,15 @@ class SysdigThread(threading.Thread):
             if (op == '<' and size < value) or (op == '>' and size > value) or (op == '=' and size == value):
                 rowValues = [str(datetime.datetime.now()), alert.name, '-', details]
                 self.addNotification(rowValues)
+                if alert.seconds:
+                    self.capture(alert.seconds, alert.filename)
 
     def addNotification(self, values):
         self.ui.notificationsTableWidget.insertRow(0)
         for i in range(self.ui.notificationsTableWidget.columnCount()):
             self.ui.notificationsTableWidget.setItem(0, i, QtWidgets.QTableWidgetItem(values[i]))
+
+    def capture(self, seconds, filename):
+        command = self.sysdig_commands.getCommand('capture')['command']
+        command += f' -M {seconds}'
+        subprocess.run(args=shlex.split(command), stdout=open(f'resources/{filename}', 'a+'))

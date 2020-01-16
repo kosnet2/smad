@@ -25,7 +25,7 @@
       </property>
       <widget class="QWidget" name="homeTab">
        <attribute name="title">
-        <string>Home</string>
+        <string>Monitors</string>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_3">
         <item>
@@ -77,7 +77,7 @@
                   <bool>true</bool>
                  </property>
                  <property name="title">
-                  <string>Show stdout for given processes (&quot;all&quot; for all processes)</string>
+                  <string>Show stdout for given processes</string>
                  </property>
                  <property name="checkable">
                   <bool>true</bool>
@@ -193,7 +193,7 @@ p, li { white-space: pre-wrap; }
                <item>
                 <widget class="QGroupBox" name="errorsFileOpensGroupBox">
                  <property name="title">
-                  <string>Show all failed file opens by given processes (&quot;all&quot; for all processes)</string>
+                  <string>Show all failed file opens by given processes</string>
                  </property>
                  <property name="checkable">
                   <bool>true</bool>
@@ -795,44 +795,6 @@ p, li { white-space: pre-wrap; }
             </widget>
            </item>
            <item>
-            <widget class="QGroupBox" name="alertsNotifyGroupBox">
-             <property name="title">
-              <string>Notify</string>
-             </property>
-             <layout class="QGridLayout" name="gridLayout_6">
-              <item row="1" column="0">
-               <widget class="QCheckBox" name="alertsNotifyCheckBox">
-                <property name="text">
-                 <string>Display alert to notifications tab</string>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="0">
-               <widget class="QGroupBox" name="alertsEmailGroupBox">
-                <property name="title">
-                 <string>Send alert to email</string>
-                </property>
-                <property name="checkable">
-                 <bool>true</bool>
-                </property>
-                <layout class="QVBoxLayout" name="verticalLayout_21">
-                 <item>
-                  <widget class="QTextEdit" name="alertsEmailTextEdit">
-                   <property name="sizeAdjustPolicy">
-                    <enum>QAbstractScrollArea::AdjustToContents</enum>
-                   </property>
-                   <property name="placeholderText">
-                    <string>email@email.com</string>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </widget>
-              </item>
-             </layout>
-            </widget>
-           </item>
-           <item>
             <widget class="QPushButton" name="alertsSaveAlertPushButton">
              <property name="text">
               <string>Save alert</string>
@@ -916,11 +878,6 @@ p, li { white-space: pre-wrap; }
          </widget>
         </item>
        </layout>
-      </widget>
-      <widget class="QWidget" name="anomaliesTab">
-       <attribute name="title">
-        <string>Anomalies</string>
-       </attribute>
       </widget>
      </widget>
     </item>

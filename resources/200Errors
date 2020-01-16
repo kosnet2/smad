@@ -1,0 +1,64 @@
+1778 18:14:53.287810289 2 in:imuxsock (745) < select res=1 
+1779 18:14:53.287815721 2 in:imuxsock (745) > recvmsg fd=3(<u>/run/systemd/journal/syslog) 
+1780 18:14:53.287819939 2 in:imuxsock (745) < recvmsg res=973 size=973 data=<85>Jan 16 18:14:53 sudo:     root : TTY=pts/1 ; PWD=/home/basel/Desktop/sad ; U tuple=NULL 
+1782 18:14:53.287835960 2 in:imuxsock (745) > futex addr=558D703B5084 op=129(FUTEX_PRIVATE_FLAG|FUTEX_WAKE) val=1 
+1783 18:14:53.287842513 2 in:imuxsock (745) < futex res=1 
+1784 18:14:53.287844402 2 in:imuxsock (745) > select 
+1785 18:14:53.287846148 2 in:imuxsock (745) < select res=1 
+1786 18:14:53.287847351 2 in:imuxsock (745) > recvmsg fd=3(<u>/run/systemd/journal/syslog) 
+1788 18:14:53.287849189 2 in:imuxsock (745) < recvmsg res=87 size=87 data=<85>Jan 16 18:14:53 sudo:     root : (command continued) proc.name!=QXcbEventQue tuple=NULL 
+1789 18:14:53.287851076 3 rs:main (747) < futex res=0 
+1790 18:14:53.287853317 2 in:imuxsock (745) > select 
+1791 18:14:53.287854254 2 in:imuxsock (745) < select res=1 
+1792 18:14:53.287855312 2 in:imuxsock (745) > recvmsg fd=3(<u>/run/systemd/journal/syslog) 
+1793 18:14:53.287855686 3 rs:main (747) > futex addr=558D703B0060 op=129(FUTEX_PRIVATE_FLAG|FUTEX_WAKE) val=1 
+1794 18:14:53.287856809 2 in:imuxsock (745) < recvmsg res=89 size=89 data=<86>Jan 16 18:14:53 sudo: pam_unix(sudo:session): session opened for user root b tuple=NULL 
+1795 18:14:53.287856824 3 rs:main (747) < futex res=0 
+1796 18:14:53.287860638 2 in:imuxsock (745) > select 
+1797 18:14:53.287868945 3 rs:main (747) > write fd=9(<f>/var/log/auth.log) size=1062 
+1800 18:14:53.287954910 3 rs:main (747) < write res=1062 data=Jan 16 18:14:53 bzs sudo:     root : TTY=pts/1 ; PWD=/home/basel/Desktop/sad ; U 
+1801 18:14:53.287964745 3 rs:main (747) > write fd=9(<f>/var/log/auth.log) size=90 
+1802 18:14:53.287972288 3 rs:main (747) < write res=90 data=Jan 16 18:14:53 bzs sudo: pam_unix(sudo:session): session opened for user root b 
+1804 18:14:53.287974790 3 rs:main (747) > futex addr=558D703B5080 op=128(FUTEX_PRIVATE_FLAG) val=0 
+4010 18:15:01.417158826 3 cron (811) < nanosleep res=0 
+4011 18:15:01.417174470 3 cron (811) > stat 
+4012 18:15:01.417198939 3 cron (811) < stat res=0 path=/etc/localtime 
+4013 18:15:01.417208431 3 cron (811) > stat 
+4014 18:15:01.417212779 3 cron (811) < stat res=0 path=crontabs(/var/spool/cron/crontabs) 
+4015 18:15:01.417216321 3 cron (811) > stat 
+4016 18:15:01.417219686 3 cron (811) < stat res=0 path=/etc/crontab 
+4017 18:15:01.417223247 3 cron (811) > stat 
+4018 18:15:01.417225994 3 cron (811) < stat res=0 path=/etc/cron.d 
+4019 18:15:01.417235803 3 cron (811) > stat 
+4020 18:15:01.417239686 3 cron (811) < stat res=0 path=/etc/cron.d/popularity-contest 
+4021 18:15:01.417245776 3 cron (811) > stat 
+4022 18:15:01.417249086 3 cron (811) < stat res=0 path=/etc/cron.d/anacron 
+4023 18:15:01.417254623 3 cron (811) > nanosleep interval=60000000000(60s) 
+4197 18:15:01.488077253 0 ssh-agent (1565) < poll res=0 fds= 
+4198 18:15:01.488092887 0 ssh-agent (1565) > getppid 
+4199 18:15:01.488096141 0 ssh-agent (1565) < getppid 
+4200 18:15:01.488100538 0 ssh-agent (1565) > clock_gettime 
+4201 18:15:01.488103946 0 ssh-agent (1565) < clock_gettime 
+4202 18:15:01.488108237 0 ssh-agent (1565) > clock_gettime 
+4203 18:15:01.488109505 0 ssh-agent (1565) < clock_gettime 
+4204 18:15:01.488112612 0 ssh-agent (1565) > poll fds=3:u1 timeout=10000 
+3181 18:15:11.498234430 0 ssh-agent (1565) < poll res=0 fds= 
+3182 18:15:11.498245777 0 ssh-agent (1565) > getppid 
+3183 18:15:11.498248848 0 ssh-agent (1565) < getppid 
+3184 18:15:11.498252228 0 ssh-agent (1565) > clock_gettime 
+3185 18:15:11.498255115 0 ssh-agent (1565) < clock_gettime 
+3186 18:15:11.498258141 0 ssh-agent (1565) > clock_gettime 
+3187 18:15:11.498259001 0 ssh-agent (1565) < clock_gettime 
+3188 18:15:11.498261075 0 ssh-agent (1565) > poll fds=3:u1 timeout=10000 
+10054 18:15:14.710756112 1 in:imuxsock (745) < select res=1 
+10055 18:15:14.710761038 1 in:imuxsock (745) > recvmsg fd=3(<u>/run/systemd/journal/syslog) 
+10056 18:15:14.710765719 1 in:imuxsock (745) < recvmsg res=151 size=151 data=<12>Jan 16 18:15:14 org.gnome.Shell.desktop[1609]: Window manager warning: Inval tuple=NULL 
+10057 18:15:14.710777024 1 in:imuxsock (745) > futex addr=558D703B5080 op=129(FUTEX_PRIVATE_FLAG|FUTEX_WAKE) val=1 
+10058 18:15:14.710783562 1 in:imuxsock (745) < futex res=1 
+10059 18:15:14.710785057 1 in:imuxsock (745) > select 
+10075 18:15:14.710844896 0 rs:main (747) < futex res=0 
+10076 18:15:14.710848541 0 rs:main (747) > futex addr=558D703B0060 op=129(FUTEX_PRIVATE_FLAG|FUTEX_WAKE) val=1 
+10078 18:15:14.710849306 0 rs:main (747) < futex res=0 
+10084 18:15:14.710858590 0 rs:main (747) > write fd=7(<f>/var/log/syslog) size=152 
+10104 18:15:14.710873176 0 rs:main (747) < write res=152 data=Jan 16 18:15:14 bzs org.gnome.Shell.desktop[1609]: Window manager warning: Inval 
+10106 18:15:14.710876315 0 rs:main (747) > futex addr=558D703B5084 op=128(FUTEX_PRIVATE_FLAG) val=0 
