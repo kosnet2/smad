@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'sad_ui.ui'
+# Form implementation generated from reading ui file 'smad_ui.ui'
 #
 # Created by: PyQt5 UI code generator 5.14.0
 #
@@ -504,8 +504,8 @@ class Ui_MainWindow(object):
         self.alertsChooseMonitorLabel.setText(_translate("MainWindow", "Choose monitor"))
         self.alertsSetMetricLabel.setText(_translate("MainWindow", "Set metric"))
         self.alertsMetricDescription.setText(_translate("MainWindow", "Metric"))
-        self.alertsMetricOperationComboBox.setItemText(0, _translate("MainWindow", "<"))
-        self.alertsMetricOperationComboBox.setItemText(1, _translate("MainWindow", ">"))
+        self.alertsMetricOperationComboBox.setItemText(0, _translate("MainWindow", ">"))
+        self.alertsMetricOperationComboBox.setItemText(1, _translate("MainWindow", "<"))
         self.alertsMetricOperationComboBox.setItemText(2, _translate("MainWindow", "="))
         self.alertsActionGroupBox.setTitle(_translate("MainWindow", "Action"))
         self.alertsCaptureGroupBox.setTitle(_translate("MainWindow", "Set up capture"))

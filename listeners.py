@@ -88,23 +88,6 @@ class Listeners:
             metrics += str(self.ui.alertsMetricValueSpinBox.value()) + ' '
             metrics += self.ui.alertsMetricUnitComboBox.currentText()
         
-        # Get notifications
-        notificationsChecked = any([self.ui.alertsEmailGroupBox.isChecked(),
-                                    self.ui.alertsNotifyCheckBox.isChecked()])
-    
-        if not notificationsChecked:
-            utils.showMessageBox('Please select at least one notification field', 'Error', QtWidgets.QMessageBox.Critical)
-            return
-        
-        email = ''
-        if self.ui.alertsEmailGroupBox.isChecked():
-            email = self.ui.alertsEmailTextEdit.toPlainText().strip()
-            if len(email) == 0:
-                utils.showMessageBox('Email field must not be empty', 'Error', QtWidgets.QMessageBox.Critical)
-                return
-
-        notifications = self.ui.alertsNotifyCheckBox.isChecked()
-        
         # Get capture details
         captureTime = 0
         captureFilename = ''
@@ -117,16 +100,15 @@ class Listeners:
                 return
 
         if self.ui.alertsListListWidget.findItems(alert, QtCore.Qt.MatchExactly):
-            self.data.editAlert(alert, monitor, metrics, notifications, email, captureTime, captureFilename)
+            self.data.editAlert(alert, monitor, metrics, captureTime, captureFilename)
             utils.showMessageBox('Alert has been edited!', 'Success', QtWidgets.QMessageBox.Information)
         else:
             self.ui.alertsListListWidget.addItem(alert)
-            self.data.addAlert(alert, monitor, metrics, notifications, email, captureTime, captureFilename)
+            self.data.addAlert(alert, monitor, metrics, captureTime, captureFilename)
             utils.showMessageBox('Alert has been added!', 'Success', QtWidgets.QMessageBox.Information)
         
         # Reset UI
         self.ui.alertsAlertNameTextEdit.setText('')
-        self.ui.alertsEmailTextEdit.setText('')
         self.ui.alertsFileNameTextEdit.setText('')
         
         # Sysdig
@@ -176,12 +158,6 @@ class Listeners:
             idx = self.ui.alertsMetricUnitComboBox.findText(un)
             self.ui.alertsMetricUnitComboBox.setCurrentIndex(idx)
             
-        self.ui.alertsNotifyCheckBox.setChecked(alert.notifications)
-        if alert.email != '':
-            self.ui.alertsEmailGroupBox.setChecked(True)
-            self.ui.alertsEmailTextEdit.setText(alert.email)
-        else:
-            self.ui.alertsEmailGroupBox.setChecked(False)
         if alert.seconds > 0:
             self.ui.alertsCaptureGroupBox.setChecked(True)
             self.ui.alertsCaptureDurationSpinBox.setValue(alert.seconds)

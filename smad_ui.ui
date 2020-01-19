@@ -705,12 +705,12 @@ p, li { white-space: pre-wrap; }
                    </property>
                    <item>
                     <property name="text">
-                     <string>&lt;</string>
+                     <string>&gt;</string>
                     </property>
                    </item>
                    <item>
                     <property name="text">
-                     <string>&gt;</string>
+                     <string>&lt;</string>
                     </property>
                    </item>
                    <item>

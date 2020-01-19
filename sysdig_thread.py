@@ -38,14 +38,18 @@ class SysdigThread(threading.Thread):
                     break
 
                 if output:
-                    line = output.strip().decode('utf-8')
-                    if line[0].isdigit() and len(self.monitor.alerts):
-                        if self.monitor.metricType == 'number' or self.monitor.metricType == 'percentage':
-                            self.checkNumberMetric(self.getValues(line))
-                        elif self.monitor.metricType == 'time':
-                            self.checkTimeMetric(self.getValues(line))
-                        elif self.monitor.metricType == 'size':
-                            self.checkSizeMetric(self.getValues(line))
+                    if self.monitor.metricType == 'none':
+                        with open(f'smad_captures/none-metric-monitors/{self.monitor.name}', 'ab+') as f:
+                            f.write(output)
+                    else:
+                        line = output.strip().decode('utf-8')
+                        if line[0].isdigit() and len(self.monitor.alerts):
+                            if self.monitor.metricType == 'number' or self.monitor.metricType == 'percentage':
+                                self.checkNumberMetric(self.getValues(line))
+                            elif self.monitor.metricType == 'time':
+                                self.checkTimeMetric(self.getValues(line))
+                            elif self.monitor.metricType == 'size':
+                                self.checkSizeMetric(self.getValues(line))
             rc = process.poll()
 
     def stop(self):
@@ -76,10 +80,7 @@ class SysdigThread(threading.Thread):
             op, threshold, unit = alert.metrics.split(' ')
             threshold = float(threshold)
             if (op == '<' and value < threshold) or (op == '>' and value > threshold) or (op == '=' and value == threshold):
-                rowValues = [str(datetime.datetime.now()), alert.name, '-', details]
-                self.addNotification(rowValues)
-                if alert.seconds:
-                    self.capture(alert.seconds, alert.filename)
+                self.addNotification(alert, details)
 
     def checkTimeMetric(self, values):
         time, source = values
@@ -99,10 +100,7 @@ class SysdigThread(threading.Thread):
             op, value, unit = alert.metrics.split(' ')
             value = float(value) * self.time_dict[unit]
             if (op == '<' and time < value) or (op == '>' and time > value) or (op == '=' and time == value):
-                rowValues = [str(datetime.datetime.now()), alert.name, '-', details]
-                self.addNotification(rowValues)
-                if alert.seconds:
-                    self.capture(alert.seconds, alert.filename)
+                self.addNotification(alert, details)
 
     def checkSizeMetric(self, values):
         if len(values) == 2:
@@ -129,17 +127,17 @@ class SysdigThread(threading.Thread):
             op, value, unit = alert.metrics.split(' ')
             value = float(value) * self.size_dict[unit]
             if (op == '<' and size < value) or (op == '>' and size > value) or (op == '=' and size == value):
-                rowValues = [str(datetime.datetime.now()), alert.name, '-', details]
-                self.addNotification(rowValues)
-                if alert.seconds:
-                    self.capture(alert.seconds, alert.filename)
+                self.addNotification(alert, details)
 
-    def addNotification(self, values):
+    def addNotification(self, alert, details):
+        values = [str(datetime.datetime.now()), alert.name, alert.filename, details]
         self.ui.notificationsTableWidget.insertRow(0)
         for i in range(self.ui.notificationsTableWidget.columnCount()):
             self.ui.notificationsTableWidget.setItem(0, i, QtWidgets.QTableWidgetItem(values[i]))
+        if alert.seconds:
+            self.capture(alert.seconds, alert.filename)
 
     def capture(self, seconds, filename):
         command = self.sysdig_commands.getCommand('capture')['command']
         command += f' -M {seconds}'
-        subprocess.run(args=shlex.split(command), stdout=open(f'resources/{filename}', 'a+'))
+        subprocess.run(args=shlex.split(command), stdout=open(f'smad_captures/{filename}', 'a+'))

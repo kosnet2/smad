@@ -2,21 +2,20 @@ from sysdig_commands import SysdigCommands
 
 # File responsible for handling application data
 class Monitor:
-	def __init__(self, command, metricType):
+	def __init__(self, command, metricType, name):
 		self.command = command
 		self.metricType = metricType
 		self.alerts = []
+		self.name = name
 
 # Defines an alert set by the user on a specific Monitor
 class Alert:
-    def __init__(self, name, monitor, metrics, notifications, email, seconds, filename):
-        self.name = name
-        self.monitor = monitor
-        self.metrics = metrics
-        self.email = email
-        self.notifications = notifications
-        self.seconds = seconds
-        self.filename = filename
+	def __init__(self, name, monitor, metrics, seconds, filename):
+		self.name = name
+		self.monitor = monitor
+		self.metrics = metrics
+		self.seconds = seconds
+		self.filename = filename
 
 class Data:
 	def __init__(self):
@@ -39,15 +38,15 @@ class Data:
 
 	def addMonitor(self, name):
 		commandDict = self.sysdig_commands.getCommand(name)
-		self.monitors[name] = Monitor(commandDict['command'], commandDict['metricType'])
+		self.monitors[name] = Monitor(commandDict['command'], commandDict['metricType'], name)
 
 		# Add existing alerts to new monitor
 		for alert in self.alerts:
 			if alert.monitor == name:
 				self.monitors[name].alerts.append(alert)
 
-	def addAlert(self, name, monitor, metrics, notifications=False, email='', seconds=0, filename=''):
-		alert = Alert(name, monitor, metrics, notifications, email, seconds, filename)
+	def addAlert(self, name, monitor, metrics, seconds=0, filename=''):
+		alert = Alert(name, monitor, metrics, seconds, filename)
 		self.alerts.append(alert)
 		self.monitors[monitor].alerts.append(alert)
 

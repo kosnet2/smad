@@ -1,6 +1,6 @@
 from listeners import Listeners
 from data import Data
-from sad_ui import QtWidgets, Ui_MainWindow
+from smad_ui import QtWidgets, Ui_MainWindow
 import sys
 
 def updateMonitorsUI(savedMonitors):
