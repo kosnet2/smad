@@ -32,17 +32,24 @@ class SysdigThread(threading.Thread):
                 process.kill()
                 os.wait()
                 break
-            if poll_obj.poll(0):
+            if poll_obj.poll(0): # Check if thread has output
                 output = process.stdout.readline()
                 if output == '' and process.poll() is not None:
                     break
 
                 if output:
                     if self.monitor.metricType == 'none':
-                        with open(f'smad_captures/none-metric-monitors/{self.monitor.name}', 'ab+') as f:
+                        # Save directly to file if monitor has no metrics
+                        filename = self.monitor.name.replace('/', '')
+                        with open(f'smad_captures/none-metric-monitors/{filename}', 'ab+') as f:
                             f.write(output)
+
+                            # Check for alerts with capture
+                            for alert in self.monitor.alerts:
+                            	if alert.seconds:
+                            		self.capture(alert.seconds, alert.filename)
                     else:
-                        line = output.strip().decode('utf-8')
+                        line = output.strip().decode('utf-8') # Convert bytes to string
                         if line[0].isdigit() and len(self.monitor.alerts):
                             if self.monitor.metricType == 'number' or self.monitor.metricType == 'percentage':
                                 self.checkNumberMetric(self.getValues(line))
