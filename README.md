@@ -1,6 +1,4 @@
-# ![](resources/sad-logo.png)
-
-*Server Anomaly Detection*
+*Server Monitoring and Anomaly Detection*
 
 ## Authors
 * **Basel Sababa** — Full-stack Developer, Cyber Security — [mrbzs](https://github.com/mrbzs)
@@ -9,7 +7,7 @@
 * **Copyright** — The tool is prepared in the context of a Final Year Project for [University Of Nicosia](https://www.unic.ac.cy/) 
 
 ## Description
-* Server Anomaly Detection tool, that supports monitoring real-time systems on various levels.
+* SMAD supports monitoring real-time systems on various levels.
 * Users can set up custom monitors and alerts, and get insights based on metrics.
 * Good for system administrators, network/data analysts to easily identify questionable behavior in monitored servers.
 
@@ -25,9 +23,11 @@
 * [Bash](https://www.gnu.org/software/bash/) — DevOPS
 
 ## Tested on
-* [Kali Linux](https://www.kali.org/)
+* [Ubuntu 18.04](http://releases.ubuntu.com/18.04/)
 * [Ubuntu 19.04](http://releases.ubuntu.com/19.04/)
+* [Kali Linux](https://www.kali.org/)
 
-## Tool details
-
-## How to make it work
+## TODO:
+* Installation
+* Running SMAD
+* Future work
