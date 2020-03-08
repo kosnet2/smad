@@ -1,0 +1,11 @@
+#!/bin/sh
+
+curl -s https://s3.amazonaws.com/download.draios.com/DRAIOS-GPG-KEY.public | sudo apt-key add -  
+
+sudo curl -s -o /etc/apt/sources.list.d/draios.list https://s3.amazonaws.com/download.draios.com/stable/deb/draios.list  
+
+sudo apt-get update -y
+
+sudo apt-get -y install linux-headers-$(uname -r)
+
+sudo apt-get -y install sysdig
