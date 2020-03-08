@@ -1,5 +1,6 @@
 from sysdig_commands import SysdigCommands
 from PyQt5 import QtWidgets
+import sys
 import datetime
 import threading
 import subprocess
@@ -7,6 +8,8 @@ import select
 import shlex
 import os
 import re
+
+import time
 
 class SysdigThread(threading.Thread):
     def __init__(self, name, monitor, ui):
@@ -18,7 +21,9 @@ class SysdigThread(threading.Thread):
         self._stop_event = threading.Event()
         self.time_dict = {'ps': 10 ** -6, 'ns': 10 ** -3, 'μs': 1, 'us' : 1, 'ms': 10 ** 3, 's': 10 ** 6, 'm': 60 * (10 ** 6)}
         self.size_dict = {'B': 1, 'KB': 2 ** 10, 'MB': 2 ** 20, 'GB': 2 ** 30, 'TB': 2 ** 40, 'PB': 2 ** 50}
-    
+        # Visualization
+        self.is_plotting = False
+
     def getValues(self, line):
         res = re.findall(r'[\S]+', line)
         return res if len(res) < 3 else [res[0], ' '.join(res[1:-1]), res[-1]]
@@ -57,7 +62,23 @@ class SysdigThread(threading.Thread):
                                 self.checkTimeMetric(self.getValues(line))
                             elif self.monitor.metricType == 'size':
                                 self.checkSizeMetric(self.getValues(line))
+                        if line[0].isdigit() and self.is_plotting:
+                            timestamp=int(round(time.time()*1000))
+                            diff = timestamp - self.timestamp
+                            if len(self.ui.data_x) >= len(self.ui.data_y):
+                                values = self.getValues(line)
+                                self.ui.data_y.append(float(values[0][:-1]))
+                                self.timestamp = timestamp
+
+
             rc = process.poll()
+
+    def stopPlot(self):
+        self.is_plotting = False
+
+    def startPlot(self):
+        self.is_plotting = True
+        self.timestamp=int(round(time.time()*1000))
 
     def stop(self):
         self._stop_event.set()
@@ -66,7 +87,7 @@ class SysdigThread(threading.Thread):
         return self._stop_event.is_set()
 
     def checkNumberMetric(self, values):
-        if self.name == 'cpu_top_processes':
+        if self.name.startswith('cpu_top_processes'):
             value, processName, pid = values
             details = f'{value} from process {processName} ({pid})'
             value = float(value[:-1])
@@ -88,7 +109,7 @@ class SysdigThread(threading.Thread):
             threshold = float(threshold)
             if (op == '<' and value < threshold) or (op == '>' and value > threshold) or (op == '=' and value == threshold):
                 self.addNotification(alert, details)
-
+        
     def checkTimeMetric(self, values):
         time, source = values
         if time[-2].isdigit():

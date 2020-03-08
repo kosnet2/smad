@@ -10,6 +10,47 @@ def showMessageBox(message, title, icon=QtWidgets.QMessageBox.Critical):
     msg.setWindowTitle(title)
     msg.exec_()
 
+def getValidRules(text, name, argType):
+    def isValidArgType(argType, line):
+        if argType == 'process':
+            # Protection against command injection
+            if re.search('[&|;#$]', line):
+                return False
+            stream = os.popen('command -v ' + line)
+            if stream.read() == '':
+                return False
+        elif argType == 'ip':
+            validIpAddressRegex = "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$"
+            if not re.match(validIpAddressRegex, line):
+                return False
+        elif argType == 'user':
+            # Protection against command injection
+            if re.match('[&|;#$]', line):
+                return False
+        elif argType == 'dir':
+            # Protection against command injection
+            if re.search('[&|;#$]', line):
+                return False
+            stream = os.popen('test -d '+ line +' && echo "yeap" || echo "nope"')
+            output = stream.read()
+            if 'nope' in output:
+                return False
+
+        return True
+
+    # split multiline
+    validRules = []
+    invalidRules = []
+    lines = text.split('\n')
+    for line in lines:
+        line = line.strip()
+        if line != '' and isValidArgType(argType, line):
+            validRules.append(name + line)
+        else:
+            invalidRules.append(name + line)
+
+    return (validRules, invalidRules)
+
 def getValidMonitors(text, name, argType):
     def isValidArgType(argType, line):
         # Validate linux commands
@@ -19,8 +60,7 @@ def getValidMonitors(text, name, argType):
                 return False
 
             stream = os.popen('command -v ' + line)
-            output = stream.read()
-            if output == '':
+            if stream.read() == '':
                 return False
         # Validate ip addresses
         elif argType == 'ip':
