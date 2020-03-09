@@ -2,6 +2,15 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from glob import glob
 import os
 import re
+import datetime
+
+UNIX_EPOCH = datetime.datetime(1970, 1, 1, 0, 0)
+
+def now_timestamp():
+    return(int((datetime.datetime.now() - UNIX_EPOCH).total_seconds() * 1e6))
+
+def int2dt(ts):
+    return(datetime.datetime.utcfromtimestamp(float(ts)/1e6))
 
 def showMessageBox(message, title, icon=QtWidgets.QMessageBox.Critical):
     msg = QtWidgets.QMessageBox()

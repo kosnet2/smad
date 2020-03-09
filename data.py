@@ -1,4 +1,5 @@
 from sysdig_commands import SysdigCommands
+from collections import deque
 
 # File responsible for handling application data
 class Monitor:
@@ -7,6 +8,7 @@ class Monitor:
 		self.metricType = metricType
 		self.alerts = []
 		self.name = name
+#		self.plot = MonitorPlot()
 
 # Defines an alert set by the user on a specific Monitor
 class Alert:
