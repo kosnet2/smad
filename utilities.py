@@ -4,13 +4,35 @@ import os
 import re
 import datetime
 
+""" PLOTTING """
+import sys
+import numpy as np
+from PyQt5.QtCore import QTime, QTimer
+from pyqtgraph.Qt import QtGui, QtCore
+import pyqtgraph as pg
+from collections import deque
+import pytz
 UNIX_EPOCH = datetime.datetime(1970, 1, 1, 0, 0)
 
-def now_timestamp():
-    return(int((datetime.datetime.now() - UNIX_EPOCH).total_seconds() * 1e6))
+# Function to get current UNIX_EPOCH to avoid calling datetime all the time
+def getUnixEpoch():
+    return UNIX_EPOCH
 
+# Get current timestamp 
+def now_timestamp():
+    return(int((datetime.datetime.now() - getUnixEpoch()).total_seconds() * 1e6))
+
+# Get time in seconds
 def int2dt(ts):
     return(datetime.datetime.utcfromtimestamp(float(ts)/1e6))
+
+# Custom time axis for showing timestamps
+class TimeAxisItem(pg.AxisItem):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def tickStrings(self, values, scale, spacing):
+        return [int2dt(value).strftime("%H:%M:%S") for value in values]
 
 def showMessageBox(message, title, icon=QtWidgets.QMessageBox.Critical):
     msg = QtWidgets.QMessageBox()

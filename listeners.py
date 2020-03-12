@@ -1,40 +1,21 @@
 # -*- coding: utf-8 -*-
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QWidget, QInputDialog, QLineEdit, QFileDialog
+from PyQt5.QtCore import QTime, QTimer
 from PyQt5.QtGui import QIcon
 from sysdig_thread import SysdigThread
 import utilities as utils
 from pyqtgraph import PlotWidget, plot
 from random import randint
-
-""" PLOTTING """
-import sys
-import numpy as np
-import datetime
-from PyQt5.QtCore import QTime, QTimer
-from pyqtgraph.Qt import QtGui, QtCore
-import pyqtgraph as pg
 from collections import deque
-import pytz
 
 """ FALCO """
 from falco_rules import FalcoRules
 from falco_thread import FalcoThread
 
-UNIX_EPOCH = datetime.datetime(1970, 1, 1, 0, 0)
-
-def now_timestamp():
-    return(int((datetime.datetime.now() - UNIX_EPOCH).total_seconds() * 1e6))
-
-def int2dt(ts):
-    return(datetime.datetime.utcfromtimestamp(float(ts)/1e6))
-
-class TimeAxisItem(pg.AxisItem):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-    def tickStrings(self, values, scale, spacing):
-        return [int2dt(value).strftime("%H:%M:%S") for value in values]
+""" LOADING SMAD_RULE CONFIGURATIONS """
+""" dummy functionality for now      """
+""" probably should be moved to utils"""
 
 class FileDialog(QWidget):
     def __init__(self, type):
@@ -182,8 +163,6 @@ class Listeners:
         # Create the falco configuration file
         # Start falco instance
         self.startFalco(rules)
-
-        # self.startSysdig(monitors, self.ui.monitorsRunningMonitorsListWidget)
 
         # Display monitor Status
         self.displayRuleStatus(rules, invalidRules)
@@ -380,15 +359,15 @@ class Listeners:
         # Sysdig
         self.threads[text].stop()
         self.threads[text].join()
-        # self.threads[text].stopPlot()
+        self.threads[text].stopPlot()
         del self.threads[text]
 
         self.data.removeMonitor(text)
 
         # Visualization
-        # if self.ui.tmr:
-        #     self.ui.tmr.stop()
-        #     self.ui.graphWidget.clear()
+        if self.ui.tmr:
+            self.ui.tmr.stop()
+            self.ui.graphWidget.clear()
 
         utils.showMessageBox('Monitor stopped!', 'Success', QtWidgets.QMessageBox.Information)
 
@@ -421,25 +400,20 @@ class Listeners:
         self.threads[text].startPlot()
 
         # Add line to plot
-        self.ui.curve =self.ui.graphWidget.addPlot(title=text, axisItems={'bottom': TimeAxisItem(orientation='bottom')}).plot()
+        self.ui.curve =self.ui.graphWidget.addPlot(title=text, axisItems={'bottom': utils.TimeAxisItem(orientation='bottom')}).plot()
+        self.ui.curve2 =self.ui.graphWidget.addPlot(title=text, axisItems={'bottom': utils.TimeAxisItem(orientation='bottom')}).plot()
+        self.ui.curve3 =self.ui.graphWidget.addPlot(title=text, axisItems={'bottom': utils.TimeAxisItem(orientation='bottom')}).plot()
 
         # Keep timer
         self.ui.tmr = QTimer()
         self.ui.tmr.timeout.connect(lambda: self.update(text))
-        self.ui.tmr.start(200)
+        self.ui.tmr.start(100)
 
     def update(self, monitorName):
-        x = now_timestamp()
-        self.ui.data_x.append(x)
-        try:
-            self.ui.curve.setData(x=list(self.ui.data_x), y=list(self.ui.data_y))
-        except Exception as e:
-            if len(self.ui.data_x) > len(self.ui.data_y):
-                self.ui.data_x.pop()
-            else:
-                self.ui.data_y.pop()
-        finally:
-            self.ui.curve.setData(x=list(self.ui.data_x), y=list(self.ui.data_y))
+        # TODO: think how to solve multiplotting with single line input from stdout
+        self.ui.curve.setData(x=list(self.ui.data_x), y=list(self.ui.data_y))
+        self.ui.curve2.setData(x=[-z for z in list(self.ui.data_x)], y=[-z for z in list(self.ui.data_y)])
+        self.ui.curve3.setData(x=list(self.ui.data_x), y=list(self.ui.data_y))
 
     """""""""""""""
         SYSDIG

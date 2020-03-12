@@ -18,10 +18,10 @@ class FalcoThread(threading.Thread):
 
 	def run(self):
 		# Create configuration file
-		with open('smad_rules/smad_rules.yaml', 'w+') as f:
+		with open('smad_rules/auto_generated_rules.smadconf', 'w+') as f:
 			f.write(self.rules)
 		# Start Falco
-		process = subprocess.Popen(shlex.split('sudo falco -U -r smad_rules/smad_rules.yaml'), stdout=subprocess.PIPE)
+		process = subprocess.Popen(shlex.split('falco -U -r smad_rules/auto_generated_rules.smadconf'), stdout=subprocess.PIPE)
 		poll_obj = select.poll()
 		poll_obj.register(process.stdout, select.POLLIN)
 

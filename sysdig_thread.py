@@ -1,4 +1,5 @@
 from sysdig_commands import SysdigCommands
+import utilities as utils
 from PyQt5 import QtWidgets
 import sys
 import datetime
@@ -63,13 +64,9 @@ class SysdigThread(threading.Thread):
                             elif self.monitor.metricType == 'size':
                                 self.checkSizeMetric(self.getValues(line))
                         if line[0].isdigit() and self.is_plotting:
-                            timestamp=int(round(time.time()*1000))
-                            diff = timestamp - self.timestamp
-                            if len(self.ui.data_x) >= len(self.ui.data_y):
-                                values = self.getValues(line)
-                                self.ui.data_y.append(float(values[0][:-1]))
-                                self.timestamp = timestamp
-
+                            values = self.getValues(line)
+                            self.ui.data_x.append(utils.now_timestamp()) # add the current timestamp
+                            self.ui.data_y.append(float(values[0][:-1])) # get the digit value of the line and remove the %
 
             rc = process.poll()
 
