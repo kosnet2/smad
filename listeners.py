@@ -1,21 +1,18 @@
 # -*- coding: utf-8 -*-
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QWidget, QInputDialog, QLineEdit, QFileDialog
 from PyQt5.QtCore import QTime, QTimer
-from PyQt5.QtGui import QIcon
-from sysdig_thread import SysdigThread
 import utilities as utils
-from pyqtgraph import PlotWidget, plot
-from random import randint
-from collections import deque
 
+""" FILE_DIALOG"""
+from PyQt5.QtWidgets import QWidget, QFileDialog
+""" PLOTTING """
+from collections import deque
+""" SYSDIG """
+from sysdig_thread import SysdigThread
 """ FALCO """
 from falco_rules import FalcoRules
 from falco_thread import FalcoThread
-
-""" LOADING SMAD_RULE CONFIGURATIONS """
-""" dummy functionality for now      """
-""" probably should be moved to utils"""
+from file_watcher_thread import FileWatcherThread
 
 class FileDialog(QWidget):
     def __init__(self, type):
@@ -68,7 +65,6 @@ class Listeners:
 
         # Stop current threads
         for thread in self.threads:
-            print(thread, 'is stopping from UI close event')
             self.threads[thread].stop()
             self.threads[thread].join()
 
@@ -436,14 +432,24 @@ class Listeners:
         FALCO
     """""""""""""""
     def startFalco(self, rules):
-
         falco_rules = FalcoRules()
         for rule in rules:
             falco_rules.setArgs(rule)
 
         rules = falco_rules.getRules()
+        if 'falco' in self.threads:
+            self.threads['falco'].stop()
+            self.threads['falco'].join()
+
         self.threads['falco'] = FalcoThread(self.ui, rules)
-        self.threads['falco'].run()
+        self.threads['falco'].start()
+
+        if 'file_watcher' in self.threads:
+            self.threads['file_watcher'].stop()
+            self.threads['file_watcher'].join()
+
+        self.threads['file_watcher'] = FileWatcherThread(self.ui, 'smad_rules/.falco_events.txt')
+        self.threads['file_watcher'].start()
 
     """""""""""""""
         UI HELPER
