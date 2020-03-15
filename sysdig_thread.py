@@ -63,6 +63,7 @@ class SysdigThread(threading.Thread):
                                 self.checkTimeMetric(self.getValues(line))
                             elif self.monitor.metricType == 'size':
                                 self.checkSizeMetric(self.getValues(line))
+                        ''' PLOTTING '''
                         if line[0].isdigit() and self.is_plotting:
                             values = self.getValues(line)
                             self.ui.data_x.append(utils.now_timestamp()) # add the current timestamp
@@ -75,7 +76,6 @@ class SysdigThread(threading.Thread):
 
     def startPlot(self):
         self.is_plotting = True
-        self.timestamp=int(round(time.time()*1000))
 
     def stop(self):
         self._stop_event.set()
