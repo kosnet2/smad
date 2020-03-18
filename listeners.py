@@ -6,51 +6,14 @@ import utilities as utils
 from PyQt5.QtWidgets import QWidget, QFileDialog
 """ VISUALIZATION """
 from PyQt5.QtCore import QTime, QTimer
-from collections import deque
 import pyqtgraph as pg
 """ SYSDIG """
+from file_dialog import FileDialog
+from collections import deque
 from sysdig_thread import SysdigThread
-""" FALCO """
 from falco_rules import FalcoRules
 from falco_thread import FalcoThread
 from file_watcher_thread import FileWatcherThread
-
-class FileDialog(QWidget):
-    def __init__(self, type):
-        super().__init__()
-        self.title = 'Allo'
-        self.left = 10
-        self.top = 10
-        self.width = 640
-        self.height = 480
-        self.type = type
-        self.initUI()
-
-    def initUI(self):
-        self.setWindowTitle(self.title)
-        self.setGeometry(self.left, self.top, self.width, self.height)
-        if self.type == 'load_file':
-            self.loadFileDialog()
-        elif self.type == 'save_file':
-            self.saveFileDialog()
-        self.show()
-    
-    def loadFileDialog(self):
-        options = QFileDialog.Options()
-        options |= QFileDialog.DontUseNativeDialog
-        filename, _ = QFileDialog.getOpenFileName(self, "Load Anomaly Rules", "","SMAD configuration files (*.smadconf);;Text Files (*.txt)", options=options)
-        if filename:
-            # Do stuff here to load the file rules
-            print(filename)
-
-    def saveFileDialog(self):
-        options = QFileDialog.Options()
-        options |= QFileDialog.DontUseNativeDialog
-        filename, _ = QFileDialog.getSaveFileName(self,"Export Anomaly Rules","","SMAD configuration files (*.smadconf);;Text Files (*.txt)", options=options)
-        if filename:
-            # Do stuff here to export the file rules
-            print(filename)
-
 
 class Listeners:
     def __init__(self, ui, data):
@@ -65,13 +28,14 @@ class Listeners:
 		# Save monitors to file
         with open('resources/monitors.txt', 'w+') as f:
             f.write('\n'.join([monitor for monitor in self.data.monitors]))
-
         # Stop current threads
         for thread in self.threads:
             self.threads[thread].stop()
             self.threads[thread].join()
 
-
+    """""""""""""""""""""
+    BUTTON REGISTRATION
+    """""""""""""""""""""
     def registerListeners(self):
         # Monitors Button Listeners
         self.ui.monitorsStartMonitors.clicked.connect(lambda: self.startMonitors())
@@ -82,19 +46,19 @@ class Listeners:
         self.ui.alertsDeleteAlertPushButton.clicked.connect(lambda: self.deleteAlert())
         self.ui.alertsEditAlertPushButton.clicked.connect(lambda: self.editAlert())
         self.ui.alertsChooseMonitorComboBox.currentIndexChanged.connect(lambda: self.enableMetrics())
-
         # Anomalies Button Listeners
         self.ui.anomaliesLoadRulesButton.clicked.connect(lambda: self.loadAnomalyRules())
         self.ui.anomaliesExportRulesButton.clicked.connect(lambda: self.exportAnomalyRules())
         self.ui.anomaliesDeployAnomalyDetectorButton.clicked.connect(lambda: self.deployAnomalyDetector())
+    
     """""""""""""""
         ANOMALIES
     """""""""""""""
     def loadAnomalyRules(self):
-        dialog = FileDialog('load_file')
+        dialog = FileDialog('load_file', self.ui)
 
     def exportAnomalyRules(self):
-        dialog = FileDialog('save_file')
+        dialog = FileDialog('save_file', self.ui)
 
     def deployAnomalyDetector(self):
         # Read separate lines for all the text and checkbox fields
@@ -159,12 +123,10 @@ class Listeners:
         if self.ui.anomaliesKafkaCheckBox.isChecked():
             rules.append('inbound_kafka_traffic')
         
-        # Create the falco configuration file
         # Start falco instance
-        self.startFalco(rules)
-
-        # Display monitor Status
-        self.displayRuleStatus(rules, invalidRules)
+        self.startFalco(rules, invalidRules)
+        # Display rule Status
+       
     
     """""""""""""""
         ALERTS
@@ -337,10 +299,11 @@ class Listeners:
         if self.ui.monitorsProcessBWCheckBox.isChecked():
             monitors.append('network_top_processes_bandwidth')
 
+        # Start sysdig instances
         self.startSysdig(monitors, self.ui.monitorsRunningMonitorsListWidget)
-
         self.displayMonitorStatus(monitors, invalidMonitors)
-
+        
+        # Reset fields
         self.ui.monitorsCpuProcessUsageTextEdit.setPlainText('')
 
     def stopMonitor(self):
@@ -429,18 +392,18 @@ class Listeners:
     """""""""""""""
         FALCO
     """""""""""""""
-    def startFalco(self, rules):
+    def startFalco(self, rules, invalidRules):
         falco_rules = FalcoRules()
         for rule in rules:
             falco_rules.setArgs(rule)
 
-        rules = falco_rules.getRules()
         if 'falco' in self.threads:
             self.threads['falco'].stop()
             self.threads['falco'].join()
 
-        self.threads['falco'] = FalcoThread(self.ui, rules)
+        self.threads['falco'] = FalcoThread(self.ui, falco_rules.getRules())
         self.threads['falco'].start()
+        self.displayRuleStatus(rules, invalidRules)
 
         if 'file_watcher' in self.threads:
             self.threads['file_watcher'].stop()
@@ -461,7 +424,11 @@ class Listeners:
             utils.showMessageBox('No monitors started!', 'Error', QtWidgets.QMessageBox.Critical)
 
     def displayRuleStatus(self, rules, invalidRules):
-        if len(rules) != 0:    
-            utils.showMessageBox('Rules set:\n\n--> ' + '\n--> '.join(rules), 'Success', QtWidgets.QMessageBox.Information)
+        events_file = self.threads['falco'].get_events_file()
+        
+        if len(rules) != 0:
+            message  = 'Anomaly Detector Deployed with Custom + Default rules!\n\n--> '+ '\n--> '.join(rules) + '\n\nDetector alerts can be found in the Notifications tab\nor in the events file located at ' + events_file +'\n\nPlease consult the documentation for default rule information!'
+            utils.showMessageBox(message, 'Success', QtWidgets.QMessageBox.Information)
         else:
-            utils.showMessageBox('No rules were set!', 'Error', QtWidgets.QMessageBox.Critical)
+            message = 'Anomaly Detector Deployed with Default rules!\n\n'+ 'Detector alerts can be found in the Notifications tab\nor in the events file located at ' + events_file + '\n\nPlease consult the documentation for default rule information!' 
+            utils.showMessageBox(message, 'Success', QtWidgets.QMessageBox.Information)

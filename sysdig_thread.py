@@ -64,6 +64,7 @@ class SysdigThread(threading.Thread):
                                 self.checkTimeMetric(self.getValues(line))
                             elif self.monitor.metricType == 'size':
                                 self.checkSizeMetric(self.getValues(line))
+                        ''' PLOTTING '''
                         if line[0].isdigit() and self.is_plotting:
                             values = self.getValues(line)
                             if values[1] not in self.ui.plots:
