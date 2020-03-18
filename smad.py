@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'smad.ui'
 #
-# Created by: PyQt5 UI code generator 5.14.1
+# Created by: PyQt5 UI code generator 5.14.0
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -93,9 +93,9 @@ class Ui_MainWindow(object):
         self.groupBox_6.setObjectName("groupBox_6")
         self.gridLayout_2 = QtWidgets.QGridLayout(self.groupBox_6)
         self.gridLayout_2.setObjectName("gridLayout_2")
-        self.graphWidget = GraphicsLayoutWidget(self.groupBox_6)
-        self.graphWidget.setObjectName("graphWidget")
-        self.gridLayout_2.addWidget(self.graphWidget, 0, 0, 1, 1)
+        self.plotWidget = PlotWidget(self.groupBox_6)
+        self.plotWidget.setObjectName("plotWidget")
+        self.gridLayout_2.addWidget(self.plotWidget, 0, 0, 1, 1)
         self.verticalLayout_7.addWidget(self.groupBox_6)
         self.widget = QtWidgets.QWidget(self.tab_5)
         self.widget.setMaximumSize(QtCore.QSize(16777215, 40))
@@ -475,4 +475,4 @@ class Ui_MainWindow(object):
         item = self.notificationsTableWidget.horizontalHeaderItem(3)
         item.setText(_translate("MainWindow", "Details"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_3), _translate("MainWindow", "Notifications"))
-from pyqtgraph import GraphicsLayoutWidget
+from pyqtgraph import PlotWidget

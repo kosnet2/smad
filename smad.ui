@@ -177,7 +177,7 @@
               </property>
               <layout class="QGridLayout" name="gridLayout_2">
                <item row="0" column="0">
-                <widget class="GraphicsLayoutWidget" name="graphWidget" native="true"/>
+                <widget class="PlotWidget" name="plotWidget" native="true"/>
                </item>
               </layout>
              </widget>
@@ -821,7 +821,7 @@ Add multiples inputs for a rule in separate lines</string>
  </widget>
  <customwidgets>
   <customwidget>
-   <class>GraphicsLayoutWidget</class>
+   <class>PlotWidget</class>
    <extends>QWidget</extends>
    <header>pyqtgraph</header>
    <container>1</container>

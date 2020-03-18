@@ -1,6 +1,7 @@
 from sysdig_commands import SysdigCommands
-import utilities as utils
 from PyQt5 import QtWidgets
+from PyQt5.QtCore import QTime, QTimer
+import utilities as utils
 import sys
 import datetime
 import threading
@@ -9,14 +10,14 @@ import select
 import shlex
 import os
 import re
-
 import time
 
 class SysdigThread(threading.Thread):
-    def __init__(self, name, monitor, ui):
+    def __init__(self, name, monitor, ui, listeners):
         super(SysdigThread, self).__init__()
         self.sysdig_commands = SysdigCommands()
         self.ui = ui
+        self.listeners = listeners
         self.name = name
         self.monitor = monitor
         self._stop_event = threading.Event()
@@ -52,8 +53,8 @@ class SysdigThread(threading.Thread):
 
                             # Check for alerts with capture
                             for alert in self.monitor.alerts:
-                            	if alert.seconds:
-                            		self.capture(alert.seconds, alert.filename)
+                                if alert.seconds:
+                                    self.capture(alert.seconds, alert.filename)
                     else:
                         line = output.strip().decode('utf-8') # Convert bytes to string
                         if line[0].isdigit() and len(self.monitor.alerts):
@@ -65,8 +66,15 @@ class SysdigThread(threading.Thread):
                                 self.checkSizeMetric(self.getValues(line))
                         if line[0].isdigit() and self.is_plotting:
                             values = self.getValues(line)
-                            self.ui.data_x.append(utils.now_timestamp()) # add the current timestamp
-                            self.ui.data_y.append(float(values[0][:-1])) # get the digit value of the line and remove the %
+                            if values[1] not in self.ui.plots:
+                                self.listeners.addPlot(values[1])
+
+                            self.ui.plotsData[values[1]][0].append(utils.now_timestamp())
+
+                            if self.monitor.metricType == 'percentage':
+                                self.ui.plotsData[values[1]][1].append(float(values[0][:-1])) # get the digit value of the line and remove the %
+                            else:
+                            	self.ui.plotsData[values[1]][1].append(float(values[0]))
 
             rc = process.poll()
 
@@ -75,7 +83,6 @@ class SysdigThread(threading.Thread):
 
     def startPlot(self):
         self.is_plotting = True
-        self.timestamp=int(round(time.time()*1000))
 
     def stop(self):
         self._stop_event.set()

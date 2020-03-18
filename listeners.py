@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtCore import QTime, QTimer
 import utilities as utils
 
-""" FILE_DIALOG"""
+""" FILE_DIALOG """
 from PyQt5.QtWidgets import QWidget, QFileDialog
-""" PLOTTING """
+""" VISUALIZATION """
+from PyQt5.QtCore import QTime, QTimer
 from collections import deque
+import pyqtgraph as pg
 """ SYSDIG """
 from sysdig_thread import SysdigThread
 """ FALCO """
@@ -53,6 +54,8 @@ class FileDialog(QWidget):
 
 class Listeners:
     def __init__(self, ui, data):
+        self.pens = [(255, 0, 0), (0, 255, 0), (0, 0, 255), (255, 255, 0), (255, 0, 255)]
+        self.penIndex = 0
         self.ui = ui
         self.data = data
         self.registerListeners()
@@ -363,7 +366,7 @@ class Listeners:
         # Visualization
         if self.ui.tmr:
             self.ui.tmr.stop()
-            self.ui.graphWidget.clear()
+            self.ui.plotWidget.clear()
 
         utils.showMessageBox('Monitor stopped!', 'Success', QtWidgets.QMessageBox.Information)
 
@@ -380,36 +383,31 @@ class Listeners:
 
         text = self.ui.monitorsRunningMonitorsListWidget.currentItem().text()
 
-        # Reset the graphWidget
-        self.ui.graphWidget.clear()
+        # Reset the plotWidget
+        self.ui.plotWidget.clear()
+        self.ui.plotWidget.addLegend()
+        self.ui.plots = {}
+        self.ui.plotsData = {}
 
-        # Keep global time
-        self.t = QTime()
-        self.t.start()
-
-        # Start plot data queues
-        maxlen = 200
-        self.ui.data_x = deque(maxlen=maxlen)
-        self.ui.data_y = deque(maxlen=maxlen)
+        # Initialize plot for monitor
         for monitor in self.threads:
             self.threads[monitor].stopPlot()
         self.threads[text].startPlot()
 
-        # Add line to plot
-        self.ui.curve =self.ui.graphWidget.addPlot(title=text, axisItems={'bottom': utils.TimeAxisItem(orientation='bottom')}).plot()
-        self.ui.curve2 =self.ui.graphWidget.addPlot(title=text, axisItems={'bottom': utils.TimeAxisItem(orientation='bottom')}).plot()
-        self.ui.curve3 =self.ui.graphWidget.addPlot(title=text, axisItems={'bottom': utils.TimeAxisItem(orientation='bottom')}).plot()
-
         # Keep timer
         self.ui.tmr = QTimer()
-        self.ui.tmr.timeout.connect(lambda: self.update(text))
+        self.ui.tmr.timeout.connect(lambda: self.update())
         self.ui.tmr.start(100)
 
-    def update(self, monitorName):
-        # TODO: think how to solve multiplotting with single line input from stdout
-        self.ui.curve.setData(x=list(self.ui.data_x), y=list(self.ui.data_y))
-        self.ui.curve2.setData(x=[-z for z in list(self.ui.data_x)], y=[-z for z in list(self.ui.data_y)])
-        self.ui.curve3.setData(x=list(self.ui.data_x), y=list(self.ui.data_y))
+    def addPlot(self, param):
+        maxlen = 200
+        self.ui.plots[param] = self.ui.plotWidget.plot(name=param, axisItems={'bottom': utils.TimeAxisItem(orientation='bottom')}, pen=pg.mkPen(color=self.pens[self.penIndex]))
+        self.penIndex = (self.penIndex + 1) % len(self.pens)
+        self.ui.plotsData[param] = [deque(maxlen=maxlen), deque(maxlen=maxlen)]
+
+    def update(self):
+        for param in self.ui.plots:
+            self.ui.plots[param].setData(x=list(self.ui.plotsData[param][0]), y=list(self.ui.plotsData[param][1]))
 
     """""""""""""""
         SYSDIG
@@ -422,7 +420,7 @@ class Listeners:
                 monitor = self.data.monitors[name]
                 
                 # Start sysdig
-                self.threads[name] = SysdigThread(name, monitor, self.ui)
+                self.threads[name] = SysdigThread(name, monitor, self.ui, self)
                 self.threads[name].start()
                 
                 self.ui.alertsChooseMonitorComboBox.addItem(name)
