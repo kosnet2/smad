@@ -63,7 +63,6 @@ class FileWatcher(QObject):
 			else:
 				return QColor(255, 255, 255)
 				print('Unknown shizzled')
-
 		values = [event.datetime, event.title, event.filename, event.details]
 		self.ui.notificationsTableWidget.insertRow(0)
 		for i in range(self.ui.notificationsTableWidget.columnCount()):

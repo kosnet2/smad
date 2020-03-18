@@ -1,0 +1,1 @@
+22:14:39.432055858: Error (proc=sudo) run in (user=kosnet parent=bash cmdline=sudo touch smad_rules/ttt)

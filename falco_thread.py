@@ -13,11 +13,11 @@ class FalcoThread(threading.Thread):
 
 	def run(self):
 		# Create configuration file
-		self.events_file = '"smad_events/'+ datetime.datetime.now().strftime("%b_%d_%Y_%H:%M:%S") + '_smad_events.txt"' 
+		self.events_file = 'smad_events/'+ datetime.datetime.now().strftime("%b_%d_%Y_%H:%M:%S") + '_smad_events.txt' 
 		with open('smad_rules/user_generated_rules.yaml', 'w+') as f:
 			f.write(self.rules)
 		# Start Falco
-		process = subprocess.Popen(shlex.split('falco --unbuffered -r /etc/falco/falco_rules.yaml -r smad_rules/user_generated_rules.yaml -o stdout_output.enabled=false -o webserver.enabled=false -o file_output.enabled=true -o file_output.keep_alive=false -o file_output.filename=' + self.events_file))
+		process = subprocess.Popen(shlex.split('falco --unbuffered -r /etc/falco/falco_rules.yaml -r smad_rules/user_generated_rules.yaml -o stdout_output.enabled=false -o webserver.enabled=false -o file_output.enabled=true -o file_output.keep_alive=false -o file_output.filename="' + self.events_file + '"'))
 
 		while True:
 			if self.stopped():

@@ -409,7 +409,7 @@ class Listeners:
             self.threads['file_watcher'].stop()
             self.threads['file_watcher'].join()
 
-        self.threads['file_watcher'] = FileWatcherThread(self.ui, 'smad_rules/.falco_events.txt')
+        self.threads['file_watcher'] = FileWatcherThread(self.ui, self.threads['falco'].get_events_file())
         self.threads['file_watcher'].start()
 
     """""""""""""""
