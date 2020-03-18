@@ -72,10 +72,8 @@ class SysdigThread(threading.Thread):
 
                             self.ui.plotsData[values[1]][0].append(utils.now_timestamp())
 
-                            if self.monitor.metricType == 'percentage':
-                                self.ui.plotsData[values[1]][1].append(float(values[0][:-1])) # get the digit value of the line and remove the %
-                            else:
-                            	self.ui.plotsData[values[1]][1].append(float(values[0]))
+                            numValue = re.search('(\d+(?:\.\d+)?)',values[0]).groups()[0]
+                            self.ui.plotsData[values[1]][1].append(float(numValue))
 
             rc = process.poll()
 
