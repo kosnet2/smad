@@ -1,4 +1,5 @@
 __pycache__/
 resources/monitors.txt
 smad_captures/
-smad_rules/.falco_events.txt
+smad_events/*
+smad_rules/*

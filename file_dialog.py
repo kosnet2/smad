@@ -22,6 +22,20 @@ class FileDialog(QWidget):
             self.saveFileDialog()
         self.show()
     
+    def resetFields(self):
+        self.ui.anomaliesProgramExecutedTextEdit.setPlainText('')
+        self.ui.anomaliesDirectoryFileOpensTextEdit.setPlainText('')
+        self.ui.anomaliesProcessFileOpensTextEdit.setPlainText('')
+        self.ui.anomaliesKnownUsersTextEdit.setPlainText('')
+        self.ui.anomalieUnknownUsersTextEdit.setPlainText('')
+        self.ui.anomaliesInboundIPTextEdit.setPlainText('')
+        self.ui.anomaliesOutboundIPTextEdit.setPlainText('')
+        self.ui.anomaliesMaliciousIPTextEdit.setPlainText('')
+        self.ui.anomaliesMongoDBCheckBox.setChecked(False)
+        self.ui.anomaliesHTTPCheckBox.setChecked(False)
+        self.ui.anomaliesMySQLCheckBox.setChecked(False)
+        self.ui.anomaliesKafkaCheckBox.setChecked(False)
+
     def loadFileDialog(self):
         options = QFileDialog.Options()
         options |= QFileDialog.DontUseNativeDialog
@@ -32,6 +46,7 @@ class FileDialog(QWidget):
             with open(filename, 'r') as f:
                 line = f.readline()
                 is_checkbox = False
+                self.resetFields()
                 while line:
                     if line.startswith('#'):
                         if line.startswith('# Program Executed'):
@@ -101,3 +116,5 @@ class FileDialog(QWidget):
                 f.write('# HTTP Traffic\n' + str( self.ui.anomaliesHTTPCheckBox.isChecked()) + '\n')
                 f.write('# MySQL Traffic\n' + str(self.ui.anomaliesMySQLCheckBox.isChecked()) + '\n')
                 f.write('# Kafka Traffic\n' + str(self.ui.anomaliesKafkaCheckBox.isChecked()) + '\n')
+        
+        self.ui.anomaliesOutboundIPTextEdit.setPlainText('')
