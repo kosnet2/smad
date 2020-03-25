@@ -1,30 +1,35 @@
 from sysdig_commands import SysdigCommands
 from PyQt5 import QtWidgets
-from PyQt5.QtCore import QTime, QTimer
+from PyQt5.QtCore import QTimer, QThread
 import utilities as utils
 import sys
 import datetime
-import threading
+from threading import Event, Lock
 import subprocess
 import select
 import shlex
 import os
 import re
 import time
+from collections import deque
+import pyqtgraph as pg
 
-class SysdigThread(threading.Thread):
-    def __init__(self, name, monitor, ui, listeners):
-        super(SysdigThread, self).__init__()
+class SysdigThread(QThread):
+    def __init__(self, name, monitor, ui):
+        QThread.__init__(self)
         self.sysdig_commands = SysdigCommands()
         self.ui = ui
-        self.listeners = listeners
         self.name = name
         self.monitor = monitor
-        self._stop_event = threading.Event()
+        self._stop_event = Event()
         self.time_dict = {'ps': 10 ** -6, 'ns': 10 ** -3, 'μs': 1, 'us' : 1, 'ms': 10 ** 3, 's': 10 ** 6, 'm': 60 * (10 ** 6)}
         self.size_dict = {'B': 1, 'KB': 2 ** 10, 'MB': 2 ** 20, 'GB': 2 ** 30, 'TB': 2 ** 40, 'PB': 2 ** 50}
         # Visualization
         self.is_plotting = False
+        self.timer = QTimer(self)
+
+        self.pens = [(255, 0, 0), (0, 255, 0), (0, 0, 255), (255, 255, 0), (255, 0, 255), (0, 255, 255), (255, 255, 255)]
+        self.penIndex = 0
 
     def getValues(self, line):
         res = re.findall(r'[\S]+', line)
@@ -68,20 +73,42 @@ class SysdigThread(threading.Thread):
                         if line[0].isdigit() and self.is_plotting:
                             values = self.getValues(line)
                             if values[1] not in self.ui.plots:
-                                self.listeners.addPlot(values[1])
+                                self.addPlot(values[1])
 
                             self.ui.plotsData[values[1]][0].append(utils.now_timestamp())
 
                             numValue = re.search('(\d+(?:\.\d+)?)',values[0]).groups()[0]
                             self.ui.plotsData[values[1]][1].append(float(numValue))
+                            print('Caught ', e, ' in Sysdig Thread while adding data to plotWidget')
 
             rc = process.poll()
 
     def stopPlot(self):
+        self.timer.stop()
+        self.legend.scene().removeItem(self.legend)
         self.is_plotting = False
+        self.ui.plotWidget.clear()
 
     def startPlot(self):
+        self.legend = pg.LegendItem((100, 60), (70, 30))
+        self.legend.setParentItem(self.ui.plotWidget.graphicsItem())
+        self.timer.timeout.connect(self.update)
+        self.timer.start(200)
         self.is_plotting = True
+
+    def isPlotting(self):
+        return self.is_plotting
+
+    def addPlot(self, param):
+        maxlen = 200
+        self.ui.plots[param] = self.ui.plotWidget.plot(name=param, pen=pg.mkPen(color=self.pens[self.penIndex]))
+        self.legend.addItem(self.ui.plots[param], param)
+        self.penIndex = (self.penIndex + 1) % len(self.pens)
+        self.ui.plotsData[param] = [deque(maxlen=maxlen), deque(maxlen=maxlen)]
+
+    def update(self):
+        for param in self.ui.plots:
+            self.ui.plots[param].setData(x=list(self.ui.plotsData[param][0]), y=list(self.ui.plotsData[param][1]))
 
     def stop(self):
         self._stop_event.set()

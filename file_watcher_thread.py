@@ -1,4 +1,4 @@
-from PyQt5.QtCore import QFileSystemWatcher, QObject, pyqtSlot
+from PyQt5.QtCore import QFileSystemWatcher, QObject, pyqtSlot, QThread
 from PyQt5.QtWidgets import QTableWidgetItem
 from PyQt5.QtGui import QColor
 import threading
@@ -71,8 +71,9 @@ class FileWatcher(QObject):
 			self.ui.notificationsTableWidget.setItem(0, i, rowItem)
 
 
-class FileWatcherThread(threading.Thread):
+class FileWatcherThread(QThread):
 	def __init__(self, ui, path):
+		QThread.__init__(self)
 		super(FileWatcherThread, self).__init__()
 		self._file_watcher = FileWatcher(ui, path)
 

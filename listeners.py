@@ -5,7 +5,7 @@ import utilities as utils
 """ FILE_DIALOG """
 from PyQt5.QtWidgets import QWidget, QFileDialog
 """ VISUALIZATION """
-from PyQt5.QtCore import QTime, QTimer
+from PyQt5.QtCore import QTimer
 import pyqtgraph as pg
 """ SYSDIG """
 from file_dialog import FileDialog
@@ -17,7 +17,7 @@ from file_watcher_thread import FileWatcherThread
 
 class Listeners:
     def __init__(self, ui, data):
-        self.pens = [(255, 0, 0), (0, 255, 0), (0, 0, 255), (255, 255, 0), (255, 0, 255)]
+        self.pens = [(255, 0, 0), (0, 255, 0), (0, 0, 255), (255, 255, 0), (255, 0, 255), (0, 255, 255), (255, 255, 255)]
         self.penIndex = 0
         self.ui = ui
         self.data = data
@@ -31,7 +31,7 @@ class Listeners:
         # Stop current threads
         for thread in self.threads:
             self.threads[thread].stop()
-            self.threads[thread].join()
+            self.threads[thread].wait()
 
     """""""""""""""""""""
     BUTTON REGISTRATION
@@ -41,6 +41,7 @@ class Listeners:
         self.ui.monitorsStartMonitors.clicked.connect(lambda: self.startMonitors())
         self.ui.monitorsStopMonitorButton.clicked.connect(lambda: self.stopMonitor())
         self.ui.monitorsPlotMonitorButton.clicked.connect(lambda: self.visualizeMonitor())
+        self.ui.monitorsStopPlotMonitorButton.clicked.connect(lambda: self.stopVisualizingMonitor())
         # Alerts Button Listeners
         self.ui.alertsSaveAlertPushButton.clicked.connect(lambda: self.saveAlert())
         self.ui.alertsDeleteAlertPushButton.clicked.connect(lambda: self.deleteAlert())
@@ -317,27 +318,26 @@ class Listeners:
 
         cbIdx = self.ui.alertsChooseMonitorComboBox.findText(text)
         self.ui.alertsChooseMonitorComboBox.removeItem(cbIdx)
-        
-        # Sysdig
+       
+        # Stop plotting if the monitor is plotting
+        if self.threads[text].isPlotting():
+            self.stopVisualizingMonitor()
+
+        # Stop the sysdig thread
         self.threads[text].stop()
-        self.threads[text].join()
-        self.threads[text].stopPlot()
+        self.threads[text].wait()
         del self.threads[text]
 
+        # Clean user data
         self.data.removeMonitor(text)
 
-        # Visualization
-        if self.ui.tmr:
-            self.ui.tmr.stop()
-            self.ui.plotWidget.clear()
-
+        # Display message
         utils.showMessageBox('Monitor stopped!', 'Success', QtWidgets.QMessageBox.Information)
 
 
     """""""""""""""""""""
         VISUALIZATION
     """""""""""""""""""""
-
     def visualizeMonitor(self):
         idx = self.ui.monitorsRunningMonitorsListWidget.currentRow()
         if idx == -1:
@@ -346,32 +346,20 @@ class Listeners:
 
         text = self.ui.monitorsRunningMonitorsListWidget.currentItem().text()
 
-        # Reset the plotWidget
-        self.ui.plotWidget.clear()
-        self.ui.plotWidget.addLegend()
+        # Reset plotting widget and stop already plotting monitors
+        self.stopVisualizingMonitor()
+
+        # Start plotting
         self.ui.plots = {}
         self.ui.plotsData = {}
-
-        # Initialize plot for monitor
-        for monitor in self.threads:
-            self.threads[monitor].stopPlot()
         self.threads[text].startPlot()
 
-        # Keep timer
-        self.ui.tmr = QTimer()
-        self.ui.tmr.timeout.connect(lambda: self.update())
-        self.ui.tmr.start(100)
-
-    def addPlot(self, param):
-        maxlen = 200
-        self.ui.plots[param] = self.ui.plotWidget.plot(name=param, axisItems={'bottom': utils.TimeAxisItem(orientation='bottom')}, pen=pg.mkPen(color=self.pens[self.penIndex]))
-        self.penIndex = (self.penIndex + 1) % len(self.pens)
-        self.ui.plotsData[param] = [deque(maxlen=maxlen), deque(maxlen=maxlen)]
-
-    def update(self):
-        for param in self.ui.plots:
-            self.ui.plots[param].setData(x=list(self.ui.plotsData[param][0]), y=list(self.ui.plotsData[param][1]))
-
+    def stopVisualizingMonitor(self):
+        for thread in self.threads:
+            if isinstance(self.threads[thread], SysdigThread):
+                if self.threads[thread].isPlotting():
+                    self.threads[thread].stopPlot()
+                    
     """""""""""""""
         SYSDIG
     """""""""""""""
@@ -383,7 +371,7 @@ class Listeners:
                 monitor = self.data.monitors[name]
                 
                 # Start sysdig
-                self.threads[name] = SysdigThread(name, monitor, self.ui, self)
+                self.threads[name] = SysdigThread(name, monitor, self.ui)
                 self.threads[name].start()
                 
                 self.ui.alertsChooseMonitorComboBox.addItem(name)
@@ -399,7 +387,7 @@ class Listeners:
 
         if 'falco' in self.threads:
             self.threads['falco'].stop()
-            self.threads['falco'].join()
+            self.threads['falco'].wait()
 
         self.threads['falco'] = FalcoThread(self.ui, falco_rules.getRules())
         self.threads['falco'].start()
@@ -407,7 +395,7 @@ class Listeners:
 
         if 'file_watcher' in self.threads:
             self.threads['file_watcher'].stop()
-            self.threads['file_watcher'].join()
+            self.threads['file_watcher'].wait()
 
         self.threads['file_watcher'] = FileWatcherThread(self.ui, self.threads['falco'].get_events_file())
         self.threads['file_watcher'].start()

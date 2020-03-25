@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'smad.ui'
 #
-# Created by: PyQt5 UI code generator 5.14.0
+# Created by: PyQt5 UI code generator 5.14.1
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -105,6 +105,10 @@ class Ui_MainWindow(object):
         self.monitorsPlotMonitorButton = QtWidgets.QPushButton(self.widget)
         self.monitorsPlotMonitorButton.setObjectName("monitorsPlotMonitorButton")
         self.horizontalLayout_3.addWidget(self.monitorsPlotMonitorButton)
+        self.monitorsStopPlotMonitorButton = QtWidgets.QPushButton(self.widget)
+        self.monitorsStopPlotMonitorButton.setEnabled(True)
+        self.monitorsStopPlotMonitorButton.setObjectName("monitorsStopPlotMonitorButton")
+        self.horizontalLayout_3.addWidget(self.monitorsStopPlotMonitorButton)
         self.monitorsStopMonitorButton = QtWidgets.QPushButton(self.widget)
         self.monitorsStopMonitorButton.setObjectName("monitorsStopMonitorButton")
         self.horizontalLayout_3.addWidget(self.monitorsStopMonitorButton)
@@ -409,6 +413,7 @@ class Ui_MainWindow(object):
         self.tabWidget_2.setTabText(self.tabWidget_2.indexOf(self.tab_4), _translate("MainWindow", "Start monitors"))
         self.groupBox_6.setTitle(_translate("MainWindow", "Visualization"))
         self.monitorsPlotMonitorButton.setText(_translate("MainWindow", "Plot monitor"))
+        self.monitorsStopPlotMonitorButton.setText(_translate("MainWindow", "Stop plot"))
         self.monitorsStopMonitorButton.setText(_translate("MainWindow", "Stop monitor"))
         self.tabWidget_2.setTabText(self.tabWidget_2.indexOf(self.tab_5), _translate("MainWindow", "Running monitors"))
         self.alertsAlertDetailsGroupBox.setTitle(_translate("MainWindow", "Alert details"))

@@ -199,6 +199,16 @@
                 </widget>
                </item>
                <item>
+                <widget class="QPushButton" name="monitorsStopPlotMonitorButton">
+                 <property name="enabled">
+                  <bool>true</bool>
+                 </property>
+                 <property name="text">
+                  <string>Stop plot</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
                 <widget class="QPushButton" name="monitorsStopMonitorButton">
                  <property name="text">
                   <string>Stop monitor</string>

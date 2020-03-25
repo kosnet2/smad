@@ -7,7 +7,6 @@ import datetime
 """ PLOTTING """
 import sys
 import numpy as np
-from PyQt5.QtCore import QTime, QTimer
 from pyqtgraph.Qt import QtGui, QtCore
 import pyqtgraph as pg
 from collections import deque
