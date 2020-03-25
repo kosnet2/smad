@@ -1,5 +1,8 @@
 __pycache__/
 resources/monitors.txt
 smad_captures/
+!smad_captures/.gitkeep
 smad_events/*
+!smad_events/.gitkeep
 smad_rules/*
+!smad_rules/.gitkeep
