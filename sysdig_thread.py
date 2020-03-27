@@ -1,17 +1,17 @@
 from sysdig_commands import SysdigCommands
 from PyQt5 import QtWidgets
 from PyQt5.QtCore import QTimer, QThread
+from threading import Event, Lock
+from collections import deque
 import utilities as utils
 import sys
 import datetime
-from threading import Event, Lock
 import subprocess
 import select
 import shlex
 import os
 import re
 import time
-from collections import deque
 import pyqtgraph as pg
 
 class SysdigThread(QThread):
@@ -24,6 +24,7 @@ class SysdigThread(QThread):
         self._stop_event = Event()
         self.time_dict = {'ps': 10 ** -6, 'ns': 10 ** -3, 'μs': 1, 'us' : 1, 'ms': 10 ** 3, 's': 10 ** 6, 'm': 60 * (10 ** 6)}
         self.size_dict = {'B': 1, 'KB': 2 ** 10, 'MB': 2 ** 20, 'GB': 2 ** 30, 'TB': 2 ** 40, 'PB': 2 ** 50}
+
         # Visualization
         self.is_plotting = False
         self.timer = QTimer(self)
@@ -32,6 +33,7 @@ class SysdigThread(QThread):
         self.penIndex = 0
 
     def getValues(self, line):
+    	# Get space separated values from a line of output
         res = re.findall(r'[\S]+', line)
         return res if len(res) < 3 else [res[0], ' '.join(res[1:-1]), res[-1]]
 
@@ -69,9 +71,12 @@ class SysdigThread(QThread):
                                 self.checkTimeMetric(self.getValues(line))
                             elif self.monitor.metricType == 'size':
                                 self.checkSizeMetric(self.getValues(line))
-                        ''' PLOTTING '''
+
+                        # Plotting
                         if line[0].isdigit() and self.is_plotting:
                             values = self.getValues(line)
+
+                            # If new key encountered, create new plot
                             if values[1] not in self.ui.plots:
                                 self.addPlot(values[1])
 
@@ -79,7 +84,6 @@ class SysdigThread(QThread):
 
                             numValue = re.search('(\d+(?:\.\d+)?)',values[0]).groups()[0]
                             self.ui.plotsData[values[1]][1].append(float(numValue))
-                            print('Caught ', e, ' in Sysdig Thread while adding data to plotWidget')
 
             rc = process.poll()
 
@@ -189,7 +193,11 @@ class SysdigThread(QThread):
 
     def addNotification(self, alert, details):
         values = [str(datetime.datetime.now()), alert.name, alert.filename, details]
+
+        # Insert blank row
         self.ui.notificationsTableWidget.insertRow(0)
+
+        # Update new row
         for i in range(self.ui.notificationsTableWidget.columnCount()):
             self.ui.notificationsTableWidget.setItem(0, i, QtWidgets.QTableWidgetItem(values[i]))
         if alert.seconds:
@@ -198,4 +206,6 @@ class SysdigThread(QThread):
     def capture(self, seconds, filename):
         command = self.sysdig_commands.getCommand('capture')['command']
         command += f' -M {seconds}'
+
+        # Start sysdig capture in a separate thread
         subprocess.run(args=shlex.split(command), stdout=open(f'smad_captures/{filename}', 'a+'))

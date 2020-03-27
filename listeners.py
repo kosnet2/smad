@@ -4,9 +4,10 @@ import utilities as utils
 
 """ FILE_DIALOG """
 from PyQt5.QtWidgets import QWidget, QFileDialog
+
 """ VISUALIZATION """
-from PyQt5.QtCore import QTimer
 import pyqtgraph as pg
+
 """ SYSDIG """
 from file_dialog import FileDialog
 from collections import deque
@@ -17,24 +18,25 @@ from file_watcher_thread import FileWatcherThread
 
 class Listeners:
     def __init__(self, ui, data):
-        self.pens = [(255, 0, 0), (0, 255, 0), (0, 0, 255), (255, 255, 0), (255, 0, 255), (0, 255, 255), (255, 255, 255)]
+        self.pens = [(255, 0, 0), (0, 255, 0), (0, 0, 255), (255, 255, 0), (255, 0, 255), (0, 255, 255), (255, 255, 255)] # Plotting colors
         self.penIndex = 0
         self.ui = ui
         self.data = data
-        self.registerListeners()
         self.threads = {}
+        self.registerListeners()
     
     def stopApplication(self, event):
 		# Save monitors to file
         with open('resources/monitors.txt', 'w+') as f:
             f.write('\n'.join([monitor for monitor in self.data.monitors]))
+
         # Stop current threads
         for thread in self.threads:
             self.threads[thread].stop()
             self.threads[thread].wait()
 
     """""""""""""""""""""
-    BUTTON REGISTRATION
+     BUTTON REGISTRATION
     """""""""""""""""""""
     def registerListeners(self):
         # Monitors Button Listeners
@@ -42,11 +44,13 @@ class Listeners:
         self.ui.monitorsStopMonitorButton.clicked.connect(lambda: self.stopMonitor())
         self.ui.monitorsPlotMonitorButton.clicked.connect(lambda: self.visualizeMonitor())
         self.ui.monitorsStopPlotMonitorButton.clicked.connect(lambda: self.stopVisualizingMonitor())
+
         # Alerts Button Listeners
         self.ui.alertsSaveAlertPushButton.clicked.connect(lambda: self.saveAlert())
         self.ui.alertsDeleteAlertPushButton.clicked.connect(lambda: self.deleteAlert())
         self.ui.alertsEditAlertPushButton.clicked.connect(lambda: self.editAlert())
         self.ui.alertsChooseMonitorComboBox.currentIndexChanged.connect(lambda: self.enableMetrics())
+
         # Anomalies Button Listeners
         self.ui.anomaliesLoadRulesButton.clicked.connect(lambda: self.loadAnomalyRules())
         self.ui.anomaliesExportRulesButton.clicked.connect(lambda: self.exportAnomalyRules())
@@ -126,9 +130,7 @@ class Listeners:
         
         # Start falco instance
         self.startFalco(rules, invalidRules)
-        # Display rule Status
-       
-    
+
     """""""""""""""
         ALERTS
     """""""""""""""
@@ -141,6 +143,8 @@ class Listeners:
         self.ui.alertsMetricValueSpinBox.setMaximum(2147483647)
         
         monitor = self.ui.alertsChooseMonitorComboBox.currentText()
+
+        # Update metrics depending on monitor chosen
         if monitor != '':
             metricType = self.data.monitors[monitor].metricType
             
@@ -171,9 +175,10 @@ class Listeners:
         if len(alert) == 0:
             utils.showMessageBox('Alert name field must not be empty', 'Error', QtWidgets.QMessageBox.Critical)
             return
-        monitor = self.ui.alertsChooseMonitorComboBox.currentText()
 
+        monitor = self.ui.alertsChooseMonitorComboBox.currentText()
         metrics = ''
+
         if self.ui.alertsSetMetricWidget.isEnabled():
             metrics += self.ui.alertsMetricOperationComboBox.currentText() + ' '
             metrics += str(self.ui.alertsMetricValueSpinBox.value()) + ' '
@@ -215,8 +220,7 @@ class Listeners:
     
     # TODO: There is a bug somewhere here
     def editAlert(self):
-        idx = self.ui.alertsListListWidget.currentRow()
-        if idx == -1:
+        if self.ui.alertsListListWidget.currentRow() == -1:
             utils.showMessageBox('No alert selected', 'Error', QtWidgets.QMessageBox.Critical)
             return
 
@@ -230,22 +234,13 @@ class Listeners:
             self.ui.alertsChooseMonitorComboBox.setCurrentIndex(index)
             
         metrics = alert.metrics.split(' ')
-        if len(metrics) == 0 :  # CASE - no metrics
-            a = 10 # do nothing, for now..
-        elif len(metrics) == 2: # CASE - missing last field
-            op = metrics[0]
-            th = metrics[1]
-            idx = self.ui.alertsMetricOperationComboBox.findText(op)
-            self.ui.alertsMetricOperationComboBox.setCurrentIndex(idx)
-            self.ui.alertsMetricValueSpinBox.setValue(int(th))
-        elif len(metrics) == 3: # CASE - all fields set
-            op = metrics[0]
-            th = metrics[1]
-            un = metrics[2]
-            idx = self.ui.alertsMetricOperationComboBox.findText(op)
-            self.ui.alertsMetricOperationComboBox.setCurrentIndex(idx)
-            self.ui.alertsMetricValueSpinBox.setValue(int(th))
-            idx = self.ui.alertsMetricUnitComboBox.findText(un)
+        idx = self.ui.alertsMetricOperationComboBox.findText(metrics[0])
+        self.ui.alertsMetricOperationComboBox.setCurrentIndex(idx)
+        self.ui.alertsMetricValueSpinBox.setValue(int(metrics[1]))
+
+        # If last metric field is set
+        if len(metrics) == 3:
+            idx = self.ui.alertsMetricUnitComboBox.findText(metrics[2])
             self.ui.alertsMetricUnitComboBox.setCurrentIndex(idx)
             
         if alert.seconds > 0:
@@ -339,8 +334,7 @@ class Listeners:
         VISUALIZATION
     """""""""""""""""""""
     def visualizeMonitor(self):
-        idx = self.ui.monitorsRunningMonitorsListWidget.currentRow()
-        if idx == -1:
+        if self.ui.monitorsRunningMonitorsListWidget.currentRow() == -1:
             utils.showMessageBox('No monitor selected', 'Error', QtWidgets.QMessageBox.Critical)
             return
 

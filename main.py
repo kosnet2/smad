@@ -1,9 +1,9 @@
-import sys
 from PyQt5.QtCore import QFile, QTextStream
-import breeze_resources
+from listeners import Listeners
 from smad import QtWidgets, Ui_MainWindow
 from data import Data
-from listeners import Listeners
+import breeze_resources
+import sys
 
 def updateMonitorsUI(savedMonitors):
     for monitor in savedMonitors:
