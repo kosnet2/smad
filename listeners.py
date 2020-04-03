@@ -18,6 +18,7 @@ from file_watcher_thread import FileWatcherThread
 
 """ SCHEDULER """
 from rule_config import RuleConfigWidget
+
 class Listeners:
     def __init__(self, ui, data):
         self.pens = [(255, 0, 0), (0, 255, 0), (0, 0, 255), (255, 255, 0), (255, 0, 255), (0, 255, 255), (255, 255, 255)] # Plotting colors
@@ -25,13 +26,16 @@ class Listeners:
         self.ui = ui
         self.data = data
         self.threads = {}
+        self.ruleConfigWidget = RuleConfigWidget(self.ui, self.data)
         self.registerListeners()
-        self.ruleConfigWidget = RuleConfigWidget(ui)
     
     def stopApplication(self, event):
 		# Save monitors to file
         with open('resources/monitors.txt', 'w+') as f:
             f.write('\n'.join([monitor for monitor in self.data.monitors]))
+
+        # Save saved schedules rules
+        self.data.saveScheduledRules()
 
         # Stop current threads
         for thread in self.threads:
@@ -67,6 +71,8 @@ class Listeners:
 
     def exportAnomalyRules(self):
         dialog = FileDialog('save_file', self.ui)
+        print('complete')
+        self.ruleConfigWidget.addRule(dialog.filename)
 
     def deployAnomalyDetector(self):
         # Read separate lines for all the text and checkbox fields

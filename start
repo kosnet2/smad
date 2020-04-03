@@ -1,2 +1,2 @@
 #!/bin/bash
-sudo python3 main.py 2>/dev/null
+sudo python3 main.py #2>/dev/null

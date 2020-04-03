@@ -1,4 +1,5 @@
 from PyQt5.QtWidgets import QWidget, QFileDialog
+from PyQt5.QtCore import pyqtSignal
 
 class FileDialog(QWidget):
     # Spawn a file dialog based on type parameter passed
@@ -12,6 +13,7 @@ class FileDialog(QWidget):
         self.type = type
         self.ui = ui
         self.initUI()
+        self.success = False
 
     def initUI(self):
         self.setWindowTitle(self.title)
@@ -93,6 +95,7 @@ class FileDialog(QWidget):
                                 ui_element.insertPlainText(line)
 
                     line = f.readline()
+                self.success = True
 
     def saveFileDialog(self):
         options = QFileDialog.Options()
@@ -116,5 +119,6 @@ class FileDialog(QWidget):
                 f.write('# HTTP Traffic\n' + str( self.ui.anomaliesHTTPCheckBox.isChecked()) + '\n')
                 f.write('# MySQL Traffic\n' + str(self.ui.anomaliesMySQLCheckBox.isChecked()) + '\n')
                 f.write('# Kafka Traffic\n' + str(self.ui.anomaliesKafkaCheckBox.isChecked()) + '\n')
-        
         self.ui.anomaliesOutboundIPTextEdit.setPlainText('')
+        self.success = True
+        self.filename = filename.split('/')[-1]

@@ -18,11 +18,61 @@ class Alert:
 		self.seconds = seconds
 		self.filename = filename
 
+class ScheduledRule:
+	def __init__(self, start, end, repetitive, running):
+		self.start = start
+		self.end = end
+		self.repetitive = repetitive
+		self.running = running
+
 class Data:
 	def __init__(self):
 		self.sysdig_commands = SysdigCommands()
 		self.monitors = {}
 		self.alerts = []
+		self.scheduled_rules = {}
+		self.getScheduledRules()
+
+	def getScheduledRules(self):
+		try:
+			with open('resources/scheduledRules.txt', 'r') as f:
+				scheduledRules = f.read().split('\n')
+				for line in scheduledRules:
+					l = line.split(' ', 1)
+					filename = l[0]
+					if filename not in self.scheduled_rules:
+						self.scheduled_rules[filename] = []
+					scheduledRule = l[1].split(' ')
+					
+					schedule = ScheduledRule(scheduledRule[0],
+											  scheduledRule[1],
+											  scheduledRule[2],
+											  scheduledRule[3])
+
+					self.scheduled_rules[filename].append(schedule)
+		except Exception:
+			return {}
+	
+	def saveScheduledRules(self):
+		try:
+			with open('resources/scheduledRules.txt', 'w') as f:
+				for filename in self.scheduled_rules:
+					for r in self.scheduled_rules[filename]:
+						f.write(filename + ' ' + r.start + ' ' + r.end + ' ' + str(r.repetitive) + ' ' + str(r.running) + '\n')
+
+		except Exception as e:
+			print('Caught exception while saving scheduled rules\n', e)
+
+	def addScheduledRule(self, filename, start, end, repetitive, running):
+		if filename not in self.scheduled_rules:
+			self.scheduled_rules[filename] = []
+		self.scheduled_rules[filename].append(ScheduledRule(start, end, repetitive, running))
+	
+	def removeScheduledRule(self, filename, index):
+		self.scheduled_rules[filename].pop(index)
+
+	def getScheduledRulesByFile(self, filename):
+		return self.scheduled_rules[filename]
 
 	def getSavedMonitors(self):
 		try:

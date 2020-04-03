@@ -1,0 +1,2 @@
+sayit.smadconf 04042001:03:50 04042001:03:50 True False
+yolo.smadconf 04042001:03:53 04042001:03:53 True False
