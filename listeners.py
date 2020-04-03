@@ -16,6 +16,8 @@ from falco_rules import FalcoRules
 from falco_thread import FalcoThread
 from file_watcher_thread import FileWatcherThread
 
+""" SCHEDULER """
+from rule_config import RuleConfigWidget
 class Listeners:
     def __init__(self, ui, data):
         self.pens = [(255, 0, 0), (0, 255, 0), (0, 0, 255), (255, 255, 0), (255, 0, 255), (0, 255, 255), (255, 255, 255)] # Plotting colors
@@ -24,6 +26,7 @@ class Listeners:
         self.data = data
         self.threads = {}
         self.registerListeners()
+        self.ruleConfigWidget = RuleConfigWidget(ui)
     
     def stopApplication(self, event):
 		# Save monitors to file

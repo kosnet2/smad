@@ -24,7 +24,7 @@
        </size>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="tab">
        <attribute name="title">
@@ -447,304 +447,344 @@
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_26">
         <item>
-         <widget class="QWidget" name="widget_2" native="true">
-          <layout class="QHBoxLayout" name="horizontalLayout_5">
-           <item>
-            <widget class="QLabel" name="label_7">
-             <property name="text">
-              <string>Please configure the needed rules below or load from file.
-Add multiples inputs for a rule in separate lines</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="anomaliesLoadRulesButton">
-             <property name="text">
-              <string>Load rules</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="anomaliesExportRulesButton">
-             <property name="text">
-              <string>Export rules</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-        </item>
-        <item>
-         <widget class="QScrollArea" name="scrollArea_5">
-          <property name="widgetResizable">
-           <bool>true</bool>
+         <widget class="QTabWidget" name="tabWidget_3">
+          <property name="currentIndex">
+           <number>1</number>
           </property>
-          <widget class="QWidget" name="scrollAreaWidgetContents">
-           <property name="geometry">
-            <rect>
-             <x>0</x>
-             <y>0</y>
-             <width>841</width>
-             <height>1074</height>
-            </rect>
-           </property>
-           <layout class="QVBoxLayout" name="verticalLayout_27">
+          <widget class="QWidget" name="tab_8">
+           <attribute name="title">
+            <string>Detector</string>
+           </attribute>
+           <layout class="QVBoxLayout" name="verticalLayout">
             <item>
-             <widget class="QGroupBox" name="anomaliesProgramExecutedGroupBox">
-              <property name="title">
-               <string>Detect unexpected execution of a program</string>
-              </property>
-              <property name="checkable">
-               <bool>false</bool>
-              </property>
-              <property name="checked">
-               <bool>false</bool>
-              </property>
-              <layout class="QHBoxLayout" name="horizontalLayout_6">
+             <widget class="QWidget" name="widget_2" native="true">
+              <layout class="QHBoxLayout" name="horizontalLayout_5">
                <item>
-                <widget class="QTextEdit" name="anomaliesProgramExecutedTextEdit">
-                 <property name="autoFillBackground">
-                  <bool>false</bool>
-                 </property>
-                 <property name="placeholderText">
-                  <string>i.e sudo</string>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </widget>
-            </item>
-            <item>
-             <widget class="QGroupBox" name="anomaliesDirectoryFileOpensGroupBox">
-              <property name="title">
-               <string>Detect failed file opens in directory</string>
-              </property>
-              <property name="checkable">
-               <bool>false</bool>
-              </property>
-              <property name="checked">
-               <bool>false</bool>
-              </property>
-              <layout class="QHBoxLayout" name="horizontalLayout_13">
-               <item>
-                <widget class="QTextEdit" name="anomaliesDirectoryFileOpensTextEdit">
-                 <property name="placeholderText">
-                  <string>i.e. /etc</string>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </widget>
-            </item>
-            <item>
-             <widget class="QGroupBox" name="anomaliesProcessFileOpensGroupBox">
-              <property name="title">
-               <string>Detect failed file opens from process</string>
-              </property>
-              <property name="checkable">
-               <bool>false</bool>
-              </property>
-              <property name="checked">
-               <bool>false</bool>
-              </property>
-              <layout class="QHBoxLayout" name="horizontalLayout_16">
-               <item>
-                <widget class="QTextEdit" name="anomaliesProcessFileOpensTextEdit">
-                 <property name="placeholderText">
-                  <string>i.e python3</string>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </widget>
-            </item>
-            <item>
-             <widget class="QGroupBox" name="anomaliesKnownUsersGroupBox">
-              <property name="toolTip">
-               <string>Monitor and detect system usage for specific known users</string>
-              </property>
-              <property name="toolTipDuration">
-               <number>2</number>
-              </property>
-              <property name="title">
-               <string>Detect directories visited by known users</string>
-              </property>
-              <property name="checkable">
-               <bool>false</bool>
-              </property>
-              <property name="checked">
-               <bool>false</bool>
-              </property>
-              <layout class="QHBoxLayout" name="horizontalLayout_17">
-               <item>
-                <widget class="QTextEdit" name="anomaliesKnownUsersTextEdit">
-                 <property name="toolTipDuration">
-                  <number>-1</number>
-                 </property>
-                 <property name="placeholderText">
-                  <string>i.e john</string>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </widget>
-            </item>
-            <item>
-             <widget class="QGroupBox" name="anomaliesUnknownUsersGroupBox">
-              <property name="toolTip">
-               <string>Provide the known users to identify unknown user activity</string>
-              </property>
-              <property name="toolTipDuration">
-               <number>2</number>
-              </property>
-              <property name="title">
-               <string>Detect directories visited by unknown users</string>
-              </property>
-              <property name="checkable">
-               <bool>false</bool>
-              </property>
-              <property name="checked">
-               <bool>false</bool>
-              </property>
-              <layout class="QHBoxLayout" name="horizontalLayout_18">
-               <item>
-                <widget class="QTextEdit" name="anomalieUnknownUsersTextEdit">
-                 <property name="placeholderText">
-                  <string>i.e john</string>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </widget>
-            </item>
-            <item>
-             <widget class="QGroupBox" name="anomaliesInboundIPGroupBox">
-              <property name="title">
-               <string>Detect inbound traffic related to IP</string>
-              </property>
-              <property name="checkable">
-               <bool>false</bool>
-              </property>
-              <property name="checked">
-               <bool>false</bool>
-              </property>
-              <layout class="QHBoxLayout" name="horizontalLayout_19">
-               <item>
-                <widget class="QTextEdit" name="anomaliesInboundIPTextEdit">
-                 <property name="placeholderText">
-                  <string>i.e. 192.168.125.117</string>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </widget>
-            </item>
-            <item>
-             <widget class="QGroupBox" name="anomaliesOutboundIPGroupBox">
-              <property name="title">
-               <string>Detect outbound traffic related to IP</string>
-              </property>
-              <property name="checkable">
-               <bool>false</bool>
-              </property>
-              <property name="checked">
-               <bool>false</bool>
-              </property>
-              <layout class="QHBoxLayout" name="horizontalLayout_20">
-               <item>
-                <widget class="QTextEdit" name="anomaliesOutboundIPTextEdit">
-                 <property name="placeholderText">
-                  <string>i.e 192.168.125.117</string>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </widget>
-            </item>
-            <item>
-             <widget class="QGroupBox" name="anomaliesMaliciousIPGroupBox">
-              <property name="toolTip">
-               <string>The list of malicious IPs should be updated frequently</string>
-              </property>
-              <property name="title">
-               <string>Detect traffic related to a malicious IP</string>
-              </property>
-              <property name="checkable">
-               <bool>false</bool>
-              </property>
-              <property name="checked">
-               <bool>false</bool>
-              </property>
-              <layout class="QHBoxLayout" name="horizontalLayout_21">
-               <item>
-                <widget class="QTextEdit" name="anomaliesMaliciousIPTextEdit">
-                 <property name="placeholderText">
-                  <string>i.e. 192.168.125.117</string>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </widget>
-            </item>
-            <item>
-             <widget class="QGroupBox" name="groupBox_13">
-              <property name="title">
-               <string>Detect unexpected inbound traffic on server</string>
-              </property>
-              <layout class="QGridLayout" name="gridLayout_3">
-               <item row="0" column="1">
-                <widget class="QCheckBox" name="anomaliesMySQLCheckBox">
-                 <property name="toolTip">
-                  <string>Inbound traffic to MySQL server in an unknown port</string>
-                 </property>
-                 <property name="toolTipDuration">
-                  <number>2</number>
-                 </property>
+                <widget class="QLabel" name="label_7">
                  <property name="text">
-                  <string>MySQL unexpected inbound traffic</string>
+                  <string>Please configure the needed rules below or load from file.
+Add multiples inputs for a rule in separate lines</string>
                  </property>
                 </widget>
                </item>
-               <item row="0" column="0">
-                <widget class="QCheckBox" name="anomaliesMongoDBCheckBox">
-                 <property name="toolTip">
-                  <string>Inbound traffic to MongoDB server in an unknown port</string>
-                 </property>
-                 <property name="toolTipDuration">
-                  <number>2</number>
-                 </property>
+               <item>
+                <widget class="QPushButton" name="anomaliesLoadRulesButton">
                  <property name="text">
-                  <string>MongoDB unexpected inbound traffic</string>
+                  <string>Load rules</string>
                  </property>
                 </widget>
                </item>
-               <item row="1" column="0">
-                <widget class="QCheckBox" name="anomaliesHTTPCheckBox">
-                 <property name="toolTip">
-                  <string>Inbound traffic to HTTP server in an unknown port</string>
-                 </property>
-                 <property name="toolTipDuration">
-                  <number>2</number>
-                 </property>
+               <item>
+                <widget class="QPushButton" name="anomaliesExportRulesButton">
                  <property name="text">
-                  <string>HTTP server unexpected inbound traffic</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="1">
-                <widget class="QCheckBox" name="anomaliesKafkaCheckBox">
-                 <property name="toolTip">
-                  <string>Inbound traffic to Kafka server in an unknown port</string>
-                 </property>
-                 <property name="toolTipDuration">
-                  <number>2</number>
-                 </property>
-                 <property name="text">
-                  <string>Kafka unexpected inbound traffic</string>
+                  <string>Export rules</string>
                  </property>
                 </widget>
                </item>
               </layout>
+             </widget>
+            </item>
+            <item>
+             <widget class="QScrollArea" name="scrollArea_5">
+              <property name="widgetResizable">
+               <bool>true</bool>
+              </property>
+              <widget class="QWidget" name="scrollAreaWidgetContents">
+               <property name="geometry">
+                <rect>
+                 <x>0</x>
+                 <y>0</y>
+                 <width>819</width>
+                 <height>1074</height>
+                </rect>
+               </property>
+               <layout class="QVBoxLayout" name="verticalLayout_27">
+                <item>
+                 <widget class="QGroupBox" name="anomaliesProgramExecutedGroupBox">
+                  <property name="title">
+                   <string>Detect unexpected execution of a program</string>
+                  </property>
+                  <property name="checkable">
+                   <bool>false</bool>
+                  </property>
+                  <property name="checked">
+                   <bool>false</bool>
+                  </property>
+                  <layout class="QHBoxLayout" name="horizontalLayout_6">
+                   <item>
+                    <widget class="QTextEdit" name="anomaliesProgramExecutedTextEdit">
+                     <property name="autoFillBackground">
+                      <bool>false</bool>
+                     </property>
+                     <property name="placeholderText">
+                      <string>i.e sudo</string>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QGroupBox" name="anomaliesDirectoryFileOpensGroupBox">
+                  <property name="title">
+                   <string>Detect failed file opens in directory</string>
+                  </property>
+                  <property name="checkable">
+                   <bool>false</bool>
+                  </property>
+                  <property name="checked">
+                   <bool>false</bool>
+                  </property>
+                  <layout class="QHBoxLayout" name="horizontalLayout_13">
+                   <item>
+                    <widget class="QTextEdit" name="anomaliesDirectoryFileOpensTextEdit">
+                     <property name="placeholderText">
+                      <string>i.e. /etc</string>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QGroupBox" name="anomaliesProcessFileOpensGroupBox">
+                  <property name="title">
+                   <string>Detect failed file opens from process</string>
+                  </property>
+                  <property name="checkable">
+                   <bool>false</bool>
+                  </property>
+                  <property name="checked">
+                   <bool>false</bool>
+                  </property>
+                  <layout class="QHBoxLayout" name="horizontalLayout_16">
+                   <item>
+                    <widget class="QTextEdit" name="anomaliesProcessFileOpensTextEdit">
+                     <property name="placeholderText">
+                      <string>i.e python3</string>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QGroupBox" name="anomaliesKnownUsersGroupBox">
+                  <property name="toolTip">
+                   <string>Monitor and detect system usage for specific known users</string>
+                  </property>
+                  <property name="toolTipDuration">
+                   <number>2</number>
+                  </property>
+                  <property name="title">
+                   <string>Detect directories visited by known users</string>
+                  </property>
+                  <property name="checkable">
+                   <bool>false</bool>
+                  </property>
+                  <property name="checked">
+                   <bool>false</bool>
+                  </property>
+                  <layout class="QHBoxLayout" name="horizontalLayout_17">
+                   <item>
+                    <widget class="QTextEdit" name="anomaliesKnownUsersTextEdit">
+                     <property name="toolTipDuration">
+                      <number>-1</number>
+                     </property>
+                     <property name="placeholderText">
+                      <string>i.e john</string>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QGroupBox" name="anomaliesUnknownUsersGroupBox">
+                  <property name="toolTip">
+                   <string>Provide the known users to identify unknown user activity</string>
+                  </property>
+                  <property name="toolTipDuration">
+                   <number>2</number>
+                  </property>
+                  <property name="title">
+                   <string>Detect directories visited by unknown users</string>
+                  </property>
+                  <property name="checkable">
+                   <bool>false</bool>
+                  </property>
+                  <property name="checked">
+                   <bool>false</bool>
+                  </property>
+                  <layout class="QHBoxLayout" name="horizontalLayout_18">
+                   <item>
+                    <widget class="QTextEdit" name="anomalieUnknownUsersTextEdit">
+                     <property name="placeholderText">
+                      <string>i.e john</string>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QGroupBox" name="anomaliesInboundIPGroupBox">
+                  <property name="title">
+                   <string>Detect inbound traffic related to IP</string>
+                  </property>
+                  <property name="checkable">
+                   <bool>false</bool>
+                  </property>
+                  <property name="checked">
+                   <bool>false</bool>
+                  </property>
+                  <layout class="QHBoxLayout" name="horizontalLayout_19">
+                   <item>
+                    <widget class="QTextEdit" name="anomaliesInboundIPTextEdit">
+                     <property name="placeholderText">
+                      <string>i.e. 192.168.125.117</string>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QGroupBox" name="anomaliesOutboundIPGroupBox">
+                  <property name="title">
+                   <string>Detect outbound traffic related to IP</string>
+                  </property>
+                  <property name="checkable">
+                   <bool>false</bool>
+                  </property>
+                  <property name="checked">
+                   <bool>false</bool>
+                  </property>
+                  <layout class="QHBoxLayout" name="horizontalLayout_20">
+                   <item>
+                    <widget class="QTextEdit" name="anomaliesOutboundIPTextEdit">
+                     <property name="placeholderText">
+                      <string>i.e 192.168.125.117</string>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QGroupBox" name="anomaliesMaliciousIPGroupBox">
+                  <property name="toolTip">
+                   <string>The list of malicious IPs should be updated frequently</string>
+                  </property>
+                  <property name="title">
+                   <string>Detect traffic related to a malicious IP</string>
+                  </property>
+                  <property name="checkable">
+                   <bool>false</bool>
+                  </property>
+                  <property name="checked">
+                   <bool>false</bool>
+                  </property>
+                  <layout class="QHBoxLayout" name="horizontalLayout_21">
+                   <item>
+                    <widget class="QTextEdit" name="anomaliesMaliciousIPTextEdit">
+                     <property name="placeholderText">
+                      <string>i.e. 192.168.125.117</string>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QGroupBox" name="groupBox_13">
+                  <property name="title">
+                   <string>Detect unexpected inbound traffic on server</string>
+                  </property>
+                  <layout class="QGridLayout" name="gridLayout_3">
+                   <item row="0" column="1">
+                    <widget class="QCheckBox" name="anomaliesMySQLCheckBox">
+                     <property name="toolTip">
+                      <string>Inbound traffic to MySQL server in an unknown port</string>
+                     </property>
+                     <property name="toolTipDuration">
+                      <number>2</number>
+                     </property>
+                     <property name="text">
+                      <string>MySQL unexpected inbound traffic</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="0">
+                    <widget class="QCheckBox" name="anomaliesMongoDBCheckBox">
+                     <property name="toolTip">
+                      <string>Inbound traffic to MongoDB server in an unknown port</string>
+                     </property>
+                     <property name="toolTipDuration">
+                      <number>2</number>
+                     </property>
+                     <property name="text">
+                      <string>MongoDB unexpected inbound traffic</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="0">
+                    <widget class="QCheckBox" name="anomaliesHTTPCheckBox">
+                     <property name="toolTip">
+                      <string>Inbound traffic to HTTP server in an unknown port</string>
+                     </property>
+                     <property name="toolTipDuration">
+                      <number>2</number>
+                     </property>
+                     <property name="text">
+                      <string>HTTP server unexpected inbound traffic</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="1">
+                    <widget class="QCheckBox" name="anomaliesKafkaCheckBox">
+                     <property name="toolTip">
+                      <string>Inbound traffic to Kafka server in an unknown port</string>
+                     </property>
+                     <property name="toolTipDuration">
+                      <number>2</number>
+                     </property>
+                     <property name="text">
+                      <string>Kafka unexpected inbound traffic</string>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QWidget" name="tab_9">
+           <attribute name="title">
+            <string>Scheduler</string>
+           </attribute>
+           <layout class="QGridLayout" name="gridLayout_4">
+            <item row="1" column="0">
+             <widget class="QTreeWidget" name="treeWidget">
+              <property name="animated">
+               <bool>false</bool>
+              </property>
+              <property name="allColumnsShowFocus">
+               <bool>false</bool>
+              </property>
+              <property name="wordWrap">
+               <bool>false</bool>
+              </property>
+              <property name="headerHidden">
+               <bool>false</bool>
+              </property>
+              <property name="columnCount">
+               <number>0</number>
+              </property>
              </widget>
             </item>
            </layout>
