@@ -19,10 +19,11 @@ class Alert:
 		self.filename = filename
 
 class ScheduledRule:
-	def __init__(self, start, end, repetitive, running):
+	def __init__(self, start, end, repetitive, active, running):
 		self.start = start
 		self.end = end
 		self.repetitive = repetitive
+		self.active = active
 		self.running = running
 
 class Data:
@@ -44,10 +45,11 @@ class Data:
 						self.scheduled_rules[filename] = []
 					scheduledRule = l[1].split(' ')
 					
-					schedule = ScheduledRule(scheduledRule[0],
-											  scheduledRule[1],
-											  scheduledRule[2],
-											  scheduledRule[3])
+					schedule = ScheduledRule(	scheduledRule[0],
+											  	scheduledRule[1],
+											  	scheduledRule[2],
+											  	scheduledRule[3],
+											  	scheduledRule[4])
 
 					self.scheduled_rules[filename].append(schedule)
 		except Exception:
@@ -58,15 +60,15 @@ class Data:
 			with open('resources/scheduledRules.txt', 'w') as f:
 				for filename in self.scheduled_rules:
 					for r in self.scheduled_rules[filename]:
-						f.write(filename + ' ' + r.start + ' ' + r.end + ' ' + str(r.repetitive) + ' ' + str(r.running) + '\n')
+						f.write(filename + ' ' + r.start + ' ' + r.end + ' ' + str(r.repetitive) + ' ' + str(r.active) + ' ' +str(r.running) + '\n')
 
 		except Exception as e:
 			print('Caught exception while saving scheduled rules\n', e)
 
-	def addScheduledRule(self, filename, start, end, repetitive, running):
+	def addScheduledRule(self, filename, start, end, repetitive, active, running):
 		if filename not in self.scheduled_rules:
 			self.scheduled_rules[filename] = []
-		self.scheduled_rules[filename].append(ScheduledRule(start, end, repetitive, running))
+		self.scheduled_rules[filename].append(ScheduledRule(start, end, repetitive, active, running))
 	
 	def removeScheduledRule(self, filename, index):
 		self.scheduled_rules[filename].pop(index)

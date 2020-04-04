@@ -61,7 +61,8 @@ class Listeners:
         # Anomalies Button Listeners
         self.ui.anomaliesLoadRulesButton.clicked.connect(lambda: self.loadAnomalyRules())
         self.ui.anomaliesExportRulesButton.clicked.connect(lambda: self.exportAnomalyRules())
-        self.ui.anomaliesDeployAnomalyDetectorButton.clicked.connect(lambda: self.deployAnomalyDetector())
+        self.ui.anomaliesUpdateButton.clicked.connect(lambda: self.updateAnomalyRules())
+        #self.ui.anomaliesDeployAnomalyDetectorButton.clicked.connect(lambda: self.deployAnomalyDetector())
     
     """""""""""""""
         ANOMALIES
@@ -71,8 +72,9 @@ class Listeners:
 
     def exportAnomalyRules(self):
         dialog = FileDialog('save_file', self.ui)
-        print('complete')
-        self.ruleConfigWidget.addRule(dialog.filename)
+
+    def updateAnomalyRules(self):
+        self.ruleConfigWidget.updateRules()
 
     def deployAnomalyDetector(self):
         # Read separate lines for all the text and checkbox fields

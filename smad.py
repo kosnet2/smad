@@ -363,6 +363,17 @@ class Ui_MainWindow(object):
         self.tab_9.setObjectName("tab_9")
         self.gridLayout_4 = QtWidgets.QGridLayout(self.tab_9)
         self.gridLayout_4.setObjectName("gridLayout_4")
+        self.widget_3 = QtWidgets.QWidget(self.tab_9)
+        self.widget_3.setObjectName("widget_3")
+        self.horizontalLayout_7 = QtWidgets.QHBoxLayout(self.widget_3)
+        self.horizontalLayout_7.setObjectName("horizontalLayout_7")
+        self.label = QtWidgets.QLabel(self.widget_3)
+        self.label.setObjectName("label")
+        self.horizontalLayout_7.addWidget(self.label)
+        self.anomaliesUpdateButton = QtWidgets.QPushButton(self.widget_3)
+        self.anomaliesUpdateButton.setObjectName("anomaliesUpdateButton")
+        self.horizontalLayout_7.addWidget(self.anomaliesUpdateButton)
+        self.gridLayout_4.addWidget(self.widget_3, 0, 0, 1, 1)
         self.treeWidget = QtWidgets.QTreeWidget(self.tab_9)
         self.treeWidget.setAnimated(False)
         self.treeWidget.setAllColumnsShowFocus(False)
@@ -373,13 +384,6 @@ class Ui_MainWindow(object):
         self.gridLayout_4.addWidget(self.treeWidget, 1, 0, 1, 1)
         self.tabWidget_3.addTab(self.tab_9, "")
         self.verticalLayout_26.addWidget(self.tabWidget_3)
-        self.anomaliesDeployAnomalyDetectorButton = QtWidgets.QPushButton(self.tab_2)
-        font = QtGui.QFont()
-        font.setBold(True)
-        font.setWeight(75)
-        self.anomaliesDeployAnomalyDetectorButton.setFont(font)
-        self.anomaliesDeployAnomalyDetectorButton.setObjectName("anomaliesDeployAnomalyDetectorButton")
-        self.verticalLayout_26.addWidget(self.anomaliesDeployAnomalyDetectorButton)
         self.tabWidget.addTab(self.tab_2, "")
         self.tab_3 = QtWidgets.QWidget()
         self.tab_3.setObjectName("tab_3")
@@ -459,8 +463,14 @@ class Ui_MainWindow(object):
         self.alertsDeleteAlertPushButton.setText(_translate("MainWindow", "Delete"))
         self.tabWidget_2.setTabText(self.tabWidget_2.indexOf(self.tab_6), _translate("MainWindow", "Alerts"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("MainWindow", "Monitors"))
-        self.label_7.setText(_translate("MainWindow", "Please configure the needed rules below or load from file.\n"
-"Add multiples inputs for a rule in separate lines"))
+        self.label_7.setText(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:\'Ubuntu\'; font-size:11pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">- Please configure the needed rules below or load from file.</p>\n"
+"<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">- Add multiples inputs for a rule in separate lines.</p>\n"
+"<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">- Export the rules in the <span style=\" font-style:italic;\">~/smad/smad_rules/</span> directory </p>\n"
+"<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">   and <span style=\" text-decoration: underline;\">update the List in the scheduler Tab</span></p></body></html>"))
         self.anomaliesLoadRulesButton.setText(_translate("MainWindow", "Load rules"))
         self.anomaliesExportRulesButton.setText(_translate("MainWindow", "Export rules"))
         self.anomaliesProgramExecutedGroupBox.setTitle(_translate("MainWindow", "Detect unexpected execution of a program"))
@@ -492,8 +502,9 @@ class Ui_MainWindow(object):
         self.anomaliesKafkaCheckBox.setToolTip(_translate("MainWindow", "Inbound traffic to Kafka server in an unknown port"))
         self.anomaliesKafkaCheckBox.setText(_translate("MainWindow", "Kafka unexpected inbound traffic"))
         self.tabWidget_3.setTabText(self.tabWidget_3.indexOf(self.tab_8), _translate("MainWindow", "Detector"))
+        self.label.setText(_translate("MainWindow", "<html><head/><body><p>Click here to update the list with <span style=\" font-weight:600;\">new </span>or <span style=\" font-weight:600;\">deleted</span> rule files located in the <span style=\" font-style:italic;\">~/smad/smad_rules/</span> directory</p></body></html>"))
+        self.anomaliesUpdateButton.setText(_translate("MainWindow", "Update"))
         self.tabWidget_3.setTabText(self.tabWidget_3.indexOf(self.tab_9), _translate("MainWindow", "Scheduler"))
-        self.anomaliesDeployAnomalyDetectorButton.setText(_translate("MainWindow", "Deploy Anomaly Detector"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("MainWindow", "Anomalies"))
         item = self.notificationsTableWidget.horizontalHeaderItem(0)
         item.setText(_translate("MainWindow", "Datetime"))

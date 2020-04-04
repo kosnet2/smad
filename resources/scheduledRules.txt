@@ -1,2 +1,5 @@
-sayit.smadconf 04042001:03:50 04042001:03:50 True False
-yolo.smadconf 04042001:03:53 04042001:03:53 True False
+mm.smadconf 04042015:09:35 04042015:09:35 False False False
+mm.smadconf 04042015:37:06 04042015:37:06 True False False
+yala.smadconf 04042015:25:14 04042015:25:14 True False False
+test.smadconf 04012015:28:52 04042015:28:52 False False False
+yili.smadconf 04042015:34:33 04042015:34:33 True False False
