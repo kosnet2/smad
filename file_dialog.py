@@ -3,7 +3,7 @@ from PyQt5.QtCore import pyqtSignal
 
 class FileDialog(QWidget):
     # Spawn a file dialog based on type parameter passed
-    def __init__(self, type, ui):
+    def __init__(self, type, ui, filename=None):
         super().__init__()
         self.title = 'Allo'
         self.left = 10
@@ -12,8 +12,11 @@ class FileDialog(QWidget):
         self.height = 480
         self.type = type
         self.ui = ui
-        self.initUI()
-        self.success = False
+        if filename != None:
+            self.autoLoadFileDialog(filename)
+        else:
+            self.initUI()
+            self.success = False
 
     def initUI(self):
         self.setWindowTitle(self.title)
@@ -24,78 +27,85 @@ class FileDialog(QWidget):
             self.saveFileDialog()
         self.show()
     
-    def resetFields(self):
-        self.ui.anomaliesProgramExecutedTextEdit.setPlainText('')
-        self.ui.anomaliesDirectoryFileOpensTextEdit.setPlainText('')
-        self.ui.anomaliesProcessFileOpensTextEdit.setPlainText('')
-        self.ui.anomaliesKnownUsersTextEdit.setPlainText('')
-        self.ui.anomalieUnknownUsersTextEdit.setPlainText('')
-        self.ui.anomaliesInboundIPTextEdit.setPlainText('')
-        self.ui.anomaliesOutboundIPTextEdit.setPlainText('')
-        self.ui.anomaliesMaliciousIPTextEdit.setPlainText('')
+    def _resetFields(self):
+        self.ui.anomaliesProgramExecutedTextEdit.clear()
+        self.ui.anomaliesDirectoryFileOpensTextEdit.clear()
+        self.ui.anomaliesProcessFileOpensTextEdit.clear()
+        self.ui.anomaliesKnownUsersTextEdit.clear()
+        self.ui.anomalieUnknownUsersTextEdit.clear()
+        self.ui.anomaliesInboundIPTextEdit.clear()
+        self.ui.anomaliesOutboundIPTextEdit.clear()
+        self.ui.anomaliesMaliciousIPTextEdit.clear()
         self.ui.anomaliesMongoDBCheckBox.setChecked(False)
         self.ui.anomaliesHTTPCheckBox.setChecked(False)
         self.ui.anomaliesMySQLCheckBox.setChecked(False)
         self.ui.anomaliesKafkaCheckBox.setChecked(False)
+
+    def autoLoadFileDialog(self, filename):
+        self._resetFields()
+        self._fillFields('smad_rules/'+filename)
 
     def loadFileDialog(self):
         options = QFileDialog.Options()
         options |= QFileDialog.DontUseNativeDialog
         filename, _ = QFileDialog.getOpenFileName(self, "Load Anomaly Rules", "","SMAD configuration files (*.smadconf)", options=options)
         if filename:
-            # Read rules line by line and insert on corresponding ui_element
-            # a ui_element can be a QTextEdit or a QCheckBox
-            with open(filename, 'r') as f:
-                line = f.readline()
-                is_checkbox = False
-                self.resetFields()
-                while line:
-                    if line.startswith('#'):
-                        if line.startswith('# Program Executed'):
-                            ui_element = self.ui.anomaliesProgramExecutedTextEdit
-                            is_checkbox = False
-                        elif line.startswith('# Directory File Open'):
-                            ui_element = self.ui.anomaliesDirectoryFileOpensTextEdit
-                            is_checkbox = False
-                        elif line.startswith('# Process File Open'):
-                            ui_element = self.ui.anomaliesProcessFileOpensTextEdit
-                            is_checkbox = False
-                        elif line.startswith('# Known Users'):
-                            ui_element = self.ui.anomaliesKnownUsersTextEdit
-                            is_checkbox = False
-                        elif line.startswith('# Unknown Users'):
-                            ui_element = self.ui.anomalieUnknownUsersTextEdit
-                            is_checkbox = False
-                        elif line.startswith('# Inbound Ip Traffic'):
-                            ui_element = self.ui.anomaliesInboundIPTextEdit
-                            is_checkbox = False
-                        elif line.startswith('# Outbound Ip Traffic'):
-                            ui_element = self.ui.anomaliesOutboundIPTextEdit
-                            is_checkbox = False
-                        elif line.startswith('# Malicious Ip Traffic'):
-                            ui_element = self.ui.anomaliesMaliciousIPTextEdit
-                            is_checkbox = False
-                        elif line.startswith('# MongoDB Traffic'):
-                            ui_element = self.ui.anomaliesMongoDBCheckBox
-                            is_checkbox = True
-                        elif line.startswith('# HTTP Traffic'):
-                            ui_element = self.ui.anomaliesHTTPCheckBox
-                            is_checkbox = True
-                        elif line.startswith('# MySQL Traffic'):
-                            ui_element = self.ui.anomaliesMySQLCheckBox
-                            is_checkbox = True
-                        elif line.startswith('# Kafka Traffic'):
-                            ui_element = self.ui.anomaliesKafkaCheckBox
-                            is_checkbox = True
+            self._resetFields()
+            self._fillFields(filename)
+                
+    def _fillFields(self, filename):
+        # Read rules line by line and insert on corresponding ui_element
+        # a ui_element can be a QTextEdit or a QCheckBox
+        with open(filename, 'r') as f:
+            line = f.readline().strip()
+            is_checkbox = False
+            while line:
+                if line.startswith('#'):
+                    if line.startswith('# Program Executed'):
+                        ui_element = self.ui.anomaliesProgramExecutedTextEdit
+                        is_checkbox = False
+                    elif line.startswith('# Directory File Open'):
+                        ui_element = self.ui.anomaliesDirectoryFileOpensTextEdit
+                        is_checkbox = False
+                    elif line.startswith('# Process File Open'):
+                        ui_element = self.ui.anomaliesProcessFileOpensTextEdit
+                        is_checkbox = False
+                    elif line.startswith('# Known Users'):
+                        ui_element = self.ui.anomaliesKnownUsersTextEdit
+                        is_checkbox = False
+                    elif line.startswith('# Unknown Users'):
+                        ui_element = self.ui.anomalieUnknownUsersTextEdit
+                        is_checkbox = False
+                    elif line.startswith('# Inbound Ip Traffic'):
+                        ui_element = self.ui.anomaliesInboundIPTextEdit
+                        is_checkbox = False
+                    elif line.startswith('# Outbound Ip Traffic'):
+                        ui_element = self.ui.anomaliesOutboundIPTextEdit
+                        is_checkbox = False
+                    elif line.startswith('# Malicious Ip Traffic'):
+                        ui_element = self.ui.anomaliesMaliciousIPTextEdit
+                        is_checkbox = False
+                    elif line.startswith('# MongoDB Traffic'):
+                        ui_element = self.ui.anomaliesMongoDBCheckBox
+                        is_checkbox = True
+                    elif line.startswith('# HTTP Traffic'):
+                        ui_element = self.ui.anomaliesHTTPCheckBox
+                        is_checkbox = True
+                    elif line.startswith('# MySQL Traffic'):
+                        ui_element = self.ui.anomaliesMySQLCheckBox
+                        is_checkbox = True
+                    elif line.startswith('# Kafka Traffic'):
+                        ui_element = self.ui.anomaliesKafkaCheckBox
+                        is_checkbox = True
+                else:
+                    if is_checkbox:
+                        ui_element.setChecked(True if line.strip() == 'True' else False)
                     else:
-                        if is_checkbox:
-                            ui_element.setChecked(True if line.strip() == 'True' else False)
-                        else:
-                            if line != '' or line != '\n':
-                                ui_element.insertPlainText(line)
+                        if line != '' or line != '\n':
+                            ui_element.insertPlainText(line)
 
-                    line = f.readline()
-                self.success = True
+                line = f.readline()
+            self.success = True
 
     def saveFileDialog(self):
         options = QFileDialog.Options()

@@ -233,9 +233,23 @@ class Ui_MainWindow(object):
         self.widget_2.setObjectName("widget_2")
         self.horizontalLayout_5 = QtWidgets.QHBoxLayout(self.widget_2)
         self.horizontalLayout_5.setObjectName("horizontalLayout_5")
-        self.label_7 = QtWidgets.QLabel(self.widget_2)
+        self.widget_4 = QtWidgets.QWidget(self.widget_2)
+        self.widget_4.setObjectName("widget_4")
+        self.verticalLayout_8 = QtWidgets.QVBoxLayout(self.widget_4)
+        self.verticalLayout_8.setObjectName("verticalLayout_8")
+        self.runningRulefileLabel = QtWidgets.QLabel(self.widget_4)
+        font = QtGui.QFont()
+        font.setPointSize(14)
+        self.runningRulefileLabel.setFont(font)
+        self.runningRulefileLabel.setObjectName("runningRulefileLabel")
+        self.verticalLayout_8.addWidget(self.runningRulefileLabel)
+        self.label_3 = QtWidgets.QLabel(self.widget_4)
+        self.label_3.setObjectName("label_3")
+        self.verticalLayout_8.addWidget(self.label_3)
+        self.label_7 = QtWidgets.QLabel(self.widget_4)
         self.label_7.setObjectName("label_7")
-        self.horizontalLayout_5.addWidget(self.label_7)
+        self.verticalLayout_8.addWidget(self.label_7)
+        self.horizontalLayout_5.addWidget(self.widget_4)
         self.anomaliesLoadRulesButton = QtWidgets.QPushButton(self.widget_2)
         self.anomaliesLoadRulesButton.setObjectName("anomaliesLoadRulesButton")
         self.horizontalLayout_5.addWidget(self.anomaliesLoadRulesButton)
@@ -417,7 +431,7 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
         self.tabWidget.setCurrentIndex(1)
         self.tabWidget_2.setCurrentIndex(0)
-        self.tabWidget_3.setCurrentIndex(1)
+        self.tabWidget_3.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
@@ -463,14 +477,20 @@ class Ui_MainWindow(object):
         self.alertsDeleteAlertPushButton.setText(_translate("MainWindow", "Delete"))
         self.tabWidget_2.setTabText(self.tabWidget_2.indexOf(self.tab_6), _translate("MainWindow", "Alerts"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("MainWindow", "Monitors"))
+        self.runningRulefileLabel.setText(_translate("MainWindow", "<div class=\"box\"> Running rulefile:  </div>"))
+        self.label_3.setText(_translate("MainWindow", "<hr>"))
         self.label_7.setText(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:\'Ubuntu\'; font-size:11pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">- Please configure the needed rules below or load from file.</p>\n"
-"<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">- Add multiples inputs for a rule in separate lines.</p>\n"
-"<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">- Export the rules in the <span style=\" font-style:italic;\">~/smad/smad_rules/</span> directory </p>\n"
-"<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">   and <span style=\" text-decoration: underline;\">update the List in the scheduler Tab</span></p></body></html>"))
+"<ul>\n"
+"<li style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Add multiples inputs for a rule in separate lines\n"
+"</li>\n"
+"<li style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">\n"
+"Custom user rules should be exported in the <span style=\" font-style:italic;\">~/smad/smad_rules/</span>  <br> directory to allow the  scheduler switch between rule files.\n"
+"</li>\n"
+"</ul>\n"
+"</body></html>"))
         self.anomaliesLoadRulesButton.setText(_translate("MainWindow", "Load rules"))
         self.anomaliesExportRulesButton.setText(_translate("MainWindow", "Export rules"))
         self.anomaliesProgramExecutedGroupBox.setTitle(_translate("MainWindow", "Detect unexpected execution of a program"))
@@ -502,7 +522,7 @@ class Ui_MainWindow(object):
         self.anomaliesKafkaCheckBox.setToolTip(_translate("MainWindow", "Inbound traffic to Kafka server in an unknown port"))
         self.anomaliesKafkaCheckBox.setText(_translate("MainWindow", "Kafka unexpected inbound traffic"))
         self.tabWidget_3.setTabText(self.tabWidget_3.indexOf(self.tab_8), _translate("MainWindow", "Detector"))
-        self.label.setText(_translate("MainWindow", "<html><head/><body><p>Click here to update the list with <span style=\" font-weight:600;\">new </span>or <span style=\" font-weight:600;\">deleted</span> rule files located in the <span style=\" font-style:italic;\">~/smad/smad_rules/</span> directory</p></body></html>"))
+        self.label.setText(_translate("MainWindow", "<html><head/><body><p>Click here to update the list when rule files are <span style=\" font-weight:600;\">deleted</span> from the <span style=\" font-style:italic;\">~/smad/smad_rules/</span>  directory</p></body></html>"))
         self.anomaliesUpdateButton.setText(_translate("MainWindow", "Update"))
         self.tabWidget_3.setTabText(self.tabWidget_3.indexOf(self.tab_9), _translate("MainWindow", "Scheduler"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("MainWindow", "Anomalies"))

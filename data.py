@@ -26,6 +26,15 @@ class ScheduledRule:
 		self.active = active
 		self.running = running
 
+	def __eq__(self, other):
+		if not isinstance(other, ScheduledRule):
+			return NotImplemented
+		return self.start == other.start and \
+			   self.end == other.end and \
+			   self.repetitive == other.repetitive and \
+			   self.active == other.active and \
+			   self.running == other.running
+
 class Data:
 	def __init__(self):
 		self.sysdig_commands = SysdigCommands()
@@ -44,13 +53,14 @@ class Data:
 					if filename not in self.scheduled_rules:
 						self.scheduled_rules[filename] = []
 					scheduledRule = l[1].split(' ')
-					
-					schedule = ScheduledRule(	scheduledRule[0],
-											  	scheduledRule[1],
-											  	scheduledRule[2],
-											  	scheduledRule[3],
-											  	scheduledRule[4])
 
+					start = scheduledRule[0]
+					end = scheduledRule[1]
+					repetitive = True if scheduledRule[2] == 'True' else False
+					active = True if scheduledRule[3] == 'True' else False
+					running = True if scheduledRule[4] == 'True' else False
+
+					schedule = ScheduledRule(start, end, repetitive, active, running)
 					self.scheduled_rules[filename].append(schedule)
 		except Exception:
 			return {}
@@ -71,6 +81,7 @@ class Data:
 		self.scheduled_rules[filename].append(ScheduledRule(start, end, repetitive, active, running))
 	
 	def removeScheduledRule(self, filename, index):
+		self.scheduled_rules[filename][index].active = False
 		self.scheduled_rules[filename].pop(index)
 
 	def getScheduledRulesByFile(self, filename):

@@ -18,6 +18,7 @@ from file_watcher_thread import FileWatcherThread
 
 """ SCHEDULER """
 from rule_config import RuleConfigWidget
+from schedule_handler import ContextSwitchHandler, DataChangeHandler
 
 class Listeners:
     def __init__(self, ui, data):
@@ -37,7 +38,10 @@ class Listeners:
         # Save saved schedules rules
         self.data.saveScheduledRules()
 
-        # Stop current threads
+        # Stopping scheduler
+        self.schedulerThread.stop()
+
+        # Stop running threads
         for thread in self.threads:
             self.threads[thread].stop()
             self.threads[thread].wait()
@@ -62,16 +66,32 @@ class Listeners:
         self.ui.anomaliesLoadRulesButton.clicked.connect(lambda: self.loadAnomalyRules())
         self.ui.anomaliesExportRulesButton.clicked.connect(lambda: self.exportAnomalyRules())
         self.ui.anomaliesUpdateButton.clicked.connect(lambda: self.updateAnomalyRules())
-        #self.ui.anomaliesDeployAnomalyDetectorButton.clicked.connect(lambda: self.deployAnomalyDetector())
+        
+        # Scheduler Listeners
+        self.schedulerThread = ContextSwitchHandler(self.data)
+        self.schedulerThread.start()
+        self.schedulerThread.scheduleswitched.connect(lambda rulefile: self.startAnomalyDetector(rulefile))
     
     """""""""""""""
         ANOMALIES
     """""""""""""""
+    def startAnomalyDetector(self, rulefile):
+        self.ui.runningRulefileLabel.setText('Running rulefile: ' + rulefile)
+        if rulefile != 'None':
+            dialog = FileDialog('load_file', self.ui, rulefile)
+            self.deployAnomalyDetector()
+        else:
+            if 'falco' in self.threads.keys():
+                self.threads['falco'].stop()
+                self.threads['falco'].wait()
+
     def loadAnomalyRules(self):
         dialog = FileDialog('load_file', self.ui)
-
+        
     def exportAnomalyRules(self):
         dialog = FileDialog('save_file', self.ui)
+        self.data.saveScheduledRules()
+        self.ruleConfigWidget.updateRules()
 
     def updateAnomalyRules(self):
         self.ruleConfigWidget.updateRules()

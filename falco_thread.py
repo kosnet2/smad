@@ -17,6 +17,7 @@ class FalcoThread(QThread):
 		# Create configuration file
 		with open('smad_rules/user_generated_rules.yaml', 'w+') as f:
 			f.write(self.rules)
+		
 		# Start Falco
 		process = Popen(shlex.split('falco --unbuffered -r /etc/falco/falco_rules.yaml -r smad_rules/user_generated_rules.yaml -o stdout_output.enabled=false -o webserver.enabled=false -o file_output.enabled=true -o file_output.keep_alive=false -o file_output.filename="' + self.events_file + '"'))
 

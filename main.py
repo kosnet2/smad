@@ -2,7 +2,7 @@ from PyQt5.QtCore import QFile, QTextStream
 from listeners import Listeners
 from smad import QtWidgets, Ui_MainWindow
 from data import Data
-import breeze_resources
+import stylesheets.breeze_resources
 import sys
 
 def updateMonitorsUI(savedMonitors):
@@ -37,6 +37,7 @@ if __name__ == '__main__':
     file.open(QFile.ReadOnly | QFile.Text)
     stream = QTextStream(file)
     app.setStyleSheet(stream.readAll())
+
     ui = Ui_MainWindow()
     
     ui.setupUi(MainWindow)

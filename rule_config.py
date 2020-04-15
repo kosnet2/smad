@@ -42,6 +42,7 @@ class ScheduleItem(QWidget):
 
         # Delete button
         self.deleteBtn = QPushButton("Delete")
+        self.deleteBtn.setStyleSheet("background-color: #ff6347")
         self.deleteBtn.setFont(self.labelFont)
         self.deleteBtn.clicked.connect(self.delete)
 
@@ -63,7 +64,7 @@ class ScheduleItem(QWidget):
         self.schedulechanged.emit(self.startdt, self.enddt, self.repetitive.isChecked(), self.active.isChecked())
     
     def setStyles(self):
-        if self.run 
+        # if running something should happen 
         if self.active.isChecked() == True:
             self.setStyleSheet("background-color:lightgreen;")
         else:
@@ -73,18 +74,18 @@ class RuleConfigWidget(QDialog):
     def __init__(self, ui, data):
         super(RuleConfigWidget, self).__init__()
         self.init_ui(ui)
+        self.data = data
         self.load_data(data)
 
     def load_data(self, data):
-        self.data = data
         arr = os.listdir('smad_rules/')
         idx = 0
-        for ruleset in arr:
-            if ruleset.endswith('.smadconf'):
-                self.addRule(ruleset)
-                if ruleset in self.data.scheduled_rules:
-                    for rule in self.data.getScheduledRulesByFile(ruleset):
-                        self.addSubRule(ruleset, idx, rule.start, rule.end, rule.repetitive, rule.active, rule.running)
+        for rulefile in arr:
+            if rulefile.endswith('.smadconf'):
+                self.addRule(rulefile)
+                if rulefile in self.data.scheduled_rules:
+                    for rule in self.data.getScheduledRulesByFile(rulefile):
+                        self.addSubRule(rulefile, idx, rule.start, rule.end, rule.repetitive, rule.active, rule.running)
                 idx += 1
 
     def init_ui(self, ui):
@@ -112,9 +113,11 @@ class RuleConfigWidget(QDialog):
     def addRule(self, text):
         topLevelItem = QTreeWidgetItem()
         index = len(self.topLevelItems)
+
         self.parentChildren[text] = []
         self.topLevelItems.append(QTreeWidgetItem())
         ruleButton = QPushButton(text)
+        ruleButton.setStyleSheet("color: white; font-size : 14px; font-weight : bold; background-color: #4169E1;")
         self.treeWidget.addTopLevelItem(topLevelItem)
         self.treeWidget.setItemWidget(topLevelItem, 0, ruleButton)
         ruleButton.clicked.connect(lambda: self.addSubRule(text, index))
@@ -127,27 +130,25 @@ class RuleConfigWidget(QDialog):
         if start == None:
             now = QDateTime.currentDateTime()
             scheduleItem = ScheduleItem(now, now, True, False)
-            self.data.addScheduledRule(parent, QDateTime.toString(now, "MMddyyhh:mm:ss"), QDateTime.toString(now, "MMddyyhh:mm:ss"), True, False, False)
+            self.data.addScheduledRule(parent, QDateTime.toString(now, "MMddyyyyhh:mm:ss"), QDateTime.toString(now, "MMddyyyyhh:mm:ss"), True, False, False)
         else:
-            startstr = QDateTime.fromString(start, "MMddyyhh:mm:ss")
-            endstr = QDateTime.fromString(end, "MMddyyhh:mm:ss")
-            rbool = True if repetitive == 'True' else False
-            abool = True if active == 'True' else False
-            scheduleItem = ScheduleItem(startstr, endstr, rbool, abool)
+            startstr = QDateTime.fromString(start, "MMddyyyyhh:mm:ss")
+            endstr = QDateTime.fromString(end, "MMddyyyyhh:mm:ss")
+            scheduleItem = ScheduleItem(startstr, endstr, repetitive, active)
+        
         self.treeWidget.setItemWidget(child, 0, scheduleItem)
         scheduleItem.schedulechanged.connect(lambda s, e, r, a : self.updateData(index, parent, child, s, e, r, a))
         scheduleItem.deleted.connect(lambda: self.removeSubRule(index, parent, child))
     
     def updateData(self, index, parent, child, startdt, enddt, repetitive, active):
         child_index = self.treeWidget.topLevelItem(index).indexOfChild(child)
-        data_item = self.data.scheduled_rules[parent][child_index]
-        data_item.start = QDateTime.toString(startdt.dateTime(), "MMddyyhh:mm:ss")
-        data_item.end = QDateTime.toString(enddt.dateTime(), "MMddyyhh:mm:ss")
-        data_item.repetitive = repetitive
-        data_item.active = active
+        rule = self.data.scheduled_rules[parent][child_index]
+        rule.start = QDateTime.toString(startdt.dateTime(), "MMddyyyyhh:mm:ss")
+        rule.end = QDateTime.toString(enddt.dateTime(), "MMddyyyyhh:mm:ss")
+        rule.repetitive = repetitive
+        rule.active = active
 
     def removeSubRule(self, index, parent, child):
         child_index = self.treeWidget.topLevelItem(index).indexOfChild(child)
         self.data.removeScheduledRule(parent, child_index)
         self.treeWidget.topLevelItem(index).removeChild(child)
-
