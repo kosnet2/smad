@@ -202,8 +202,8 @@ class Listeners:
     
     def saveAlert(self):
         # Get alert name, monitor and metrics
-        alert = self.ui.alertsAlertNameTextEdit.toPlainText().strip()
-        if len(alert) == 0:
+        alertName = self.ui.alertsAlertNameTextEdit.toPlainText().strip()
+        if len(alertName) == 0:
             utils.showMessageBox('Alert name field must not be empty', 'Error', QtWidgets.QMessageBox.Critical)
             return
 
@@ -226,12 +226,12 @@ class Listeners:
                 utils.showMessageBox('Capture filename field must not be empty', 'Error', QtWidgets.QMessageBox.Critical)
                 return
 
-        if self.ui.alertsListListWidget.findItems(alert, QtCore.Qt.MatchExactly):
-            self.data.editAlert(alert, monitor, metrics, captureTime, captureFilename)
+        if self.ui.alertsListListWidget.findItems(alertName, QtCore.Qt.MatchExactly):
+            self.data.editAlert(alertName, monitor, metrics, captureTime, captureFilename)
             utils.showMessageBox('Alert has been edited!', 'Success', QtWidgets.QMessageBox.Information)
         else:
-            self.ui.alertsListListWidget.addItem(alert)
-            self.data.addAlert(alert, monitor, metrics, captureTime, captureFilename)
+            self.ui.alertsListListWidget.addItem(alertName)
+            self.data.addAlert(alertName, monitor, metrics, captureTime, captureFilename)
             utils.showMessageBox('Alert has been added!', 'Success', QtWidgets.QMessageBox.Information)
         
         # Reset UI
@@ -249,7 +249,6 @@ class Listeners:
 
         utils.showMessageBox('Alert removed!', 'Success', QtWidgets.QMessageBox.Information)
     
-    # TODO: There is a bug somewhere here
     def editAlert(self):
         if self.ui.alertsListListWidget.currentRow() == -1:
             utils.showMessageBox('No alert selected', 'Error', QtWidgets.QMessageBox.Critical)
@@ -360,7 +359,6 @@ class Listeners:
         # Display message
         utils.showMessageBox('Monitor stopped!', 'Success', QtWidgets.QMessageBox.Information)
 
-
     """""""""""""""""""""
         VISUALIZATION
     """""""""""""""""""""
@@ -445,3 +443,4 @@ class Listeners:
         else:
             message = 'Anomaly Detector Deployed with Default rules!\n\n'+ 'Detector alerts can be found in the Notifications tab\nor in the events file located at ' + events_file + '\n\nPlease consult the documentation for default rule information!' 
             utils.showMessageBox(message, 'Success', QtWidgets.QMessageBox.Information)
+            

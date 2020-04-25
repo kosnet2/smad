@@ -55,7 +55,7 @@ class FileDialog(QWidget):
                 
     def _fillFields(self, filename):
         # Read rules line by line and insert on corresponding ui_element
-        # a ui_element can be a QTextEdit or a QCheckBox
+        # A ui_element can be a QTextEdit or a QCheckBox
         with open(filename, 'r') as f:
             line = f.readline().strip()
             is_checkbox = False
@@ -76,13 +76,13 @@ class FileDialog(QWidget):
                     elif line.startswith('# Unknown Users'):
                         ui_element = self.ui.anomalieUnknownUsersTextEdit
                         is_checkbox = False
-                    elif line.startswith('# Inbound Ip Traffic'):
+                    elif line.startswith('# Inbound IP Traffic'):
                         ui_element = self.ui.anomaliesInboundIPTextEdit
                         is_checkbox = False
-                    elif line.startswith('# Outbound Ip Traffic'):
+                    elif line.startswith('# Outbound IP Traffic'):
                         ui_element = self.ui.anomaliesOutboundIPTextEdit
                         is_checkbox = False
-                    elif line.startswith('# Malicious Ip Traffic'):
+                    elif line.startswith('# Malicious IP Traffic'):
                         ui_element = self.ui.anomaliesMaliciousIPTextEdit
                         is_checkbox = False
                     elif line.startswith('# MongoDB Traffic'):
@@ -110,21 +110,20 @@ class FileDialog(QWidget):
     def saveFileDialog(self):
         options = QFileDialog.Options()
         options |= QFileDialog.DontUseNativeDialog
-        filename, _ = QFileDialog.getSaveFileName(self,"Export Anomaly Rules","","SMAD configuration files (*.smadconf)", options=options)
+        filename, _ = QFileDialog.getSaveFileName(self, 'Export Anomaly Rules', '', 'SMAD configuration files (*.smadconf)', options=options)
         if filename:
             if not filename.endswith('.smadconf'):
                 filename += '.smadconf'
-            # Write the rule title followed by the parameters entered by the user
-            # on various input fields
+            # Write the rule title followed by the parameters entered by the user on various input fields
             with open(filename, 'w+') as f:
                 f.write('# Program Executed\n' + self.ui.anomaliesProgramExecutedTextEdit.toPlainText().strip() + '\n')
                 f.write('# Directory File Open\n' + self.ui.anomaliesDirectoryFileOpensTextEdit.toPlainText().strip() + '\n')
                 f.write('# Process File Open\n' + self.ui.anomaliesProcessFileOpensTextEdit.toPlainText().strip() + '\n')
                 f.write('# Known Users\n' + self.ui.anomaliesKnownUsersTextEdit.toPlainText().strip() + '\n')
                 f.write('# Unknown Users\n' + self.ui.anomalieUnknownUsersTextEdit.toPlainText().strip() + '\n')
-                f.write('# Inbound Ip Traffic\n' + self.ui.anomaliesInboundIPTextEdit.toPlainText().strip() + '\n')
-                f.write('# Outbound Ip Traffic\n' + self.ui.anomaliesOutboundIPTextEdit.toPlainText().strip() + '\n')
-                f.write('# Malicious Ip Traffic\n' + self.ui.anomaliesMaliciousIPTextEdit.toPlainText().strip() + '\n')
+                f.write('# Inbound IP Traffic\n' + self.ui.anomaliesInboundIPTextEdit.toPlainText().strip() + '\n')
+                f.write('# Outbound IP Traffic\n' + self.ui.anomaliesOutboundIPTextEdit.toPlainText().strip() + '\n')
+                f.write('# Malicious IP Traffic\n' + self.ui.anomaliesMaliciousIPTextEdit.toPlainText().strip() + '\n')
                 f.write('# MongoDB Traffic\n' + str(self.ui.anomaliesMongoDBCheckBox.isChecked()) + '\n')
                 f.write('# HTTP Traffic\n' + str( self.ui.anomaliesHTTPCheckBox.isChecked()) + '\n')
                 f.write('# MySQL Traffic\n' + str(self.ui.anomaliesMySQLCheckBox.isChecked()) + '\n')

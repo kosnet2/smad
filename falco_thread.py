@@ -1,9 +1,9 @@
 from PyQt5.QtCore import QThread
 from threading import Event
 from subprocess import Popen
+from datetime import datetime
 import shlex
 import os
-from datetime import datetime
 
 class FalcoThread(QThread):
 	def __init__(self, ui, rules):

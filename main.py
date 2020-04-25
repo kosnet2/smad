@@ -39,14 +39,17 @@ if __name__ == '__main__':
     app.setStyleSheet(stream.readAll())
 
     ui = Ui_MainWindow()
-    
     ui.setupUi(MainWindow)
+
     # Load data
     data = Data()
+
     # Update UI
     updateMonitorsUI(data.getSavedMonitors())
+
     # Set up listeners
     listeners = Listeners(ui, data)
+    
     # Set close event listener
     MainWindow.closeEvent = listeners.stopApplication
 

@@ -18,6 +18,7 @@ class Alert:
 		self.seconds = seconds
 		self.filename = filename
 
+# Defines a scheduled rule for the detector running using custom rules
 class ScheduledRule:
 	def __init__(self, start, end, repetitive, active, running):
 		self.start = start
@@ -60,8 +61,7 @@ class Data:
 					active = True if scheduledRule[3] == 'True' else False
 					running = True if scheduledRule[4] == 'True' else False
 
-					schedule = ScheduledRule(start, end, repetitive, active, running)
-					self.scheduled_rules[filename].append(schedule)
+					self.scheduled_rules[filename].append(ScheduledRule(start, end, repetitive, active, running))
 		except Exception:
 			return {}
 	
@@ -70,7 +70,7 @@ class Data:
 			with open('resources/scheduledRules.txt', 'w') as f:
 				for filename in self.scheduled_rules:
 					for r in self.scheduled_rules[filename]:
-						f.write(filename + ' ' + r.start + ' ' + r.end + ' ' + str(r.repetitive) + ' ' + str(r.active) + ' ' +str(r.running) + '\n')
+						f.write(f'{filename} {r.start} {r.end} {r.repetitive} {r.active} {r.running}\n')
 
 		except Exception as e:
 			print('Caught exception while saving scheduled rules\n', e)
@@ -114,12 +114,10 @@ class Data:
 		self.alerts.append(alert)
 		self.monitors[monitor].alerts.append(alert)
 
-	def editAlert(self, name, monitor, metrics, notifications, email, seconds, filename):
+	def editAlert(self, name, monitor, metrics, seconds, filename):
 		index = [alert.name for alert in self.alerts].index(name)
 		self.alerts[index].monitor = monitor
 		self.alerts[index].metrics = metrics
-		self.alerts[index].notifications = notifications
-		self.alerts[index].email = email
 		self.alerts[index].seconds = seconds
 		self.alerts[index].filename = filename
 
@@ -127,12 +125,15 @@ class Data:
 		del self.monitors[name]
 
 	def removeAlert(self, name):
+		# Remove alert from alerts array
 		i = 0
 		for alert in self.alerts:
 			if alert.name == name:
 				del self.alerts[i]
 				break
+			i += 1
 
+		# Remove alert from every monitor it is assigned to
 		for monitor in self.monitors:
 			i = 0
 			for alert in self.monitors[monitor].alerts:

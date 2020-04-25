@@ -157,22 +157,19 @@ class FalcoRules:
         rules = ''
         for name in self.falco_lists:
             args = self.falco_lists[name]
-            # non-parametric rules
+            # Non-parametric rules
             if len(args) == 0:
                 rules += self.falco_rules[name] + '\n'
-            # populating ip lists
+            # Populating IP lists
             elif name.endswith('traffic'):
                 args = str(list(map(lambda x: '\"' + x + '\"', args)))
                 rules += self.falco_rules[name].format(args)
-            # directory rules should be seperated
+            # Directory rules should be seperated
             elif name.startswith('directory'):
-                for dir in args:
-                  rules += self.falco_rules[name].format(dir)
-            # the rest of the rules
+                for directory in args:
+                    rules += self.falco_rules[name].format(directory)
+            # The rest of the rules
             else:
-              rules += self.falco_rules[name].format(args)
+                rules += self.falco_rules[name].format(args)
 
         return rules
-
-
-    

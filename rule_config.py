@@ -21,17 +21,20 @@ class ScheduleItem(QWidget):
         self.startLabel.setFont(self.labelFont)
         self.startdt = QDateTimeEdit(start)
         self.startdt.dateTimeChanged.connect(self.scheduleChanged)
+
         # End time
         self.endLabel = QLabel("End")
         self.endLabel.setFont(self.labelFont)
         self.enddt = QDateTimeEdit(end)
         self.enddt.dateTimeChanged.connect(self.scheduleChanged)
+
         # Repetitive
         self.repetitive = QCheckBox(None)
         self.repetitive.setText("Repetitive")
         self.repetitive.setToolTip("If selected, the detector will run based on days of the week and datetimes. \nE.g 04/06/20 00:00 - 05/06/20 00:00 (which is a Sunday) will run 24 hours every Sunday")
         self.repetitive.setChecked(rchecked)
         self.repetitive.stateChanged.connect(self.scheduleChanged)
+
         # Active
         self.active = QCheckBox(None)
         self.active.setText("Active")
@@ -64,16 +67,17 @@ class ScheduleItem(QWidget):
         self.schedulechanged.emit(self.startdt, self.enddt, self.repetitive.isChecked(), self.active.isChecked())
     
     def setStyles(self):
-        # if running something should happen 
+        # If running something should happen 
         if self.active.isChecked() == True:
-            self.setStyleSheet("background-color:lightgreen;")
+            self.setStyleSheet('background-color:lightgreen;')
         else:
-            self.setStyleSheet("")
+            self.setStyleSheet('')
 
 class RuleConfigWidget(QDialog):
     def __init__(self, ui, data):
         super(RuleConfigWidget, self).__init__()
-        self.init_ui(ui)
+        self.ui = ui
+        self.init_ui()
         self.data = data
         self.load_data(data)
 
@@ -88,26 +92,25 @@ class RuleConfigWidget(QDialog):
                         self.addSubRule(rulefile, idx, rule.start, rule.end, rule.repetitive, rule.active, rule.running)
                 idx += 1
 
-    def init_ui(self, ui):
-        self.ui = ui # Probably Not needed
+    def init_ui(self):
         self.treeWidget = self.ui.treeWidget
-        self.treeWidget.setHeaderLabel("Available Configuration Files")
+        self.treeWidget.setHeaderLabel('Available Configuration Files')
         self.topLevelItems = []
         self.parentChildren = {}
 
     def updateRules(self):
-        # save current data
+        # Save current data
         self.data.saveScheduledRules()
         
-        # delete all data
+        # Delete all data
         todelete = len(self.topLevelItems)
         for _ in range(todelete):
             self.treeWidget.takeTopLevelItem(0)
         self.topLevelItems = []
         self.parentChildren = {}
 
-        # reinitialize
-        self.init_ui(self.ui)
+        # Reinitialize
+        self.init_ui()
         self.load_data(self.data)
 
     def addRule(self, text):

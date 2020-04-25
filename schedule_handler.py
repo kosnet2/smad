@@ -11,8 +11,6 @@
 #       Listeners will be responsible to stop/start the falco instance with the configuration file name specified
 #       If a Scheduled Rule goes inactive and no other rule runs then a "Stop running message" should be emitted
 
-# - 
-
 from PyQt5.QtCore import QThread, QObject,pyqtSlot, QDateTime, QDate, pyqtSignal
 from time import sleep
 from threading import Event, Lock
@@ -125,9 +123,10 @@ class DataChangeHandler(QThread):
                 break
             sleep(2)
             if self.hasDataChanged():
-                # update the data
+                # Update the data
                 self.previousData = deepcopy(self.data.scheduled_rules)
-                # emit the change
+                
+                # Emit the change
                 self.datachanged.emit(self.previousData)
 
     def hasDataChanged(self):

@@ -105,7 +105,7 @@ class SysdigThread(QThread):
 
     def addPlot(self, param):
         maxlen = 200
-        self.ui.plots[param] = self.ui.plotWidget.plot(name=param, pen=pg.mkPen(color=self.pens[self.penIndex]))
+        self.ui.plots[param] = self.ui.plotWidget.plot(name=param, pen=pg.mkPen(color=self.pens[self.penIndex]), axisItems={'bottom': utils.TimeAxisItem(orientation='bottom')})
         self.legend.addItem(self.ui.plots[param], param)
         self.penIndex = (self.penIndex + 1) % len(self.pens)
         self.ui.plotsData[param] = [deque(maxlen=maxlen), deque(maxlen=maxlen)]

@@ -38,9 +38,10 @@ class FileWatcher(QObject):
 	@pyqtSlot()
 	def _onFileChanged(self):
 		if os.path.exists(self._path):
-			# get last line
+			# Get last line
 			line = self.last_insert(self._path).decode('utf-8')[:-1]
-			# split datetime and event output and raise an event
+
+			# Split datetime and event output and raise an event
 			line = line.split(' ', 1)
 			event = Event(str(datetime.datetime.now()), line[1])
 			self.addNotification(event)
@@ -69,7 +70,6 @@ class FileWatcher(QObject):
 			rowItem.setBackground(eventColor(event.details))
 			self.ui.notificationsTableWidget.setItem(0, i, rowItem)
 
-
 class FileWatcherThread(QThread):
 	def __init__(self, ui, path):
 		QThread.__init__(self)
@@ -81,4 +81,3 @@ class FileWatcherThread(QThread):
 
 	def stop(self):
 		self._file_watcher.disable()
-

@@ -27,7 +27,10 @@
 * [Ubuntu 18.04](http://releases.ubuntu.com/18.04/)
 * [Ubuntu 19.04](http://releases.ubuntu.com/19.04/)
 
-## TODO:
-* Installation
-* Running SMAD
-* Future work
+## Installation
+Simply running the install script using `sudo ./install` in the requirements folder will install everything necessary. Make sure the script has execution rights by running `chmod +x install` if needed.
+
+## Running SMAD
+Simply running `./start` in the root folder will start everything needed for the application.
+
+## Future work

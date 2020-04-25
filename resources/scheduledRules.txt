@@ -1,1 +1,2 @@
 test2.smadconf 0415202021:48:07 0415202021:48:07 True False False
+a.smadconf 0425202018:46:15 0525202018:46:15 False False False

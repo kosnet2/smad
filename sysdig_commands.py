@@ -1,6 +1,7 @@
 # This class is responsible for the sysdig commands that will be executed.
 # It has a set of predefined commands
 # It will also be responsible for throwing exceptions in case an invalid sysdig command is issued.
+
 class SysdigCommands:
     def __init__(self):
         self.sysdig_commands = {

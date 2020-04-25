@@ -1,0 +1,20 @@
+#!/bin/bash
+
+# Update packages
+sudo apt update -y
+sudo apt upgrade -y
+
+# Setting up pip3
+sudo apt install python3-pip
+sudo -H pip3 install --upgrade pip
+
+# Install smad dependencies
+pip3 install -r python_requirements.txt
+
+# Install sysdig
+chmod +x install_sysdig
+sudo ./install_sysdig
+
+# Install falco
+chmod +x install_falco
+sudo ./install_falco
