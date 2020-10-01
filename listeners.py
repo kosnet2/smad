@@ -1,38 +1,61 @@
 # -*- coding: utf-8 -*-
 from PyQt5 import QtCore, QtGui, QtWidgets
-from sysdig_thread import SysdigThread
 import utilities as utils
+
+""" FILE_DIALOG """
+from PyQt5.QtWidgets import QWidget, QFileDialog
+
+""" VISUALIZATION """
+import pyqtgraph as pg
+
+""" SYSDIG """
+from file_dialog import FileDialog
+from collections import deque
+from sysdig_thread import SysdigThread
+from falco_rules import FalcoRules
+from falco_thread import FalcoThread
+from file_watcher_thread import FileWatcherThread
+
+""" SCHEDULER """
+from rule_config import RuleConfigWidget
+from schedule_handler import ContextSwitchHandler, DataChangeHandler
 
 class Listeners:
     def __init__(self, ui, data):
+        self.pens = [(255, 0, 0), (0, 255, 0), (0, 0, 255), (255, 255, 0), (255, 0, 255), (0, 255, 255), (255, 255, 255)] # Plotting colors
+        self.penIndex = 0
         self.ui = ui
         self.data = data
-        self.registerListeners()
         self.threads = {}
+        self.ruleConfigWidget = RuleConfigWidget(self.ui, self.data)
+        self.registerListeners()
     
     def stopApplication(self, event):
 		# Save monitors to file
         with open('resources/monitors.txt', 'w+') as f:
             f.write('\n'.join([monitor for monitor in self.data.monitors]))
 
-        # Stop current threads
+        # Save saved schedules rules
+        self.data.saveScheduledRules()
+
+        # Stopping scheduler
+        self.schedulerThread.stop()
+
+        # Stop running threads
         for thread in self.threads:
             self.threads[thread].stop()
-            self.threads[thread].join()
+            self.threads[thread].wait()
 
+    """""""""""""""""""""
+     BUTTON REGISTRATION
+    """""""""""""""""""""
     def registerListeners(self):
         # Monitors Button Listeners
-        self.ui.cpuStartMonitorsPushButton.clicked.connect(lambda: self.startProcessMonitors())
-        self.ui.cpuStopMonitorPushButton.clicked.connect(lambda: self.stopProcessMonitor())
-        self.ui.errorsStartMonitorsPushButton.clicked.connect(lambda: self.startErrorsMonitors())
-        self.ui.errorsStopMonitorPushButton.clicked.connect(lambda: self.stopErrorsMonitor())
-        self.ui.networkStartMonitorsPushButton.clicked.connect(lambda: self.startNetworkMonitors())
-        self.ui.networkStopMonitorPushButton.clicked.connect(lambda: self.stopNetworkMonitor())
-        self.ui.securityStartMonitorsPushButton.clicked.connect(lambda: self.startSecurityMonitors())
-        self.ui.securityStopMonitorPushButton.clicked.connect(lambda: self.stopSecurityMonitor())
-        self.ui.appStartMonitorsPushButton.clicked.connect(lambda: self.startApplicationMonitors())
-        self.ui.appStopMonitorPushButton.clicked.connect(lambda: self.stopApplicationMonitor())
-        
+        self.ui.monitorsStartMonitors.clicked.connect(lambda: self.startMonitors())
+        self.ui.monitorsStopMonitorButton.clicked.connect(lambda: self.stopMonitor())
+        self.ui.monitorsPlotMonitorButton.clicked.connect(lambda: self.visualizeMonitor())
+        self.ui.monitorsStopPlotMonitorButton.clicked.connect(lambda: self.stopVisualizingMonitor())
+
         # Alerts Button Listeners
         self.ui.alertsSaveAlertPushButton.clicked.connect(lambda: self.saveAlert())
         self.ui.alertsDeleteAlertPushButton.clicked.connect(lambda: self.deleteAlert())
@@ -40,8 +63,108 @@ class Listeners:
         self.ui.alertsChooseMonitorComboBox.currentIndexChanged.connect(lambda: self.enableMetrics())
 
         # Anomalies Button Listeners
+        self.ui.anomaliesLoadRulesButton.clicked.connect(lambda: self.loadAnomalyRules())
+        self.ui.anomaliesExportRulesButton.clicked.connect(lambda: self.exportAnomalyRules())
+        self.ui.anomaliesUpdateButton.clicked.connect(lambda: self.updateAnomalyRules())
+        
+        # Scheduler Listeners
+        self.schedulerThread = ContextSwitchHandler(self.data)
+        self.schedulerThread.start()
+        self.schedulerThread.scheduleswitched.connect(lambda rulefile: self.startAnomalyDetector(rulefile))
+    
+    """""""""""""""
+        ANOMALIES
+    """""""""""""""
+    def startAnomalyDetector(self, rulefile):
+        self.ui.runningRulefileLabel.setText('Running rulefile: ' + rulefile)
+        if rulefile != 'None':
+            dialog = FileDialog('load_file', self.ui, rulefile)
+            self.deployAnomalyDetector()
+        else:
+            if 'falco' in self.threads.keys():
+                self.threads['falco'].stop()
+                self.threads['falco'].wait()
 
-    # Alerts
+    def loadAnomalyRules(self):
+        dialog = FileDialog('load_file', self.ui)
+        
+    def exportAnomalyRules(self):
+        dialog = FileDialog('save_file', self.ui)
+        self.data.saveScheduledRules()
+        self.ruleConfigWidget.updateRules()
+
+    def updateAnomalyRules(self):
+        self.ruleConfigWidget.updateRules()
+
+    def deployAnomalyDetector(self):
+        # Read separate lines for all the text and checkbox fields
+        # Should be the same idea as monitor loading functionalities
+        rules = []
+        invalidRules = []
+
+        text = self.ui.anomaliesProgramExecutedTextEdit.toPlainText().strip()
+        _rules = utils.getValidRules(text, 'program_executed_', 'process')
+        
+        rules.extend(_rules[0])
+        invalidRules.extend(_rules[1])
+
+        text = self.ui.anomaliesDirectoryFileOpensTextEdit.toPlainText().strip()
+        _rules = utils.getValidRules(text, 'directory_file_open_', 'dir')
+
+        rules.extend(_rules[0])
+        invalidRules.extend(_rules[1])
+        
+        text = self.ui.anomaliesProcessFileOpensTextEdit.toPlainText().strip()
+        _rules = utils.getValidRules(text, 'process_file_open_', 'process')
+
+        rules.extend(_rules[0])
+        invalidRules.extend(_rules[1])
+
+        text = self.ui.anomaliesKnownUsersTextEdit.toPlainText().strip()
+        _rules = utils.getValidRules(text, 'known_users_', 'user')
+
+        rules.extend(_rules[0])
+        invalidRules.extend(_rules[1])
+
+        text = self.ui.anomalieUnknownUsersTextEdit.toPlainText().strip()
+        _rules = utils.getValidRules(text, 'unknown_users_', 'user')
+
+        rules.extend(_rules[0])
+        invalidRules.extend(_rules[1])
+
+        text = self.ui.anomaliesInboundIPTextEdit.toPlainText().strip()
+        _rules = utils.getValidRules(text, 'inbound_ip_traffic_', 'ip')
+        
+        rules.extend(_rules[0])
+        invalidRules.extend(_rules[1])
+        
+        text = self.ui.anomaliesOutboundIPTextEdit.toPlainText().strip()
+        _rules = utils.getValidRules(text, 'outbound_ip_traffic_', 'ip')
+        
+        rules.extend(_rules[0])
+        invalidRules.extend(_rules[1])
+        
+        text = self.ui.anomaliesMaliciousIPTextEdit.toPlainText().strip()
+        _rules = utils.getValidRules(text, 'malicious_traffic_', 'ip')
+        
+        rules.extend(_rules[0])
+        invalidRules.extend(_rules[1])
+
+        if self.ui.anomaliesMongoDBCheckBox.isChecked():
+            rules.append('inbound_mongodb_traffic')
+        if self.ui.anomaliesHTTPCheckBox.isChecked():
+            rules.append('inbound_http_traffic')
+        if self.ui.anomaliesMySQLCheckBox.isChecked():
+            rules.append('inbound_mysql_traffic')
+        if self.ui.anomaliesKafkaCheckBox.isChecked():
+            rules.append('inbound_kafka_traffic')
+        
+        # Start falco instance
+        self.startFalco(rules, invalidRules)
+
+    """""""""""""""
+        ALERTS
+    """""""""""""""
     def enableMetrics(self):
         # Reset metrics before proceeding
         self.ui.alertsMetricUnitComboBox.clear()
@@ -51,6 +174,8 @@ class Listeners:
         self.ui.alertsMetricValueSpinBox.setMaximum(2147483647)
         
         monitor = self.ui.alertsChooseMonitorComboBox.currentText()
+
+        # Update metrics depending on monitor chosen
         if monitor != '':
             metricType = self.data.monitors[monitor].metricType
             
@@ -77,13 +202,14 @@ class Listeners:
     
     def saveAlert(self):
         # Get alert name, monitor and metrics
-        alert = self.ui.alertsAlertNameTextEdit.toPlainText().strip()
-        if len(alert) == 0:
+        alertName = self.ui.alertsAlertNameTextEdit.toPlainText().strip()
+        if len(alertName) == 0:
             utils.showMessageBox('Alert name field must not be empty', 'Error', QtWidgets.QMessageBox.Critical)
             return
-        monitor = self.ui.alertsChooseMonitorComboBox.currentText()
 
+        monitor = self.ui.alertsChooseMonitorComboBox.currentText()
         metrics = ''
+
         if self.ui.alertsSetMetricWidget.isEnabled():
             metrics += self.ui.alertsMetricOperationComboBox.currentText() + ' '
             metrics += str(self.ui.alertsMetricValueSpinBox.value()) + ' '
@@ -100,19 +226,17 @@ class Listeners:
                 utils.showMessageBox('Capture filename field must not be empty', 'Error', QtWidgets.QMessageBox.Critical)
                 return
 
-        if self.ui.alertsListListWidget.findItems(alert, QtCore.Qt.MatchExactly):
-            self.data.editAlert(alert, monitor, metrics, captureTime, captureFilename)
+        if self.ui.alertsListListWidget.findItems(alertName, QtCore.Qt.MatchExactly):
+            self.data.editAlert(alertName, monitor, metrics, captureTime, captureFilename)
             utils.showMessageBox('Alert has been edited!', 'Success', QtWidgets.QMessageBox.Information)
         else:
-            self.ui.alertsListListWidget.addItem(alert)
-            self.data.addAlert(alert, monitor, metrics, captureTime, captureFilename)
+            self.ui.alertsListListWidget.addItem(alertName)
+            self.data.addAlert(alertName, monitor, metrics, captureTime, captureFilename)
             utils.showMessageBox('Alert has been added!', 'Success', QtWidgets.QMessageBox.Information)
         
         # Reset UI
         self.ui.alertsAlertNameTextEdit.setText('')
         self.ui.alertsFileNameTextEdit.setText('')
-        
-        # Sysdig
             
     def deleteAlert(self):
         idx = self.ui.alertsListListWidget.currentRow()
@@ -124,10 +248,9 @@ class Listeners:
         self.ui.alertsListListWidget.takeItem(idx)
 
         utils.showMessageBox('Alert removed!', 'Success', QtWidgets.QMessageBox.Information)
-        
+    
     def editAlert(self):
-        idx = self.ui.alertsListListWidget.currentRow()
-        if idx == -1:
+        if self.ui.alertsListListWidget.currentRow() == -1:
             utils.showMessageBox('No alert selected', 'Error', QtWidgets.QMessageBox.Critical)
             return
 
@@ -141,22 +264,13 @@ class Listeners:
             self.ui.alertsChooseMonitorComboBox.setCurrentIndex(index)
             
         metrics = alert.metrics.split(' ')
-        if len(metrics) == 0 :  # CASE - no metrics
-            a = 10 # do nothing, for now..
-        elif len(metrics) == 2: # CASE - missing last field
-            op = metrics[0]
-            th = metrics[1]
-            idx = self.ui.alertsMetricOperationComboBox.findText(op)
-            self.ui.alertsMetricOperationComboBox.setCurrentIndex(idx)
-            self.ui.alertsMetricValueSpinBox.setValue(int(th))
-        elif len(metrics) == 3: # CASE - all fields set
-            op = metrics[0]
-            th = metrics[1]
-            un = metrics[2]
-            idx = self.ui.alertsMetricOperationComboBox.findText(op)
-            self.ui.alertsMetricOperationComboBox.setCurrentIndex(idx)
-            self.ui.alertsMetricValueSpinBox.setValue(int(th))
-            idx = self.ui.alertsMetricUnitComboBox.findText(un)
+        idx = self.ui.alertsMetricOperationComboBox.findText(metrics[0])
+        self.ui.alertsMetricOperationComboBox.setCurrentIndex(idx)
+        self.ui.alertsMetricValueSpinBox.setValue(int(metrics[1]))
+
+        # If last metric field is set
+        if len(metrics) == 3:
+            idx = self.ui.alertsMetricUnitComboBox.findText(metrics[2])
             self.ui.alertsMetricUnitComboBox.setCurrentIndex(idx)
             
         if alert.seconds > 0:
@@ -166,304 +280,112 @@ class Listeners:
         else:
             self.ui.alertsCaptureGroupBox.setChecked(False)
 
+    """""""""""""""
+        MONITORS
+    """""""""""""""
     # Start Monitors
-    def startProcessMonitors(self):
-        monitorsChecked = any([self.ui.cpuProcessesGroupBox.isChecked(),
-                               self.ui.cpuTopProcessesCheckBox.isChecked()])
-    
+    def startMonitors(self):
+        monitorsChecked = any([self.ui.monitorsCpuProcessUsageCheckBox.isChecked(),
+                               self.ui.monitorsProcessIOErrorsCheckBox.isChecked(),
+                               self.ui.monitorsSystemCallErrorsCheckBox.isChecked(),
+                               self.ui.monitorsFileIOErrorsCheckBox.isChecked(),
+                               self.ui.monitorsFilesMostTimeSpentCheckBox.isChecked(),
+                               self.ui.monitorsSystemCallsMostTimeSpentCheckBox.isChecked(),
+                               self.ui.monitorsNetworkConnectionsBWCheckBox.isChecked(),
+                               self.ui.monitorsProcessBWCheckBox.isChecked()])
+
         if not monitorsChecked:
             utils.showMessageBox('Please select at least one monitor', 'Error', QtWidgets.QMessageBox.Critical)
             return
-        
+
         monitors = []
         invalidMonitors = []
-        if self.ui.cpuProcessesGroupBox.isChecked():
-            text = self.ui.cpuProcessesTextEdit.toPlainText().strip()
+
+        if self.ui.monitorsCpuProcessUsageCheckBox.isChecked():
+            text = self.ui.monitorsCpuProcessUsageTextEdit.toPlainText().strip()
             if text == '':
                 utils.showMessageBox('No processes entered', 'Error', QtWidgets.QMessageBox.Critical)
                 return
-            mntrs = utils.getValidMonitors(text, 'cpu_stdout_', 'process')
+            mntrs = utils.getValidMonitors(text, 'cpu_top_processes_', 'process')
             monitors.extend(mntrs[0])
             invalidMonitors.extend(mntrs[1])
 
-        if self.ui.cpuTopProcessesCheckBox.isChecked():
-            monitors.append('cpu_top_processes')
-        
-        self.startSysdig(monitors, self.ui.cpuRunningMonitorsListWidget)
-        
-        self.displayMonitorStatus(monitors, invalidMonitors)
-        
-        # Reset form
-        self.ui.cpuProcessesTextEdit.setPlainText('')
-            
-    def startApplicationMonitors(self):
-        monitorsChecked = any([self.ui.appHTTPGroupBox.isChecked(),
-                               self.ui.appSQLGroupBox.isChecked()])
-    
-        if not monitorsChecked:
-            utils.showMessageBox('Please select at least one monitor', 'Error', QtWidgets.QMessageBox.Critical)
-            return
-        
-        monitors = []
-        invalidMonitors = []
-        if self.ui.appHTTPGroupBox.isChecked():
-            text = self.ui.appHTTPTextEdit.toPlainText().strip()
-            if text == '':
-                utils.showMessageBox('No request types entered', 'Error', QtWidgets.QMessageBox.Critical)
-                return
-            mntrs = utils.getValidMonitors(text, 'application_request_of_type_', 'request')
-            monitors.extend(mntrs[0])
-            invalidMonitors.extend(mntrs[1])
-        
-        if self.ui.appSQLGroupBox.isChecked():
-            text = self.ui.appSQLTextEdit.toPlainText().strip()
-            if text == '':
-                utils.showMessageBox('No query types entered', 'Error', QtWidgets.QMessageBox.Critical)
-                return
-            mntrs = utils.getValidMonitors(text, 'application_queries_of_type_', 'query')
-            monitors.extend(mntrs[0])
-            invalidMonitors.extend(mntrs[1])
-        
-        self.startSysdig(monitors, self.ui.appRunningMonitorsListWidget)
-        
-        self.displayMonitorStatus(monitors, invalidMonitors)       
-        
-        # Reset form
-        self.ui.appHTTPTextEdit.setPlainText('')
-        self.ui.appSQLTextEdit.setPlainText('')
-
-    def startSecurityMonitors(self):
-        monitorsChecked = any([self.ui.securityLoginShellsGroupBox.isChecked(),
-                               self.ui.securityUserDirectoriesGroupBox.isChecked(),
-                               self.ui.securityFileOpensGroupBox.isChecked()])
-    
-        if not monitorsChecked:
-            utils.showMessageBox('Please select at least one monitor', 'Error', QtWidgets.QMessageBox.Critical)
-            return
-        
-        monitors = []
-        invalidMonitors = []
-        if self.ui.securityLoginShellsGroupBox.isChecked():
-            text = self.ui.securityLoginShellsTextEdit.toPlainText().strip()
-            if text == '':
-                utils.showMessageBox('No login shell IDs entered', 'Error', QtWidgets.QMessageBox.Critical)
-                return
-            mntrs = utils.getValidMonitors(text, 'security_commands_executed_by_id_', 'shellid') 
-            monitors.extend(mntrs[0])
-            invalidMonitors.extend(mntrs[1])
-        
-        if self.ui.securityUserDirectoriesGroupBox.isChecked():
-            text = self.ui.securityUserDirectoriesTextEdit.toPlainText().strip()
-            if text == '':
-                utils.showMessageBox('No users entered', 'Error', QtWidgets.QMessageBox.Critical)
-                return
-            mntrs = utils.getValidMonitors(text, 'security_directories_visited_by_user_', 'user')
-            monitors.extend(mntrs[0])
-            invalidMonitors.extend(mntrs[1])
-        
-        if self.ui.securityFileOpensGroupBox.isChecked():
-            text = self.ui.securityFileOpensTextEdit.toPlainText().strip()
-            if text == '':
-                utils.showMessageBox('No directories entered', 'Error', QtWidgets.QMessageBox.Critical)
-                return
-            mntrs = utils.getValidMonitors(text, 'security_file_opens_at_', 'dir')
-            monitors.extend(mntrs[0])
-            invalidMonitors.extend(mntrs[1])
-        
-        self.startSysdig(monitors, self.ui.securityRunningMonitorsListWidget)
-        
-        self.displayMonitorStatus(monitors, invalidMonitors)
-
-        # Reset form
-        self.ui.securityLoginShellsTextEdit.setPlainText('')
-        self.ui.securityUserDirectoriesTextEdit.setPlainText('')
-        self.ui.securityFileOpensTextEdit.setPlainText('')
-    
-    def startNetworkMonitors(self):
-        monitorsChecked = any([self.ui.networkHostsGroupBox.isChecked(),
-                               self.ui.networkTopProcessesCheckBox.isChecked(),
-                               self.ui.networkTopConnectionsCheckBox.isChecked()])
-    
-        if not monitorsChecked:
-            utils.showMessageBox('Please select at least one monitor', 'Error', QtWidgets.QMessageBox.Critical)
-            return
-        
-        monitors = []
-        invalidMonitors = []
-        if self.ui.networkHostsGroupBox.isChecked():
-            text = self.ui.networkHostsTextEdit.toPlainText().strip()
-            if text == '':
-                utils.showMessageBox('No hosts entered', 'Error', QtWidgets.QMessageBox.Critical)
-                return
-            mntrs = utils.getValidMonitors(text, 'network_spy_ip_', 'ip')
-            monitors.extend(mntrs[0])
-            invalidMonitors.extend(mntrs[1])
-        
-        if self.ui.networkTopProcessesCheckBox.isChecked():
-            monitors.append('network_top_processes_bandwidth')
-            
-        if self.ui.networkTopConnectionsCheckBox.isChecked():
-            monitors.append('network_top_connections_bandwidth')
-        
-        self.startSysdig(monitors, self.ui.networkRunningMonitorsListWidget)
-        
-        self.displayMonitorStatus(monitors, invalidMonitors)
-        
-        # Reset form
-        self.ui.networkHostsTextEdit.setPlainText('')
-        
-    def startErrorsMonitors(self):
-        monitorsChecked = any([self.ui.errorsFileOpensGroupBox.isChecked(),
-                               self.ui.errorsTopSystemCallsCheckBox.isChecked(),
-                               self.ui.errorsSystemCallsTimeCheckBox.isChecked(),
-                               self.ui.errorsTopFilesCheckBox.isChecked(),
-                               self.ui.errorsTopProcessesCheckBox.isChecked(),
-                               self.ui.errorsFilesTimeCheckBox.isChecked()])
-       
-        if not monitorsChecked:
-            utils.showMessageBox('Please select at least one monitor', 'Error', QtWidgets.QMessageBox.Critical)
-            return
-        
-        monitors = []
-        invalidMonitors = []
-        if self.ui.errorsFileOpensGroupBox.isChecked():
-            text = self.ui.errorsFileOpensTextEdit.toPlainText().strip()
-            if text == '':
-                utils.showMessageBox('No processes entered', 'Error', QtWidgets.QMessageBox.Critical)
-                return
-            mntrs = utils.getValidMonitors(text, 'errors_top_failed_file_opens_', 'process')
-            monitors.extend(mntrs[0])
-            invalidMonitors.extend(mntrs[1])
-        
-        if self.ui.errorsTopSystemCallsCheckBox.isChecked():
+        if self.ui.monitorsSystemCallErrorsCheckBox.isChecked():
             monitors.append('errors_top_system_calls_errors')
-            
-        if self.ui.errorsSystemCallsTimeCheckBox.isChecked():
-            monitors.append('errors_top_system_calls_errors_time')
-        
-        if self.ui.errorsTopFilesCheckBox.isChecked():
+        if self.ui.monitorsFileIOErrorsCheckBox.isChecked():
             monitors.append('errors_top_file_errors')
-        
-        if self.ui.errorsTopProcessesCheckBox.isChecked():
+        if self.ui.monitorsProcessIOErrorsCheckBox.isChecked():
             monitors.append('errors_top_processes')
-  
-        if self.ui.errorsFilesTimeCheckBox.isChecked():
+        if self.ui.monitorsFilesMostTimeSpentCheckBox.isChecked():
             monitors.append('errors_files_most_time_spent')
+        if self.ui.monitorsSystemCallsMostTimeSpentCheckBox.isChecked():
+            monitors.append('errors_top_system_calls_errors_time')
+        if self.ui.monitorsNetworkConnectionsBWCheckBox.isChecked():
+            monitors.append('network_top_connections_bandwidth')
+        if self.ui.monitorsProcessBWCheckBox.isChecked():
+            monitors.append('network_top_processes_bandwidth')
 
-        self.startSysdig(monitors, self.ui.errorsRunningMonitorsListWidget)
-
+        # Start sysdig instances
+        self.startSysdig(monitors, self.ui.monitorsRunningMonitorsListWidget)
         self.displayMonitorStatus(monitors, invalidMonitors)
         
-        # Reset form
-        self.ui.errorsFileOpensTextEdit.setPlainText('')
+        # Reset fields
+        self.ui.monitorsCpuProcessUsageTextEdit.setPlainText('')
 
-    # Stop Monitors
-    def stopProcessMonitor(self):
-        idx = self.ui.cpuRunningMonitorsListWidget.currentRow()
+    def stopMonitor(self):
+        idx = self.ui.monitorsRunningMonitorsListWidget.currentRow()
         if idx == -1:
             utils.showMessageBox('No monitor selected', 'Error', QtWidgets.QMessageBox.Critical)
             return
-        
-        text = self.ui.cpuRunningMonitorsListWidget.currentItem().text()
-        self.ui.cpuRunningMonitorsListWidget.takeItem(idx)
-        
+
+        text = self.ui.monitorsRunningMonitorsListWidget.currentItem().text()
+        self.ui.monitorsRunningMonitorsListWidget.takeItem(idx)
+
         cbIdx = self.ui.alertsChooseMonitorComboBox.findText(text)
         self.ui.alertsChooseMonitorComboBox.removeItem(cbIdx)
-        
-        # Sysdig
+       
+        # Stop plotting if the monitor is plotting
+        if self.threads[text].isPlotting():
+            self.stopVisualizingMonitor()
+
+        # Stop the sysdig thread
         self.threads[text].stop()
-        self.threads[text].join()
+        self.threads[text].wait()
         del self.threads[text]
 
+        # Clean user data
         self.data.removeMonitor(text)
 
+        # Display message
         utils.showMessageBox('Monitor stopped!', 'Success', QtWidgets.QMessageBox.Information)
-    
-    def stopApplicationMonitor(self):
-        idx = self.ui.appRunningMonitorsListWidget.currentRow()
-        if idx == -1:
+
+    """""""""""""""""""""
+        VISUALIZATION
+    """""""""""""""""""""
+    def visualizeMonitor(self):
+        if self.ui.monitorsRunningMonitorsListWidget.currentRow() == -1:
             utils.showMessageBox('No monitor selected', 'Error', QtWidgets.QMessageBox.Critical)
             return
-        
-        text = self.ui.appRunningMonitorsListWidget.currentItem().text()
-        self.ui.appRunningMonitorsListWidget.takeItem(idx)
-        
-        cbIdx = self.ui.alertsChooseMonitorComboBox.findText(text)
-        self.ui.alertsChooseMonitorComboBox.removeItem(cbIdx)
-        
-        # Sysdig
-        self.threads[text].stop()
-        self.threads[text].join()
-        del self.threads[text]
 
-        self.data.removeMonitor(text)
+        text = self.ui.monitorsRunningMonitorsListWidget.currentItem().text()
 
-        utils.showMessageBox('Monitor stopped!', 'Success', QtWidgets.QMessageBox.Information)
-        
-    def stopSecurityMonitor(self):
-        idx = self.ui.securityRunningMonitorsListWidget.currentRow()
-        if idx == -1:
-            utils.showMessageBox('No monitor selected', 'Error', QtWidgets.QMessageBox.Critical)
-            return
-        
-        text = self.ui.securityRunningMonitorsListWidget.currentItem().text() 
-        self.ui.securityRunningMonitorsListWidget.takeItem(idx)
-        
-        cbIdx = self.ui.alertsChooseMonitorComboBox.findText(text)
-        self.ui.alertsChooseMonitorComboBox.removeItem(cbIdx)
-        
-        # Sysdig
-        self.threads[text].stop()
-        self.threads[text].join()
-        del self.threads[text]
+        # Reset plotting widget and stop already plotting monitors
+        self.stopVisualizingMonitor()
 
-        self.data.removeMonitor(text)
+        # Start plotting
+        self.ui.plots = {}
+        self.ui.plotsData = {}
+        self.threads[text].startPlot()
 
-        utils.showMessageBox('Monitor stopped!', 'Success', QtWidgets.QMessageBox.Information)
-        
-    def stopNetworkMonitor(self):
-        idx = self.ui.networkRunningMonitorsListWidget.currentRow()
-        if idx == -1:
-            utils.showMessageBox('No monitor selected', 'Error', QtWidgets.QMessageBox.Critical)
-            return
-        
-        text = self.ui.networkRunningMonitorsListWidget.currentItem().text() 
-        self.ui.networkRunningMonitorsListWidget.takeItem(idx)
-        
-        cbIdx = self.ui.alertsChooseMonitorComboBox.findText(text)
-        self.ui.alertsChooseMonitorComboBox.removeItem(cbIdx)
-        
-        # Sysdig
-        self.threads[text].stop()
-        self.threads[text].join()
-        del self.threads[text]
-
-        self.data.removeMonitor(text)
-
-        utils.showMessageBox('Monitor stopped!', 'Success', QtWidgets.QMessageBox.Information)
-        
-    def stopErrorsMonitor(self):
-        idx = self.ui.errorsRunningMonitorsListWidget.currentRow()
-        if idx == -1:
-            utils.showMessageBox('No monitor selected', 'Error', QtWidgets.QMessageBox.Critical)
-            return
-        
-        text = self.ui.errorsRunningMonitorsListWidget.currentItem().text()
-        self.ui.errorsRunningMonitorsListWidget.takeItem(idx)
-        
-        cbIdx = self.ui.alertsChooseMonitorComboBox.findText(text)
-        self.ui.alertsChooseMonitorComboBox.removeItem(cbIdx)
-        
-        # Sysdig
-        self.threads[text].stop()
-        self.threads[text].join()
-        del self.threads[text]
-
-        self.data.removeMonitor(text)
-
-        utils.showMessageBox('Monitor stopped!', 'Success', QtWidgets.QMessageBox.Information)
-        
-        
+    def stopVisualizingMonitor(self):
+        for thread in self.threads:
+            if isinstance(self.threads[thread], SysdigThread):
+                if self.threads[thread].isPlotting():
+                    self.threads[thread].stopPlot()
+                    
+    """""""""""""""
+        SYSDIG
+    """""""""""""""
     # Sysdig stuff here
     def startSysdig(self, monitors, listWidget):
         for name in monitors:
@@ -477,7 +399,33 @@ class Listeners:
                 
                 self.ui.alertsChooseMonitorComboBox.addItem(name)
                 listWidget.addItem(name)
-                
+
+    """""""""""""""
+        FALCO
+    """""""""""""""
+    def startFalco(self, rules, invalidRules):
+        falco_rules = FalcoRules()
+        for rule in rules:
+            falco_rules.setArgs(rule)
+
+        if 'falco' in self.threads:
+            self.threads['falco'].stop()
+            self.threads['falco'].wait()
+
+        self.threads['falco'] = FalcoThread(self.ui, falco_rules.getRules())
+        self.threads['falco'].start()
+        self.displayRuleStatus(rules, invalidRules)
+
+        if 'file_watcher' in self.threads:
+            self.threads['file_watcher'].stop()
+            self.threads['file_watcher'].wait()
+
+        self.threads['file_watcher'] = FileWatcherThread(self.ui, self.threads['falco'].get_events_file())
+        self.threads['file_watcher'].start()
+
+    """""""""""""""
+        UI HELPER
+    """""""""""""""
     def displayMonitorStatus(self, monitors, invalidMonitors):
         if len(invalidMonitors) != 0:
             utils.showMessageBox('These monitors contain errors:\n\n--> '+ '\n--> '.join(invalidMonitors) +'\n\nConsult the docs for further info.','Warning', QtWidgets.QMessageBox.Warning)
@@ -485,3 +433,14 @@ class Listeners:
             utils.showMessageBox('Monitors started:\n\n--> ' + '\n--> '.join(monitors), 'Success', QtWidgets.QMessageBox.Information)
         else:
             utils.showMessageBox('No monitors started!', 'Error', QtWidgets.QMessageBox.Critical)
+
+    def displayRuleStatus(self, rules, invalidRules):
+        events_file = self.threads['falco'].get_events_file()
+        
+        if len(rules) != 0:
+            message  = 'Anomaly Detector Deployed with Custom + Default rules!\n\n--> '+ '\n--> '.join(rules) + '\n\nDetector alerts can be found in the Notifications tab\nor in the events file located at ' + events_file +'\n\nPlease consult the documentation for default rule information!'
+            utils.showMessageBox(message, 'Success', QtWidgets.QMessageBox.Information)
+        else:
+            message = 'Anomaly Detector Deployed with Default rules!\n\n'+ 'Detector alerts can be found in the Notifications tab\nor in the events file located at ' + events_file + '\n\nPlease consult the documentation for default rule information!' 
+            utils.showMessageBox(message, 'Success', QtWidgets.QMessageBox.Information)
+            

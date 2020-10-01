@@ -1,0 +1,1 @@
+22:01:19.145269538: Error (proc=sudo) run in (user=kosnet parent=bash cmdline=sudo touch smad_rules/test2)

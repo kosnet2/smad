@@ -1,25 +1,39 @@
 from sysdig_commands import SysdigCommands
 from PyQt5 import QtWidgets
+from PyQt5.QtCore import QTimer, QThread
+from threading import Event, Lock
+from collections import deque
+import utilities as utils
+import sys
 import datetime
-import threading
 import subprocess
 import select
 import shlex
 import os
 import re
+import time
+import pyqtgraph as pg
 
-class SysdigThread(threading.Thread):
+class SysdigThread(QThread):
     def __init__(self, name, monitor, ui):
-        super(SysdigThread, self).__init__()
+        QThread.__init__(self)
         self.sysdig_commands = SysdigCommands()
         self.ui = ui
         self.name = name
         self.monitor = monitor
-        self._stop_event = threading.Event()
+        self._stop_event = Event()
         self.time_dict = {'ps': 10 ** -6, 'ns': 10 ** -3, 'μs': 1, 'us' : 1, 'ms': 10 ** 3, 's': 10 ** 6, 'm': 60 * (10 ** 6)}
         self.size_dict = {'B': 1, 'KB': 2 ** 10, 'MB': 2 ** 20, 'GB': 2 ** 30, 'TB': 2 ** 40, 'PB': 2 ** 50}
-    
+
+        # Visualization
+        self.is_plotting = False
+        self.timer = QTimer(self)
+
+        self.pens = [(255, 0, 0), (0, 255, 0), (0, 0, 255), (255, 255, 0), (255, 0, 255), (0, 255, 255), (255, 255, 255)]
+        self.penIndex = 0
+
     def getValues(self, line):
+    	# Get space separated values from a line of output
         res = re.findall(r'[\S]+', line)
         return res if len(res) < 3 else [res[0], ' '.join(res[1:-1]), res[-1]]
 
@@ -46,8 +60,8 @@ class SysdigThread(threading.Thread):
 
                             # Check for alerts with capture
                             for alert in self.monitor.alerts:
-                            	if alert.seconds:
-                            		self.capture(alert.seconds, alert.filename)
+                                if alert.seconds:
+                                    self.capture(alert.seconds, alert.filename)
                     else:
                         line = output.strip().decode('utf-8') # Convert bytes to string
                         if line[0].isdigit() and len(self.monitor.alerts):
@@ -57,7 +71,48 @@ class SysdigThread(threading.Thread):
                                 self.checkTimeMetric(self.getValues(line))
                             elif self.monitor.metricType == 'size':
                                 self.checkSizeMetric(self.getValues(line))
+
+                        # Plotting
+                        if line[0].isdigit() and self.is_plotting:
+                            values = self.getValues(line)
+
+                            # If new key encountered, create new plot
+                            if values[1] not in self.ui.plots:
+                                self.addPlot(values[1])
+
+                            self.ui.plotsData[values[1]][0].append(utils.now_timestamp())
+
+                            numValue = re.search('(\d+(?:\.\d+)?)',values[0]).groups()[0]
+                            self.ui.plotsData[values[1]][1].append(float(numValue))
+
             rc = process.poll()
+
+    def stopPlot(self):
+        self.timer.stop()
+        self.legend.scene().removeItem(self.legend)
+        self.is_plotting = False
+        self.ui.plotWidget.clear()
+
+    def startPlot(self):
+        self.legend = pg.LegendItem((100, 60), (70, 30))
+        self.legend.setParentItem(self.ui.plotWidget.graphicsItem())
+        self.timer.timeout.connect(self.update)
+        self.timer.start(200)
+        self.is_plotting = True
+
+    def isPlotting(self):
+        return self.is_plotting
+
+    def addPlot(self, param):
+        maxlen = 200
+        self.ui.plots[param] = self.ui.plotWidget.plot(name=param, pen=pg.mkPen(color=self.pens[self.penIndex]), axisItems={'bottom': utils.TimeAxisItem(orientation='bottom')})
+        self.legend.addItem(self.ui.plots[param], param)
+        self.penIndex = (self.penIndex + 1) % len(self.pens)
+        self.ui.plotsData[param] = [deque(maxlen=maxlen), deque(maxlen=maxlen)]
+
+    def update(self):
+        for param in self.ui.plots:
+            self.ui.plots[param].setData(x=list(self.ui.plotsData[param][0]), y=list(self.ui.plotsData[param][1]))
 
     def stop(self):
         self._stop_event.set()
@@ -66,7 +121,7 @@ class SysdigThread(threading.Thread):
         return self._stop_event.is_set()
 
     def checkNumberMetric(self, values):
-        if self.name == 'cpu_top_processes':
+        if self.name.startswith('cpu_top_processes'):
             value, processName, pid = values
             details = f'{value} from process {processName} ({pid})'
             value = float(value[:-1])
@@ -88,7 +143,7 @@ class SysdigThread(threading.Thread):
             threshold = float(threshold)
             if (op == '<' and value < threshold) or (op == '>' and value > threshold) or (op == '=' and value == threshold):
                 self.addNotification(alert, details)
-
+        
     def checkTimeMetric(self, values):
         time, source = values
         if time[-2].isdigit():
@@ -138,7 +193,11 @@ class SysdigThread(threading.Thread):
 
     def addNotification(self, alert, details):
         values = [str(datetime.datetime.now()), alert.name, alert.filename, details]
+
+        # Insert blank row
         self.ui.notificationsTableWidget.insertRow(0)
+
+        # Update new row
         for i in range(self.ui.notificationsTableWidget.columnCount()):
             self.ui.notificationsTableWidget.setItem(0, i, QtWidgets.QTableWidgetItem(values[i]))
         if alert.seconds:
@@ -147,4 +206,6 @@ class SysdigThread(threading.Thread):
     def capture(self, seconds, filename):
         command = self.sysdig_commands.getCommand('capture')['command']
         command += f' -M {seconds}'
+
+        # Start sysdig capture in a separate thread
         subprocess.run(args=shlex.split(command), stdout=open(f'smad_captures/{filename}', 'a+'))

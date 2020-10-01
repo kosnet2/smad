@@ -1,0 +1,199 @@
+21:33:17.409580574: Warning File /etc/ld.so.cache opened from user kosnet
+21:33:17.409592516: Warning File /etc/ld.so.cache opened from user kosnet
+21:33:17.411546434: Warning File /etc/nsswitch.conf opened from user kosnet
+21:33:17.411584621: Warning File /etc/ld.so.cache opened from user kosnet
+21:33:17.411688438: Warning File /etc/ld.so.cache opened from user kosnet
+21:33:17.411925190: Warning File /etc/passwd opened from user kosnet
+21:33:17.411982581: Warning File /etc/ld.so.cache opened from user kosnet
+21:33:17.414545037: Warning File /etc/passwd opened from user kosnet
+21:33:17.414673866: Warning File /etc/localtime opened from user kosnet
+21:33:17.422018556: Warning File /etc/passwd opened from user kosnet
+21:33:17.426623335: Warning File /etc/passwd opened from user kosnet
+21:33:17.427146285: Warning File /etc/passwd opened from user kosnet
+21:33:17.427385560: Warning File /etc/passwd opened from user kosnet
+21:33:17.439096157: Warning File /etc/passwd opened from user kosnet
+21:33:17.439258490: Warning File /etc/passwd opened from user kosnet
+21:33:17.440210615: Warning File /etc/passwd opened from user kosnet
+21:33:17.445070356: Warning File /etc/passwd opened from user kosnet
+21:33:17.454696440: Warning File /etc/passwd opened from user kosnet
+21:33:33.071208409: Warning File /etc/fstab opened from user kosnet
+21:33:35.685371344: Warning File /etc/localtime opened from user kosnet
+21:33:35.685446657: Warning File /etc/localtime opened from user kosnet
+21:33:51.407055246: Warning File /etc/ld.so.cache opened from user kosnet
+21:33:51.407273485: Warning File /etc/ld.so.cache opened from user kosnet
+21:33:51.409183974: Warning File /etc/nsswitch.conf opened from user kosnet
+21:33:51.409221636: Warning File /etc/ld.so.cache opened from user kosnet
+21:33:51.409321386: Warning File /etc/ld.so.cache opened from user kosnet
+21:33:51.409565333: Warning File /etc/passwd opened from user kosnet
+21:33:51.409622993: Warning File /etc/ld.so.cache opened from user kosnet
+21:33:51.412372790: Warning File /etc/passwd opened from user kosnet
+21:33:51.412461910: Warning File /etc/localtime opened from user kosnet
+21:33:51.419855921: Warning File /etc/passwd opened from user kosnet
+21:33:51.420383041: Warning File /etc/passwd opened from user kosnet
+21:33:51.420887953: Warning File /etc/passwd opened from user kosnet
+21:33:51.421133551: Warning File /etc/passwd opened from user kosnet
+21:33:51.422522617: Warning File /etc/passwd opened from user kosnet
+21:33:51.422705173: Warning File /etc/passwd opened from user kosnet
+21:33:51.423644961: Warning File /etc/passwd opened from user kosnet
+21:33:51.427046037: Warning File /etc/passwd opened from user kosnet
+21:33:51.432225307: Warning File /etc/passwd opened from user kosnet
+21:34:04.079150199: Warning File /etc/hosts opened from user root
+21:34:05.088048501: Warning File /etc/hosts opened from user root
+21:34:05.189161874: Warning File /etc/hosts opened from user root
+21:34:05.373112913: Warning File /etc/hosts opened from user root
+21:34:05.516524859: Warning File /etc/hosts opened from user root
+21:34:05.677416556: Warning File /etc/hosts opened from user root
+21:34:15.311222548: Warning File /etc/hosts opened from user root
+21:34:15.311949108: Warning File /etc/hosts opened from user root
+21:34:15.312403219: Warning File /etc/hosts opened from user root
+21:34:15.312945942: Warning File /etc/hosts opened from user root
+21:34:15.313587502: Warning File /etc/hosts opened from user root
+21:34:15.314061198: Warning File /etc/hosts opened from user root
+21:34:15.314667817: Warning File /etc/hosts opened from user root
+21:34:15.315237012: Warning File /etc/hosts opened from user root
+21:34:33.078466640: Warning File /etc/fstab opened from user kosnet
+21:34:35.212271931: Warning File /etc/localtime opened from user kosnet
+21:34:35.212354551: Warning File /etc/localtime opened from user kosnet
+21:34:35.316606011: Warning File /etc/hosts opened from user root
+21:34:35.317320516: Warning File /etc/hosts opened from user root
+21:34:35.317777711: Warning File /etc/hosts opened from user root
+21:34:35.318378528: Warning File /etc/hosts opened from user root
+21:34:35.319006284: Warning File /etc/hosts opened from user root
+21:34:35.319576134: Warning File /etc/hosts opened from user root
+21:34:35.320017544: Warning File /etc/hosts opened from user root
+21:34:35.320331921: Warning File /etc/hosts opened from user root
+21:34:47.232135862: Error File open error from proc=python3 run by user=root with type=openat on file=/home/kosnet/.icons/DMZ-White/cursors/split_h
+21:34:47.232144476: Error File open error from proc=python3 run by user=root with type=openat on file=/home/kosnet/.icons/DMZ-White/index.theme
+21:34:47.232163419: Error File open error from proc=python3 run by user=root with type=openat on file=/usr/share/icons/DMZ-White/cursors/split_h
+21:34:47.232211440: Error File open error from proc=python3 run by user=root with type=openat on file=/usr/share/pixmaps/DMZ-White/cursors/split_h
+21:34:47.232218262: Error File open error from proc=python3 run by user=root with type=openat on file=/usr/share/pixmaps/DMZ-White/index.theme
+21:34:47.232226053: Error File open error from proc=python3 run by user=root with type=openat on file=/home/kosnet/.icons/default/cursors/split_h
+21:34:47.232232524: Error File open error from proc=python3 run by user=root with type=openat on file=/home/kosnet/.icons/default/index.theme
+21:34:47.232239758: Error File open error from proc=python3 run by user=root with type=openat on file=/usr/share/icons/default/cursors/split_h
+21:34:47.232265765: Error File open error from proc=python3 run by user=root with type=openat on file=/usr/share/pixmaps/default/cursors/split_h
+21:34:47.232273065: Error File open error from proc=python3 run by user=root with type=openat on file=/home/kosnet/.icons/DMZ-White/cursors/split_h
+21:34:47.232280354: Error File open error from proc=python3 run by user=root with type=openat on file=/home/kosnet/.icons/DMZ-White/index.theme
+21:34:47.232287999: Error File open error from proc=python3 run by user=root with type=openat on file=/usr/share/icons/DMZ-White/cursors/split_h
+21:34:47.232319545: Error File open error from proc=python3 run by user=root with type=openat on file=/usr/share/pixmaps/DMZ-White/cursors/split_h
+21:34:47.232326299: Error File open error from proc=python3 run by user=root with type=openat on file=/usr/share/pixmaps/DMZ-White/index.theme
+21:34:47.232335129: Error File open error from proc=python3 run by user=root with type=openat on file=/home/kosnet/.icons/DMZ-White/cursors/col-resize
+21:34:47.232341999: Error File open error from proc=python3 run by user=root with type=openat on file=/home/kosnet/.icons/DMZ-White/index.theme
+21:34:47.232349228: Error File open error from proc=python3 run by user=root with type=openat on file=/usr/share/icons/DMZ-White/cursors/col-resize
+21:34:47.232400296: Error File open error from proc=python3 run by user=root with type=openat on file=/usr/share/pixmaps/DMZ-White/cursors/col-resize
+21:34:47.232407093: Error File open error from proc=python3 run by user=root with type=openat on file=/usr/share/pixmaps/DMZ-White/index.theme
+21:34:47.232415240: Error File open error from proc=python3 run by user=root with type=openat on file=/home/kosnet/.icons/default/cursors/col-resize
+21:34:47.232421979: Error File open error from proc=python3 run by user=root with type=openat on file=/home/kosnet/.icons/default/index.theme
+21:34:47.232428928: Error File open error from proc=python3 run by user=root with type=openat on file=/usr/share/icons/default/cursors/col-resize
+21:34:47.232453477: Error File open error from proc=python3 run by user=root with type=openat on file=/usr/share/pixmaps/default/cursors/col-resize
+21:34:47.232461329: Error File open error from proc=python3 run by user=root with type=openat on file=/home/kosnet/.icons/DMZ-White/cursors/col-resize
+21:34:47.232468325: Error File open error from proc=python3 run by user=root with type=openat on file=/home/kosnet/.icons/DMZ-White/index.theme
+21:34:47.232475527: Error File open error from proc=python3 run by user=root with type=openat on file=/usr/share/icons/DMZ-White/cursors/col-resize
+21:34:47.232506954: Error File open error from proc=python3 run by user=root with type=openat on file=/usr/share/pixmaps/DMZ-White/cursors/col-resize
+21:34:47.232513685: Error File open error from proc=python3 run by user=root with type=openat on file=/usr/share/pixmaps/DMZ-White/index.theme
+21:34:47.232523297: Error File open error from proc=python3 run by user=root with type=openat on file=/home/kosnet/.icons/DMZ-White/cursors/sb_h_double_arrow
+21:34:47.232530395: Error File open error from proc=python3 run by user=root with type=openat on file=/home/kosnet/.icons/DMZ-White/index.theme
+21:35:05.796243264: Warning File /etc/hosts opened from user root
+21:35:15.322814510: Warning File /etc/hosts opened from user root
+21:35:15.450802361: Warning File /etc/hosts opened from user root
+21:35:15.451121259: Warning File /etc/hosts opened from user root
+21:35:15.519668320: Warning File /etc/hosts opened from user root
+21:35:15.520341162: Warning File /etc/hosts opened from user root
+21:35:15.520813420: Warning File /etc/hosts opened from user root
+21:35:15.578724361: Warning File /etc/hosts opened from user root
+21:35:15.579134378: Warning File /etc/hosts opened from user root
+21:35:15.973547053: Warning File /etc/hosts opened from user root
+21:35:15.973948350: Warning File /etc/hosts opened from user root
+21:35:15.974273558: Warning File /etc/hosts opened from user root
+21:35:15.974727035: Warning File /etc/hosts opened from user root
+21:35:15.975252653: Warning File /etc/hosts opened from user root
+21:35:15.975703135: Warning File /etc/hosts opened from user root
+21:35:15.976203419: Warning File /etc/hosts opened from user root
+21:35:33.066613637: Warning File /etc/fstab opened from user kosnet
+21:35:35.214307336: Warning File /etc/localtime opened from user kosnet
+21:35:35.214367034: Warning File /etc/localtime opened from user kosnet
+21:36:33.025597948: Warning File /etc/fstab opened from user kosnet
+21:36:35.325431127: Warning File /etc/localtime opened from user kosnet
+21:36:35.325491468: Warning File /etc/localtime opened from user kosnet
+21:36:35.649443893: Warning File /etc/hosts opened from user root
+21:36:35.649960364: Warning File /etc/hosts opened from user root
+21:36:35.650256613: Warning File /etc/hosts opened from user root
+21:36:35.650814774: Warning File /etc/hosts opened from user root
+21:36:35.651399641: Warning File /etc/hosts opened from user root
+21:36:35.651828433: Warning File /etc/hosts opened from user root
+21:36:35.652195450: Warning File /etc/hosts opened from user root
+21:36:35.652745247: Warning File /etc/hosts opened from user root
+21:37:33.046147703: Warning File /etc/fstab opened from user kosnet
+21:37:35.439112065: Warning File /etc/localtime opened from user kosnet
+21:37:35.439170900: Warning File /etc/localtime opened from user kosnet
+21:38:09.830023055: Warning File /etc/ld.so.cache opened from user kosnet
+21:38:15.851432990: Warning Unknown user (user=kosnet) changed directory to ()
+21:38:15.851435956: Warning Unknown user (user=kosnet) changed directory to (res=0 path=/home/kosnet/smad/__pycache__ )
+21:38:16.153928984: Warning File /etc/ld.so.cache opened from user kosnet
+21:38:25.767268620: Warning Unknown user (user=kosnet) changed directory to ()
+21:38:25.767271124: Warning Unknown user (user=kosnet) changed directory to (res=0 path=/home/kosnet/smad )
+21:38:29.624817456: Error (proc=sudo) run in (user=kosnet parent=bash cmdline=sudo rm -r __pycache__/)
+21:38:29.625003155: Warning File /etc/ld.so.cache opened from user kosnet
+21:38:29.626406174: Warning File /etc/localtime opened from user kosnet
+21:38:29.626571897: Warning File /etc/nsswitch.conf opened from user kosnet
+21:38:29.626604065: Warning File /etc/ld.so.cache opened from user kosnet
+21:38:29.626702272: Warning File /etc/ld.so.cache opened from user kosnet
+21:38:29.626983252: Warning File /etc/passwd opened from user kosnet
+21:38:29.627386703: Warning File /etc/ld.so.cache opened from user kosnet
+21:38:29.627937885: Warning File /etc/passwd opened from user kosnet
+21:38:29.627996516: Warning File /etc/passwd opened from user kosnet
+21:38:29.628018212: Warning File /etc/nsswitch.conf opened from user kosnet
+21:38:29.628063141: Warning File /etc/sudoers opened from user daemon
+21:38:29.628173635: Warning File /etc/sudoers.d opened from user root
+21:38:29.628224060: Warning File /etc/sudoers.d/README opened from user daemon
+21:38:29.628343378: Warning File /etc/host.conf opened from user root
+21:38:29.628364535: Warning File /etc/resolv.conf opened from user root
+21:38:29.628395743: Warning File /etc/hosts opened from user root
+21:38:29.628534127: Warning File /etc/group opened from user root
+21:38:29.628590773: Warning File /etc/ld.so.cache opened from user root
+21:38:29.628928207: Warning File /etc/group opened from user root
+21:38:29.628976887: Warning File /etc/group opened from user root
+21:38:29.628998694: Warning File /etc/group opened from user root
+21:38:29.629025396: Warning File /etc/group opened from user root
+21:38:29.629052920: Warning File /etc/group opened from user root
+21:38:29.629081503: Warning File /etc/group opened from user root
+21:38:29.629114603: Warning File /etc/group opened from user root
+21:38:29.629156321: Warning File /etc/group opened from user root
+21:38:29.629558449: Warning File /etc/pam.d/sudo opened from user root
+21:38:29.629702876: Warning File /etc/pam.d/common-auth opened from user root
+21:38:29.629789036: Warning File /etc/ld.so.cache opened from user root
+21:38:29.630255145: Warning File /etc/ld.so.cache opened from user root
+21:38:29.630410744: Warning File /etc/pam.d/common-account opened from user root
+21:38:29.630459054: Warning File /etc/pam.d/common-session-noninteractive opened from user root
+21:38:29.630608469: Warning File /etc/pam.d/other opened from user root
+21:38:29.630625720: Warning File /etc/pam.d/common-auth opened from user root
+21:38:29.634150951: Warning File /etc/pam.d/common-account opened from user root
+21:38:29.634200646: Warning File /etc/pam.d/common-password opened from user root
+21:38:29.634398763: Warning File /etc/pam.d/common-session opened from user root
+21:38:29.634514896: Warning File /etc/ld.so.cache opened from user root
+21:38:29.634948236: Warning File /etc/login.defs opened from user root
+21:38:29.635047358: Warning File /etc/securetty opened from user root
+21:38:31.001351734: Warning File /etc/passwd opened from user root
+21:38:31.001435287: Warning File /etc/shadow opened from user root
+21:38:31.001508763: Warning File /etc/securetty opened from user root
+21:38:31.013691141: Warning File /etc/security/capability.conf opened from user root
+21:38:31.013802037: Warning File /etc/login.defs opened from user root
+21:38:31.013882108: Warning File /etc/passwd opened from user root
+21:38:31.013938379: Warning File /etc/shadow opened from user root
+21:38:31.014300580: Warning File /etc/passwd opened from user root
+21:38:31.014333659: Warning File /etc/passwd opened from user root
+21:38:31.014399714: Warning File /etc/security/pam_env.conf opened from user root
+21:38:31.014429316: Warning File /etc/environment opened from user root
+21:38:31.014447371: Warning File /etc/security/pam_env.conf opened from user root
+21:38:31.014473999: Warning File /etc/default/locale opened from user root
+21:38:31.014501025: Warning File /etc/login.defs opened from user root
+21:38:31.014548037: Warning File /etc/login.defs opened from user root
+21:38:31.014887978: Warning File /etc/passwd opened from user root
+21:38:31.015012043: Warning File /etc/login.defs opened from user root
+21:38:31.019215059: Warning File /etc/ld.so.cache opened from user root
+21:38:31.024851589: Warning File /etc/login.defs opened from user root
+21:38:33.078635393: Warning File /etc/fstab opened from user kosnet
+21:38:35.385849643: Warning File /etc/localtime opened from user kosnet
+21:38:35.385932603: Warning File /etc/localtime opened from user kosnet
+21:38:54.891103590: Warning File /etc/ld.so.cache opened from user root
+21:38:54.907148279: Warning File /etc/ld.so.cache opened from user root
+21:38:54.924075382: Warning File /etc/ld.so.cache opened from user root
