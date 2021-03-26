@@ -46,7 +46,7 @@ python-dateutil==2.6.1
 python-debian==0.1.32
 pytz==2018.3
 pyxdg==0.25
-PyYAML==3.12
+PyYAML==5.4
 qdarkgraystyle==0.0.3
 QtPy==1.9.0
 reportlab==3.4.0
